@@ -1,0 +1,23 @@
+name: DiscordUtils
+version: '4.0'
+main: md.mirrerror.discordutils.Main
+authors: [ mirrerror ]
+softdepend:
+  - 'Vault'
+  - 'LuckPerms'
+  - 'PlaceholderAPI'
+commands:
+  discordutils:
+    usage: ''
+    description: ''
+    aliases:
+      - 'disutils'
+      - 'du'
+  discordutilsadmin:
+    usage: ''
+    description: ''
+    aliases:
+      - 'disutilsadmin'
+      - 'disutilsadm'
+      - 'disutilsa'
+      - 'dua'
