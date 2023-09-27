@@ -5,7 +5,7 @@ import md.mirrerror.discordutils.config.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +22,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         if(event.getChannelType() != ChannelType.PRIVATE) return;
         if(event.getUser().equals(Main.getInstance().getBot().getJda().getSelfUser())) return;
-        if(!event.getPrivateChannel().equals(event.getUser().openPrivateChannel().complete())) return;
+        if(!event.getChannel().asPrivateChannel().equals(event.getUser().openPrivateChannel().complete())) return;
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUserIdLong());
         if(!discordUtilsUser.isLinked()) return;
@@ -35,7 +35,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
 
         if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(uuid)) {
             if(messageId == Long.parseLong(Main.getInstance().getBot().getSecondFactorPlayers().get(uuid))) {
-                if(event.getReaction().getReactionEmote().getName().equals("✅")) {
+                if(event.getReaction().getEmoji().getName().equals("✅")) {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Message.SECONDFACTOR_AUTHORIZED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
                     Main.getInstance().getBot().getSecondFactorSessions().put(uuid, new SecondFactorSession(StringUtils.remove(player.getAddress().getAddress().toString(), '/'),
@@ -44,7 +44,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                         Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfter2FAPassing").forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }
-                if(event.getReaction().getReactionEmote().getName().equals("❎")) {
+                if(event.getReaction().getEmoji().getName().equals("❎")) {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
                         player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText().getText());

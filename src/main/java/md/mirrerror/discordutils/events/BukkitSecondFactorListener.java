@@ -7,6 +7,7 @@ import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -75,8 +76,8 @@ public class BukkitSecondFactorListener implements Listener {
                         .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.SECONDFACTOR_REACTION_MESSAGE.getText().getText().replace("%playerIp%", playerIp))).submit())
                         .whenComplete((msg, error) -> {
                             if (error == null) {
-                                msg.addReaction("✅").queue();
-                                msg.addReaction("❎").queue();
+                                msg.addReaction(Emoji.fromUnicode("✅")).queue();
+                                msg.addReaction(Emoji.fromUnicode("❎")).queue();
                                 Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), msg.getId());
                                 return;
                             }

@@ -5,8 +5,8 @@ import md.mirrerror.discordutils.config.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
@@ -23,7 +23,7 @@ public class VirtualConsoleCommandsListener extends ListenerAdapter {
         if(!event.isFromGuild()) return;
         if(event.getChannelType() != ChannelType.TEXT) return;
 
-        TextChannel textChannel = event.getTextChannel();
+        TextChannel textChannel = event.getChannel().asTextChannel();
         int deleteDelay = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("Console.DeleteMessagesDelay");
 
         if(!textChannel.getId().equals(Main.getInstance().getBot().getConsoleLoggingTextChannel().getId())) return;

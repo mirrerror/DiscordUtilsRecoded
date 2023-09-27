@@ -19,7 +19,7 @@ public class MentionsListener extends ListenerAdapter {
         if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("NotifyAboutMentions.Enabled")) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
-        if(Main.getInstance().getBot().getNotifyAboutMentionsBlacklistedChannels().contains(event.getTextChannel().getIdLong())) return;
+        if(Main.getInstance().getBot().getNotifyAboutMentionsBlacklistedChannels().contains(event.getChannel().asTextChannel().getIdLong())) return;
 
         for(Member member : event.getMessage().getMentions().getMembers()) {
             User user = member.getUser();

@@ -1,8 +1,10 @@
 package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
+import org.bukkit.Bukkit;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -23,7 +25,27 @@ public class MySQLDataManager implements DataManager {
                 if (getConnection() != null && !getConnection().isClosed()) {
                     return;
                 }
-                Class.forName("com.mysql.cj.jdbc.Driver");
+
+                String rawVersionComponents = Bukkit.getVersion().split(" ")[2];
+                rawVersionComponents = rawVersionComponents.substring(0, rawVersionComponents.length() - 1);
+                String[] versionComponents = rawVersionComponents.split("\\.");
+
+                int major = Integer.parseInt(versionComponents[0]);
+                int minor = Integer.parseInt(versionComponents[1]);
+                int patch = (versionComponents.length == 3) ? Integer.parseInt(versionComponents[2]) : 0;
+
+                int desiredMajor = 1;
+                int desiredMinor = 12;
+                int desiredPatch = 2;
+
+                if((major > desiredMajor) ||
+                        (major == desiredMajor && minor > desiredMinor) ||
+                        (major == desiredMajor && minor == desiredMinor && patch > desiredPatch)) { // greater than 1.12.2
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                } else { // not greater than 1.12.2
+                    Class.forName("com.mysql.jdbc.Driver");
+                }
+
                 connection = DriverManager.getConnection(Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.ConnectionUrl")
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
                 setupTable();

@@ -5,7 +5,6 @@ import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.IInviteContainer;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Member;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -47,7 +46,7 @@ public class VoiceInvite implements SubCommand {
                         return;
                     }
 
-                    Invite invite = ((IInviteContainer) member.getVoiceState().getChannel()).createInvite().setMaxAge(15L, TimeUnit.MINUTES).complete();
+                    Invite invite = member.getVoiceState().getChannel().createInvite().setMaxAge(15L, TimeUnit.MINUTES).complete();
 
                     String url = invite.getUrl();
 

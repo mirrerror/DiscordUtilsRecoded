@@ -68,7 +68,11 @@ public final class Main extends JavaPlugin {
                 break;
             }
         }
-        dataManager.setup();
+
+        dataManager.setup().whenComplete((unused, throwable) -> {
+            Main.getInstance().getLogger().severe("Something went wrong while connecting to the database.");
+            Main.getInstance().getLogger().severe("Cause: " + throwable.getCause() + "; message: " + throwable.getMessage() + ".");
+        });
 
         if(configManager.getBotSettings().getFileConfiguration().getBoolean("AsyncBotLoading")) {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
