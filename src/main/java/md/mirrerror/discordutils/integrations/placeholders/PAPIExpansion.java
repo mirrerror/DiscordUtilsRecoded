@@ -33,18 +33,18 @@ public class PAPIExpansion extends PlaceholderExpansion {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
         if(params.equalsIgnoreCase("islinked")){
-            if(discordUtilsUser.isLinked()) return Message.YES.getText().getText();
-            else return Message.NO.getText().getText();
+            if(discordUtilsUser.isLinked()) return Message.YES.getText();
+            else return Message.NO.getText();
         }
 
         if(params.equalsIgnoreCase("discord")) {
-            if(!discordUtilsUser.isLinked()) return Message.NOT_AVAILABLE.getText().getText();
+            if(!discordUtilsUser.isLinked()) return Message.NOT_AVAILABLE.getText();
             return discordUtilsUser.getUser().getAsTag();
         }
 
         if(params.equalsIgnoreCase("2fa")) {
-            if(discordUtilsUser.hasSecondFactor()) return Message.YES.getText().getText();
-            else return Message.NO.getText().getText();
+            if(discordUtilsUser.hasSecondFactor()) return Message.YES.getText();
+            else return Message.NO.getText();
         }
 
         return null;

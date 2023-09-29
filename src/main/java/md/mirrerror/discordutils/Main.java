@@ -6,11 +6,11 @@ import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
+import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.data.MySQLDataManager;
 import md.mirrerror.discordutils.discord.DiscordUtilsBot;
-import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.events.BukkitSecondFactorListener;
 import md.mirrerror.discordutils.events.CacheListener;
@@ -68,7 +68,12 @@ public final class Main extends JavaPlugin {
                 break;
             }
         }
-        dataManager.setup();
+
+        dataManager.setup().whenComplete((unused, throwable) -> {
+            Main.getInstance().getLogger().severe("Something went wrong while connecting to the database. Disabling the plugin...");
+            Main.getInstance().getLogger().severe("Cause: " + throwable.getCause() + "; message: " + throwable.getMessage() + ".");
+            Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
+        });
 
         if(configManager.getBotSettings().getFileConfiguration().getBoolean("AsyncBotLoading")) {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {

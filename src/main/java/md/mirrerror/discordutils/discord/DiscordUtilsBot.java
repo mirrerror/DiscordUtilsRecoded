@@ -10,11 +10,12 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
 
-import javax.security.auth.login.LoginException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -66,7 +67,7 @@ public class DiscordUtilsBot {
     public void setupBot() {
         Collection<GatewayIntent> gatewayIntents = new HashSet<>();
         gatewayIntents.add(GatewayIntent.GUILD_MEMBERS);
-        gatewayIntents.add(GatewayIntent.GUILD_EMOJIS);
+        gatewayIntents.add(GatewayIntent.GUILD_EMOJIS_AND_STICKERS);
         gatewayIntents.add(GatewayIntent.GUILD_INVITES);
         gatewayIntents.add(GatewayIntent.GUILD_VOICE_STATES);
         gatewayIntents.add(GatewayIntent.GUILD_PRESENCES);
@@ -76,6 +77,7 @@ public class DiscordUtilsBot {
         gatewayIntents.add(GatewayIntent.DIRECT_MESSAGES);
         gatewayIntents.add(GatewayIntent.DIRECT_MESSAGE_REACTIONS);
         gatewayIntents.add(GatewayIntent.DIRECT_MESSAGE_TYPING);
+        gatewayIntents.add(GatewayIntent.MESSAGE_CONTENT);
 
         try {
 
@@ -94,12 +96,13 @@ public class DiscordUtilsBot {
                     .setContextEnabled(false)
                     .setBulkDeleteSplittingEnabled(false)
                     .setStatus(OnlineStatus.fromKey(botSettings.getFileConfiguration().getString("OnlineStatus")))
+                    .disableCache(CacheFlag.SCHEDULED_EVENTS) // remove the warning
                     .build()
                     .awaitReady();
             jda.addEventListener(new SlashCommandsListener(jda.getGuilds()));
 
             for (Guild guild : jda.getGuilds()) {
-                guild.retrieveOwner(true).queue();
+                guild.retrieveOwner().queue();
                 guild.loadMembers().onSuccess(members -> Main.getInstance().getLogger().info("Successfully loaded " + members.size() + " members in guild " + guild.getName() + "."))
                         .onError(error -> Main.getInstance().getLogger().severe("Failed to load members of the guild " + guild.getName() + "!")).get();
             }
@@ -258,10 +261,11 @@ public class DiscordUtilsBot {
 
             Main.getInstance().getLogger().info("Bot has been successfully loaded.");
 
-        } catch (LoginException | InterruptedException e) {
+        } catch (InterruptedException e) {
 
-            Main.getInstance().getLogger().severe("Something went wrong while setting up the bot!");
+            Main.getInstance().getLogger().severe("Something went wrong while setting up the bot! Disabling the plugin...");
             Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
 
         }
     }

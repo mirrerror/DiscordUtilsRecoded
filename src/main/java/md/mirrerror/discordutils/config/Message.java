@@ -1,9 +1,7 @@
 package md.mirrerror.discordutils.config;
 
 import md.mirrerror.discordutils.Main;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
+import md.mirrerror.discordutils.utils.HexUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -110,43 +108,43 @@ public enum Message {
         this.isList = isList;
     }
 
-    public TextComponent getText() {
-        return new TextComponent(ChatColor.translateAlternateColorCodes('&', Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this))));
+    public String getText() {
+        return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
     }
 
-    public TextComponent getText(boolean addPrefix) {
+    public String getText(boolean addPrefix) {
         if(addPrefix) {
-            return new TextComponent(ChatColor.translateAlternateColorCodes('&', Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(PREFIX))
-                    + " " + Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this))));
+            return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(PREFIX))
+                    + " " + Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
         }
         return this.getText();
     }
 
-    public List<TextComponent> getTextList() {
-        List<TextComponent> stringList = new ArrayList<>();
-        Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)).forEach(s -> stringList.add(new TextComponent(ChatColor.translateAlternateColorCodes('&', s))));
+    public List<String> getTextList() {
+        List<String> stringList = new ArrayList<>();
+        Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)).forEach(s -> stringList.add(HexUtils.color(s)));
         return stringList;
     }
 
-    public List<TextComponent> getTextList(boolean addPrefix) {
-        List<TextComponent> stringList = new ArrayList<>();
-        if(addPrefix) {
-            for(String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this))) {
-                stringList.add(new TextComponent(new ComponentBuilder(PREFIX.getText()).append(" " + s).create()));
-            }
-        } else return this.getTextList();
+    public List<String> getTextList(boolean addPrefix) {
+        List<String> stringList = new ArrayList<>();
+        if(addPrefix)
+            for(String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)))
+                stringList.add(PREFIX.getText() + HexUtils.color(" " + s));
+        else
+            return this.getTextList();
         return stringList;
     }
 
     public void send(CommandSender commandSender) {
-        if(isList) getTextList().forEach(msg -> commandSender.spigot().sendMessage(msg));
-        else commandSender.spigot().sendMessage(getText());
+        if(isList) getTextList().forEach(commandSender::sendMessage);
+        else commandSender.sendMessage(getText());
     }
 
     public void send(CommandSender commandSender, boolean addPrefix) {
         if(addPrefix) {
-            if(isList) getTextList().forEach(msg -> commandSender.spigot().sendMessage(new TextComponent(new ComponentBuilder(PREFIX.getText()).append(" ").append(msg).create())));
-            else commandSender.spigot().sendMessage(new TextComponent(new ComponentBuilder(PREFIX.getText()).append(" ").append(getText()).create()));
+            if(isList) getTextList().forEach(msg -> commandSender.sendMessage(PREFIX.getText() + " " + msg));
+            else commandSender.sendMessage(PREFIX.getText() + " " + getText());
         } else {
             send(commandSender);
         }

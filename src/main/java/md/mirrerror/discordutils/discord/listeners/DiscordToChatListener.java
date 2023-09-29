@@ -17,16 +17,16 @@ public class DiscordToChatListener extends ListenerAdapter {
         if(Main.getInstance().getBot().getChatTextChannel() == null) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
-        if(event.getTextChannel().getIdLong() != Main.getInstance().getBot().getChatTextChannel().getIdLong()) return;
+        if(event.getChannel().asTextChannel().getIdLong() != Main.getInstance().getBot().getChatTextChannel().getIdLong()) return;
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
         EmbedManager embedManager = new EmbedManager();
         if(!discordUtilsUser.isLinked()) {
-            Main.getInstance().getBot().sendTimedMessageEmbeds(event.getTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText().getText()), 10);
+            Main.getInstance().getBot().sendTimedMessageEmbeds(event.getGuildChannel().asTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()), 10);
             return;
         }
 
-        Bukkit.broadcastMessage(Message.DISCORD_TO_CHAT_FORMAT.getText().getText().replace("%user%", event.getAuthor().getAsTag())
+        Bukkit.broadcastMessage(Message.DISCORD_TO_CHAT_FORMAT.getText().replace("%user%", event.getAuthor().getAsTag())
                 .replace("%message%", event.getMessage().getContentRaw()).replace("%player%", discordUtilsUser.getOfflinePlayer().getName()));
     }
 

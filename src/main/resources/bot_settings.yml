@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BotToken
 # Token that is required for the bot to work. You can get it here: https://discord.com/developers/applications
 # ------------------------------------------------------------------
@@ -274,4 +275,282 @@ NotifyAboutMentions:
     Enabled: true
     Type: 'ENTITY_EXPERIENCE_ORB_PICKUP'
     Volume: 1
+=======
+# BotToken
+# Token that is required for the bot to work. You can get it here: https://discord.com/developers/applications
+# ------------------------------------------------------------------
+# BotPrefix
+# Prefix that is used in the bot's commands
+# ------------------------------------------------------------------
+# BotCommandTextChannels
+# The text channels, in which the bot handles the commands (if it is empty, the bot will handle the commands in all the text channels)
+# ------------------------------------------------------------------
+# AsyncBotLoading
+# Enable or not the bot's async loading (I strongly recommend you to keep this setting enabled, but if it doesn't work for you for some reason, feel free to disable it)
+# ------------------------------------------------------------------
+# OnlineStatus
+# Bot's online status (available: online, idle, do_not_disturb, invisible, offline)
+# ------------------------------------------------------------------
+# Activities
+# Enabled - true - enabled, false - disabled
+# UpdateDelay - time (in seconds), after which the bot activity will be updated (cyclically)
+# Type - activity type (available: playing, streaming, listening, watching, competing)
+# Text - activity text
+# ------------------------------------------------------------------
+# SuccessfulEmbedColor
+# Successful embed messages' type color
+# ------------------------------------------------------------------
+# InformationEmbedColor
+# Info embed messages' type color
+# ------------------------------------------------------------------
+# ErrorEmbedColor
+# Error embed messages' type color
+# ------------------------------------------------------------------
+# GroupRoles
+# These roles will automatically be assigned if the player owns respective groups
+# Format: role_id: 'group_name' or role_id: ['group_name1', 'group_name2', ...]
+# For example:
+# GroupRoles:
+#   905508941230915684: 'admin'
+#   934834130198751892: 'vip'
+# or
+# GroupRoles:
+#   905508941230915684: ['admin', 'helper']
+#   934834130198751892: 'vip'
+# ------------------------------------------------------------------
+# AdminRoles
+# Members with these roles are considered as administrators and will be able to perform admin commands (such as !sudo)
+# For example: AdminRoles: [905508941230915684, 123123123131231233]
+# ------------------------------------------------------------------
+# VerifiedRole
+# Enabled - true - assign, false - don't assign
+# Id - role id that is assigned after the verification
+# ------------------------------------------------------------------
+# CodeLength
+# The amount of characters used in the link and the 2FA codes
+# ------------------------------------------------------------------
+# 2FAType
+# Type of the 2FA. Available: code - enter the code, reaction - click on a reaction in Discord
+# ------------------------------------------------------------------
+# 2FASessions
+# Whether to enable or not 2FA sessions (uselessness of passing 2FA if the player's IP address is the same)
+# ------------------------------------------------------------------
+# 2FASessionTime
+# Time during which is valid 2FA session (in seconds) (if it is less or equal to 0, it will be valid till the plugin restart)
+# ------------------------------------------------------------------
+# 2FATimeToAuthorize
+# Time during which the player has to pass 2FA, otherwise he will be kicked (in seconds) (if less or equal to 0, he will not be limited by time)
+# ------------------------------------------------------------------
+# Default2FAValue
+# Whether to enable or not 2FA for the player when he verify his account
+# ------------------------------------------------------------------
+# NotifyAboutDisabled2FA
+# Whether to send for the player or not information about disabled 2FA (if it is disabled)
+# ------------------------------------------------------------------
+# ForceVerification
+# Whether to force players to verify their accounts or not
+# ------------------------------------------------------------------
+# AllowedCommandsBeforePassing2FA
+# List of the allowed commands before passing 2FA
+# ------------------------------------------------------------------
+# ActionsAfterFailing2FA
+# List of the actions that will be performed after the player fails 2FA n times (for 2FA type code only)
+# Messages - messages that are sent when the player fails 2FA n times
+# Commands - commands that are executed when the player fails 2FA n times
+# ------------------------------------------------------------------
+# CommandsAfter2FADeclining
+# Commands that are performed after the account owner declines the authorization of his account from Discord (%player% - placeholder for the player's nickname) (for 2FA type reaction only)
+# ------------------------------------------------------------------
+# CommandsAfter2FAPassing
+# Commands that are performed after the player passes the 2FA (%player% - placeholder for the player's nickname)
+# ------------------------------------------------------------------
+# CommandsAfterVerification
+# Commands that are performed after the player verify his account (%player% - placeholder for the player nickname)
+# ------------------------------------------------------------------
+# CommandsAfterUnlink
+# Commands that are performed after the player unlink his Discord account (%player% - placeholder for the player nickname)
+# ------------------------------------------------------------------
+# CommandsAfterServerBoosting
+# Commands that are performed after the player start boosting your Discord server (%player% - placeholder for the player nickname, %user% - placeholder for the player's Discord nickname)
+# ------------------------------------------------------------------
+# CommandsAfterStoppingServerBoosting
+# Commands that are performed after the player stops boosting your Discord server (%player% - placeholder for the player nickname, %user% - placeholder for the player's Discord nickname)
+# ------------------------------------------------------------------
+# RolesSynchronization
+# Synchronization of the in-game permission groups and Discord roles
+# Enabled - true - enable, false - disable
+# AssignOnlyPrimaryGroup - true - assign only player's primary group role, false - assign all player's groups roles
+# DelayedRolesCheck - whether to enable or disable the roles check every Delay seconds (if it is disable, the plugin will check it only when players join and leave the server)
+# Enabled - true - enable, false - disable
+# Delay - checks delay
+# ------------------------------------------------------------------
+# NamesSynchronization
+# Synchronization of the in-game nicknames and Discord nicknames
+# Enabled - true - enable, false - disable
+# NamesSyncFormat - nicknames format (%player% - placeholder for the player nickname) (supports PAPI placeholders)
+# DelayedNamesCheck - whether to enable or disable the nicknames check every Delay seconds (if it is disable, the plugin will check it only when players join and leave the server)
+# Enabled - true - enable, false - disable
+# Delay - checks delay
+# ------------------------------------------------------------------
+# GuildVoiceRewards
+# Whether to enable or not the reward giving for spending time in the voice channels on your server in Discord
+# Enabled - true - enable, false - disable
+# Time - minimum time for achieving the reward (in seconds)
+# Reward - command that is executed if the player reach the minimum time (executes multiple times if the minimum time is played by player more than one time)
+# BlacklistedChannels - ignored channel IDs. For example: BlacklistedChannels: [905508941230915684, 123123123131231233]
+# MinMembers - the minimum amount of members that has to be in a voice channel to get the rewards
+# ------------------------------------------------------------------
+# MessagesChannel
+# Whether to enable or not the possibility to send messages to Discord from the game (/du sendtodiscord)
+# Enabled - true - enable, false - disable
+# Id - text channel ID, in which will appear the messages
+# ------------------------------------------------------------------
+# ServerActivityLogging
+# Whether to enable or not the logging of some server events to an Discord channel
+# Enabled - true - enable, false - disable
+# ChannelId - text channel ID, in which will appear the logging messages
+# JoinEmbedColor - join embed messages' type color
+# QuitEmbedColor - quit embed messages' type color
+# DeathEmbedColor - death embed messages' type color
+# ChatEmbedColor - chat embed messages' type color
+# ------------------------------------------------------------------
+# Console
+# Whether to enable or not the virtual console in the specified Discord channel
+# Enabled - true - enable, false - disable
+# ClearOnEveryInit - whether to clear the virtual console channel on every initialization or not
+# ChannelId - text channel ID, in which will appear the console messages
+# DeleteMessagesDelay - the amount of seconds, after which bot's messages will get deleted (set this to 0, if you don't want the bot's messages to be deleted)
+# BlacklistedCommands - commands that can't be executed from the virtual console
+# ------------------------------------------------------------------
+# Chat
+# Whether to enable or not the chat between the Minecraft players and the linked Discord users
+# Enabled - true - enable, false - disable
+# WebhookUrl - the webhook URL that will be used to display the Minecraft players' messages
+# ChannelId - the text channel ID, in which the linked Discord users can type their messages for the Minecraft players
+# ------------------------------------------------------------------
+# NotifyAboutMentions
+# Whether to notify the verified players about the mentions in Discord or not
+# Enabled - true - enable, false - disable
+# BlacklistedChannels - ignored channel IDs. For example: BlacklistedChannels: [905508941230915684, 123123123131231233]
+# Title - title message settings
+# Enabled - true - enable, false - disable
+# FadeIn - fade in time
+# Stay - stay time
+# FadeOut - fade out time
+# Title - title text (top)
+# Subtitle - subtitle text (bottom)
+# Message - chat message settings
+# Enabled - true - enable, false - disable
+# Text - message text
+# Sound - sound settings
+# Enabled - true - enable, false - disable
+# Type - sound type
+# Volume - sound volume
+# Pitch - sound pitch
+
+BotToken: ''
+BotPrefix: '!'
+BotCommandTextChannels: []
+AsyncBotLoading: true
+OnlineStatus: 'online'
+Activities:
+  Enabled: true
+  UpdateDelay: 10
+  1:
+    Type: 'playing'
+    Text: 'Minecraft'
+  2:
+    Type: 'listening'
+    Text: 'mirrerror'
+  3:
+    Type: 'watching'
+    Text: 'DiscordUtils'
+SuccessfulEmbedColor: '#0AAC00'
+InformationEmbedColor: '#ECC846'
+ErrorEmbedColor: '#A80000'
+GroupRoles: {}
+AdminRoles: []
+VerifiedRole:
+  Enabled: false
+  ID: -1
+CodeLength: 10
+2FAType: 'reaction'
+2FASessions: true
+2FASessionTime: 900
+2FATimeToAuthorize: 30
+Default2FAValue: false
+NotifyAboutDisabled2FA: true
+ForceVerification: false
+AllowedCommandsBeforePassing2FA: []
+ActionsAfterFailing2FA:
+  1:
+    Messages:
+      - 'You have failed 2FA for &bone&f time. If you will have failed 2FA &btwo&f more times, your IP address will be banned.'
+    Commands: []
+  3:
+    Messages: []
+    Commands:
+      - 'banip %player% 30m Suspicious activity.'
+CommandsAfter2FADeclining: []
+CommandsAfter2FAPassing: []
+CommandsAfterVerification: []
+CommandsAfterUnlink: []
+CommandsAfterServerBoosting: []
+CommandsAfterStoppingServerBoosting: []
+RolesSynchronization:
+  Enabled: true
+  AssignOnlyPrimaryGroup: true
+  DelayedRolesCheck:
+    Enabled: true
+    Delay: 30
+NamesSynchronization:
+  Enabled: true
+  NamesSyncFormat: '%player%'
+  DelayedNamesCheck:
+    Enabled: true
+    Delay: 30
+GuildVoiceRewards:
+  Enabled: false
+  Time: 600
+  Reward: 'eco give %player% 100'
+  BlacklistedChannels: []
+  MinMembers: 1
+MessagesChannel:
+  Enabled: false
+  ID: -1
+ServerActivityLogging:
+  Enabled: false
+  ChannelId: -1
+  JoinEmbedColor: '#8de113'
+  QuitEmbedColor: '#f34520'
+  DeathEmbedColor: '#f34520'
+  ChatEmbedColor: '#e8d725'
+Console:
+  Enabled: false
+  ClearOnEveryInit: true
+  ChannelId: -1
+  DeleteMessagesDelay: 10
+  BlacklistedCommands: []
+Chat:
+  Enabled: false
+  WebhookUrl: ''
+  ChannelId: -1
+NotifyAboutMentions:
+  Enabled: true
+  BlacklistedChannels: []
+  Title:
+    Enabled: true
+    FadeIn: 3
+    Stay: 50
+    FadeOut: 3
+    Title: '&bNew mention!'
+    Subtitle: '&fCheck your &9Discord&f.'
+  Message:
+    Enabled: false
+    Text: '&9DiscordUtils &7/&f You have been mentioned in &9Discord&f.'
+  Sound:
+    Enabled: true
+    Type: 'ENTITY_EXPERIENCE_ORB_PICKUP'
+    Volume: 1
+>>>>>>> update
     Pitch: 1

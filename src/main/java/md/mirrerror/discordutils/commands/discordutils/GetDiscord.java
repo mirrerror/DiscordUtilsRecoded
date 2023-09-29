@@ -39,7 +39,7 @@ public class GetDiscord implements SubCommand {
                     }
 
                     try {
-                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).getText().replace("%discord%", Main.getInstance().getBot().getJda().getUserById(userId).getAsTag()));
+                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", Main.getInstance().getBot().getJda().getUserById(userId).getAsTag()));
                     } catch (NullPointerException ignored) {
                         Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.send(sender, true);
                     }
@@ -52,7 +52,7 @@ public class GetDiscord implements SubCommand {
                 return;
             }
 
-            sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).getText().replace("%discord%", discordUtilsUser.getUser().getAsTag()));
+            sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", discordUtilsUser.getUser().getAsTag()));
         }
 
     }

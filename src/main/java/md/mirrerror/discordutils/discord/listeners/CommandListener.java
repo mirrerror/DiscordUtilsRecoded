@@ -9,7 +9,6 @@ import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -32,7 +31,7 @@ public class CommandListener extends ListenerAdapter {
         List<Long> botCommandTextChannels = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("BotCommandTextChannels");
         if(!botCommandTextChannels.isEmpty()) {
             if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("BotCommandTextChannels").contains(event.getChannel().getIdLong())) {
-                event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText().getText())).queue();
+                event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();
                 return;
             }
         }
@@ -43,11 +42,11 @@ public class CommandListener extends ListenerAdapter {
         switch (args[0]) {
             case "link": {
                 if(discordUtilsUser.isLinked()) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_ALREADY_VERIFIED.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_ALREADY_VERIFIED.getText())).queue();
                     return;
                 }
                 if(bot.getLinkCodes().containsValue(event.getAuthor().getIdLong())) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
                     return;
                 }
                 AtomicReference<String> code = new AtomicReference<>("");
@@ -56,33 +55,33 @@ public class CommandListener extends ListenerAdapter {
                 code.set(code.get().replace("-", "").trim());
 
                 event.getAuthor().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.VERIFICATION_CODE_MESSAGE.getText().getText().replace("%code%", code.get()))).submit())
+                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.VERIFICATION_CODE_MESSAGE.getText().replace("%code%", code.get()))).submit())
                         .whenComplete((msg, error) -> {
                             if(error == null) {
-                                event.getChannel().sendMessageEmbeds(embedManager.successfulEmbed(Message.VERIFICATION_MESSAGE.getText().getText())).queue();
+                                event.getChannel().sendMessageEmbeds(embedManager.successfulEmbed(Message.VERIFICATION_MESSAGE.getText())).queue();
                                 bot.getLinkCodes().put(code.get(), event.getAuthor().getIdLong());
                                 return;
                             }
-                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.CAN_NOT_SEND_MESSAGE.getText().getText())).queue();
+                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
                         });
                 break;
             }
             case "online": {
-                event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().getText().replace("%online%", "" + Bukkit.getOnlinePlayers().size()))).queue();
+                event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().replace("%online%", "" + Bukkit.getOnlinePlayers().size()))).queue();
                 break;
             }
             case "sudo": {
                 if(!discordUtilsUser.isLinked()) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
                     return;
                 }
 
                 if(!discordUtilsUser.isAdmin(event.getGuild())) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
                     return;
                 }
                 if(args.length < 2) {
-                    event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_SUDO_USAGE.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_SUDO_USAGE.getText())).queue();
                     return;
                 }
                 AtomicReference<String> command = new AtomicReference<>("");
@@ -90,21 +89,21 @@ public class CommandListener extends ListenerAdapter {
                 command.set(command.get().trim());
 
                 Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.get()));
-                event.getChannel().sendMessageEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText().getText())).queue();
+                event.getChannel().sendMessageEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText())).queue();
                 break;
             }
             case "embed": {
                 if(!discordUtilsUser.isLinked()) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
                     return;
                 }
 
                 if(!discordUtilsUser.isAdmin(event.getGuild())) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
                     return;
                 }
                 if(args.length < 4) {
-                    event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_EMBED_USAGE.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_EMBED_USAGE.getText())).queue();
                     return;
                 }
                 String text = "";
@@ -119,11 +118,11 @@ public class CommandListener extends ListenerAdapter {
                 }
 
                 if(color == null) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INVALID_COLOR_VALUE.getText().getText())).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INVALID_COLOR_VALUE.getText())).queue();
                     return;
                 }
 
-                event.getChannel().sendMessageEmbeds(embedManager.embed(args[1], text, color, Message.EMBED_SENT_BY.getText().getText().replace("%sender%",
+                event.getChannel().sendMessageEmbeds(embedManager.embed(args[1], text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
                         event.getAuthor().getAsTag()))).queue();
                 break;
             }
@@ -134,13 +133,13 @@ public class CommandListener extends ListenerAdapter {
                         DiscordUtilsUser disUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(member.getUser().getIdLong());
 
                         if(!disUtilsUser.isLinked()) {
-                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText().getText())).queue();
+                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
                             return;
                         }
 
                         String messageToSend = "";
-                        for (TextComponent t : Message.STATS_FORMAT.getTextList()) {
-                            messageToSend += t.getText() + "\n";
+                        for (String s : Message.STATS_FORMAT.getTextList()) {
+                            messageToSend += s + "\n";
                         }
 
                         messageToSend = Main.getInstance().getPapiManager().setPlaceholders(disUtilsUser.getOfflinePlayer(), messageToSend);
@@ -157,7 +156,7 @@ public class CommandListener extends ListenerAdapter {
                     } else {
 
                         if(!discordUtilsUser.isLinked()) {
-                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText().getText())).queue();
+                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
                             return;
                         }
 
@@ -166,8 +165,8 @@ public class CommandListener extends ListenerAdapter {
                     }
 
                     String messageToSend = "";
-                    for (TextComponent t : Message.STATS_FORMAT.getTextList()) {
-                        messageToSend += t.getText() + "\n";
+                    for (String s : Message.STATS_FORMAT.getTextList()) {
+                        messageToSend += s + "\n";
                     }
 
                     messageToSend = Main.getInstance().getPapiManager().setPlaceholders(player, messageToSend);
@@ -180,8 +179,8 @@ public class CommandListener extends ListenerAdapter {
             case "help": {
 
                 String messageToSend = "";
-                for (TextComponent t : Message.DISCORD_HELP.getTextList()) {
-                    messageToSend += t.getText() + "\n";
+                for (String s : Message.DISCORD_HELP.getTextList()) {
+                    messageToSend += s + "\n";
                 }
 
                 event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend)).queue();

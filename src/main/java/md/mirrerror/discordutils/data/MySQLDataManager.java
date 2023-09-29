@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 
 import java.sql.*;
 import java.util.UUID;
@@ -23,12 +24,16 @@ public class MySQLDataManager implements DataManager {
                 if (getConnection() != null && !getConnection().isClosed()) {
                     return;
                 }
-                Class.forName("com.mysql.cj.jdbc.Driver");
+
+                if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
+                else Class.forName("com.mysql.jdbc.Driver");
+
                 connection = DriverManager.getConnection(Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.ConnectionUrl")
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
                 setupTable();
             } catch (SQLException | ClassNotFoundException ignored) {
-                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database! Check your settings!");
+                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database! Check your settings! Disabling the plugin...");
+                Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
             }
 
         });

@@ -6,6 +6,7 @@ import md.mirrerror.discordutils.config.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -38,12 +39,12 @@ public class Unlink implements SubCommand {
         String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
         discordUtilsUser.getUser().openPrivateChannel().submit()
-                .thenCompose(channel -> channel.sendMessageEmbeds(new EmbedManager().infoEmbed(Message.ACCOUNT_UNLINK_CONFIRMATION.getText().getText().replace("%playerIp%", playerIp))).submit())
+                .thenCompose(channel -> channel.sendMessageEmbeds(new EmbedManager().infoEmbed(Message.ACCOUNT_UNLINK_CONFIRMATION.getText().replace("%playerIp%", playerIp))).submit())
                 .whenComplete((msg, error) -> {
                     if (error == null) {
                         Main.getInstance().getBot().getUnlinkPlayers().put(player.getUniqueId(), msg);
-                        msg.addReaction("✅").queue();
-                        msg.addReaction("❎").queue();
+                        msg.addReaction(Emoji.fromUnicode("✅")).queue();
+                        msg.addReaction(Emoji.fromUnicode("❎")).queue();
                         return;
                     }
                     Message.CAN_NOT_SEND_MESSAGE.send(sender, true);
