@@ -97,7 +97,7 @@ EMBED_SENT_BY: 'Odesláno hráčem: %sender%'
 ERROR: Chyba
 INFORMATION: Informace
 SUCCESSFULLY: Úspěch
-EMBED_FOOTER: Bot od mirrerror#7777
+EMBED_FOOTER: Bot od mirrerror
 STATS_FORMAT:
 - 'Přezdívka: %player_name%'
 - 'Naposled se připojil: %player_last_join_date%'

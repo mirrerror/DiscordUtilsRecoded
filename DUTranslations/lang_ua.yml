@@ -75,7 +75,7 @@ EMBED_SENT_BY: 'Відправник: %sender%'
 ERROR: Помилка
 INFORMATION: Інформація
 SUCCESSFULLY: Успішно
-EMBED_FOOTER: Bot by mirrerror#4790
+EMBED_FOOTER: Bot by mirrerror
 DISCORD_TO_CHAT_FORMAT: '&b%user%&7 (&b%player%&7)&f: %message%'
 STATS_FORMAT:
 - 'Нік: %player_name%'
