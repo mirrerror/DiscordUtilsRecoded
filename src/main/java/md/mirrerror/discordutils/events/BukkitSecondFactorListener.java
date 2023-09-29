@@ -73,7 +73,7 @@ public class BukkitSecondFactorListener implements Listener {
 
             if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.REACTION) {
                 discordUtilsUser.getUser().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.SECONDFACTOR_REACTION_MESSAGE.getText().getText().replace("%playerIp%", playerIp))).submit())
+                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.SECONDFACTOR_REACTION_MESSAGE.getText().replace("%playerIp%", playerIp))).submit())
                         .whenComplete((msg, error) -> {
                             if (error == null) {
                                 msg.addReaction(Emoji.fromUnicode("✅")).queue();
@@ -91,7 +91,7 @@ public class BukkitSecondFactorListener implements Listener {
                 code.set(code.get().replace("-", ""));
 
                 discordUtilsUser.getUser().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.SECONDFACTOR_CODE_MESSAGE.getText().getText().replace("%code%", code.get()).replace("%playerIp%", playerIp))).submit())
+                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.SECONDFACTOR_CODE_MESSAGE.getText().replace("%code%", code.get()).replace("%playerIp%", playerIp))).submit())
                         .whenComplete((msg, error) -> {
                             if (error == null) {
                                 Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), code.get());
@@ -105,7 +105,7 @@ public class BukkitSecondFactorListener implements Listener {
 
             if(timeToAuthorize > 0) Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                 if(player != null) {
-                    if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) player.kickPlayer(Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText().getText());
+                    if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) player.kickPlayer(Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
                 }
             }, timeToAuthorize*20L);
         }

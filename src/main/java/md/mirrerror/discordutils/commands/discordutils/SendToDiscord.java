@@ -41,7 +41,7 @@ public class SendToDiscord implements SubCommand {
                 return;
             }
 
-            Main.getInstance().getBot().getMessagesTextChannel().sendMessageEmbeds(new EmbedManager().embed(args[0], text.replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().getText().replace("%sender%", sender.getName()))).queue();
+            Main.getInstance().getBot().getMessagesTextChannel().sendMessageEmbeds(new EmbedManager().embed(args[0], text.replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName()))).queue();
             Message.DISCORDUTILS_SENDTODISCORD_SUCCESSFUL.send(sender, true);
         });
     }

@@ -30,12 +30,12 @@ public class SecondFactor implements SubCommand {
         if(discordUtilsUser.hasSecondFactor()) {
 
             discordUtilsUser.setSecondFactor(false);
-            sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).getText().replace("%status%", Message.DISABLED.getText().getText()));
+            sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.DISABLED.getText()));
 
         } else {
 
             discordUtilsUser.setSecondFactor(true);
-            sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).getText().replace("%status%", Message.ENABLED.getText().getText()));
+            sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.ENABLED.getText()));
 
         }
     }

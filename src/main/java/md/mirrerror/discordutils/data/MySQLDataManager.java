@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 import org.bukkit.Bukkit;
 
 import java.sql.*;
@@ -26,25 +27,8 @@ public class MySQLDataManager implements DataManager {
                     return;
                 }
 
-                String rawVersionComponents = Bukkit.getVersion().split(" ")[2];
-                rawVersionComponents = rawVersionComponents.substring(0, rawVersionComponents.length() - 1);
-                String[] versionComponents = rawVersionComponents.split("\\.");
-
-                int major = Integer.parseInt(versionComponents[0]);
-                int minor = Integer.parseInt(versionComponents[1]);
-                int patch = (versionComponents.length == 3) ? Integer.parseInt(versionComponents[2]) : 0;
-
-                int desiredMajor = 1;
-                int desiredMinor = 12;
-                int desiredPatch = 2;
-
-                if((major > desiredMajor) ||
-                        (major == desiredMajor && minor > desiredMinor) ||
-                        (major == desiredMajor && minor == desiredMinor && patch > desiredPatch)) { // greater than 1.12.2
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                } else { // not greater than 1.12.2
-                    Class.forName("com.mysql.jdbc.Driver");
-                }
+                if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
+                else Class.forName("com.mysql.jdbc.Driver");
 
                 connection = DriverManager.getConnection(Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.ConnectionUrl")
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);

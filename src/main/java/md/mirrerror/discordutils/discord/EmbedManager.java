@@ -10,10 +10,10 @@ import java.awt.*;
 public class EmbedManager {
 
     private final EmbedBuilder embedBuilder = new net.dv8tion.jda.api.EmbedBuilder();
-    private final String FOOTER = Message.EMBED_FOOTER.getText().getText();
+    private final String FOOTER = Message.EMBED_FOOTER.getText();
 
     public MessageEmbed errorEmbed(String text) {
-        embedBuilder.setTitle(Message.ERROR.getText().getText());
+        embedBuilder.setTitle(Message.ERROR.getText());
         embedBuilder.setColor(Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("ErrorEmbedColor")));
         embedBuilder.setDescription(text);
         embedBuilder.setFooter(FOOTER);
@@ -21,7 +21,7 @@ public class EmbedManager {
     }
 
     public MessageEmbed successfulEmbed(String text) {
-        embedBuilder.setTitle(Message.SUCCESSFULLY.getText().getText());
+        embedBuilder.setTitle(Message.SUCCESSFULLY.getText());
         embedBuilder.setColor(Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("SuccessfulEmbedColor")));
         embedBuilder.setDescription(text);
         embedBuilder.setFooter(FOOTER);
@@ -29,7 +29,7 @@ public class EmbedManager {
     }
 
     public MessageEmbed infoEmbed(String text) {
-        embedBuilder.setTitle(Message.INFORMATION.getText().getText());
+        embedBuilder.setTitle(Message.INFORMATION.getText());
         embedBuilder.setColor(Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("InformationEmbedColor")));
         embedBuilder.setDescription(text);
         embedBuilder.setFooter(FOOTER);

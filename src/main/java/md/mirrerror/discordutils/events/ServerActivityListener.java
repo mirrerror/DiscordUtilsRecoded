@@ -23,8 +23,8 @@ public class ServerActivityListener implements Listener {
         String message = event.getMessage();
         Main.getInstance().getBot().getServerActivityLoggingTextChannel().sendMessageEmbeds(
                 embedManager.embed(
-                        Message.CHAT_LOGGING_EMBED_TITLE.getText().getText().replace("%player%", player.getName()).replace("%message%", message),
-                        Message.CHAT_LOGGING_EMBED_TEXT.getText().getText().replace("%player%", player.getName()).replace("%message%", message),
+                        Message.CHAT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()).replace("%message%", message),
+                        Message.CHAT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()).replace("%message%", message),
                         Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("ServerActivityLogging.ChatEmbedColor"))
                 )
         ).queue();
@@ -35,8 +35,8 @@ public class ServerActivityListener implements Listener {
         Player player = event.getPlayer();
         Main.getInstance().getBot().getServerActivityLoggingTextChannel().sendMessageEmbeds(
                 embedManager.embed(
-                        Message.JOIN_LOGGING_EMBED_TITLE.getText().getText().replace("%player%", player.getName()),
-                        Message.JOIN_LOGGING_EMBED_TEXT.getText().getText().replace("%player%", player.getName()),
+                        Message.JOIN_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
+                        Message.JOIN_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
                         Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("ServerActivityLogging.JoinEmbedColor"))
                 )
         ).queue();
@@ -47,8 +47,8 @@ public class ServerActivityListener implements Listener {
         Player player = event.getPlayer();
         Main.getInstance().getBot().getServerActivityLoggingTextChannel().sendMessageEmbeds(
                 embedManager.embed(
-                        Message.QUIT_LOGGING_EMBED_TITLE.getText().getText().replace("%player%", player.getName()),
-                        Message.QUIT_LOGGING_EMBED_TEXT.getText().getText().replace("%player%", player.getName()),
+                        Message.QUIT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
+                        Message.QUIT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
                         Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("ServerActivityLogging.QuitEmbedColor"))
                 )
         ).queue();
@@ -59,8 +59,8 @@ public class ServerActivityListener implements Listener {
         Player player = event.getEntity();
         Main.getInstance().getBot().getServerActivityLoggingTextChannel().sendMessageEmbeds(
                 embedManager.embed(
-                        Message.DEATH_LOGGING_EMBED_TITLE.getText().getText().replace("%player%", player.getName()),
-                        Message.DEATH_LOGGING_EMBED_TEXT.getText().getText().replace("%player%", player.getName()),
+                        Message.DEATH_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
+                        Message.DEATH_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
                         Color.decode(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("ServerActivityLogging.DeathEmbedColor"))
                 )
         ).queue();

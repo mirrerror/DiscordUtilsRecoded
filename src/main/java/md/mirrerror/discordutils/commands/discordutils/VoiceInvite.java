@@ -50,7 +50,7 @@ public class VoiceInvite implements SubCommand {
 
                     String url = invite.getUrl();
 
-                    TextComponent textComponent = new TextComponent(Message.VOICE_INVITE.getText(true).getText().replace("%sender%", player.getName()));
+                    TextComponent textComponent = new TextComponent(Message.VOICE_INVITE.getText(true).replace("%sender%", player.getName()));
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
                     textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Message.VOICE_INVITE_HOVER.getText(false)).create()));
 

@@ -47,7 +47,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                 if(event.getReaction().getEmoji().getName().equals("❎")) {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                        player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText().getText());
+                        player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
                         Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfter2FADeclining").forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }

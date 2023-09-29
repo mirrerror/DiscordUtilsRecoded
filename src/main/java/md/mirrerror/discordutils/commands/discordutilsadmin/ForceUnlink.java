@@ -48,7 +48,7 @@ public class ForceUnlink implements SubCommand {
         if(player.isOnline()) {
             Player onlinePlayer = player.getPlayer();
             Main.getInstance().getBot().getUnlinkPlayers().remove(onlinePlayer.getUniqueId());
-            onlinePlayer.sendMessage(Message.DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET.getText(true).getText().replace("%sender%", sender.getName()).replace("%target%", player.getName()));
+            onlinePlayer.sendMessage(Message.DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET.getText(true).replace("%sender%", sender.getName()).replace("%target%", player.getName()));
         }
 
         Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
@@ -56,7 +56,7 @@ public class ForceUnlink implements SubCommand {
         });
         discordUtilsUser.unregister();
 
-        sender.sendMessage(Message.DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_SENDER.getText(true).getText().replace("%sender%", sender.getName()).replace("%target%", player.getName()));
+        sender.sendMessage(Message.DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_SENDER.getText(true).replace("%sender%", sender.getName()).replace("%target%", player.getName()));
     }
 
     @Override

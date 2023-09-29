@@ -17,7 +17,7 @@ public class Stats implements SubCommand {
                 Main.getInstance().getLogger().severe("Something went wrong while counting the linked players!");
                 return;
             }
-            Message.DISCORDUTILSADMIN_STATS_FORMAT.getTextList().forEach(msg -> sender.sendMessage(msg.getText().replace("%linkedPlayers%", String.valueOf(count))));
+            Message.DISCORDUTILSADMIN_STATS_FORMAT.getTextList().forEach(msg -> sender.sendMessage(msg.replace("%linkedPlayers%", String.valueOf(count))));
         });
     }
 
