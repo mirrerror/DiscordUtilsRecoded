@@ -2,8 +2,6 @@ package md.mirrerror.discordutils.config;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.utils.HexUtils;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

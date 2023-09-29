@@ -263,8 +263,9 @@ public class DiscordUtilsBot {
 
         } catch (InterruptedException e) {
 
-            Main.getInstance().getLogger().severe("Something went wrong while setting up the bot!");
+            Main.getInstance().getLogger().severe("Something went wrong while setting up the bot! Disabling the plugin...");
             Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
 
         }
     }

@@ -2,10 +2,8 @@ package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
-import org.bukkit.Bukkit;
 
 import java.sql.*;
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,7 +32,8 @@ public class MySQLDataManager implements DataManager {
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
                 setupTable();
             } catch (SQLException | ClassNotFoundException ignored) {
-                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database! Check your settings!");
+                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database! Check your settings! Disabling the plugin...");
+                Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
             }
 
         });
