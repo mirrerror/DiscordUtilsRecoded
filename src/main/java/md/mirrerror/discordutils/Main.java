@@ -7,6 +7,8 @@ import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
 import md.mirrerror.discordutils.config.ConfigManager;
+import md.mirrerror.discordutils.config.messages.Translation;
+import md.mirrerror.discordutils.config.messages.TranslationsManager;
 import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.data.MySQLDataManager;
@@ -23,10 +25,7 @@ import md.mirrerror.discordutils.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class Main extends JavaPlugin {
 
@@ -35,6 +34,7 @@ public final class Main extends JavaPlugin {
     private DataManager dataManager;
     private PAPIManager papiManager;
     private PermissionsIntegration permissionsIntegration;
+    private Translation translation;
 
     private DiscordUtilsBot bot;
 
@@ -96,6 +96,31 @@ public final class Main extends JavaPlugin {
         registerCommands();
         getLogger().info("The commands have been successfully loaded.");
 
+        TranslationsManager.registerTranslations(Set.of(
+                new Translation("ru", "mirrerror", "4.1"),
+                new Translation("cz", "Esterze", "4.1"),
+                new Translation("ua", "msgumor", "4.1"),
+                new Translation("es", "NovaCraft254", "4.1")
+        ));
+        getLogger().info("Translations have been successfully registered.");
+
+        String chosenTranslation = configManager.getConfig().getFileConfiguration().getString("Language");
+        if(!chosenTranslation.isEmpty()) {
+            for(Translation translation : TranslationsManager.getTranslations()) {
+                if(translation.getKey().equalsIgnoreCase(chosenTranslation)) {
+                    this.translation = translation;
+                    break;
+                }
+            }
+        }
+
+        if(translation != null) {
+            translation.download();
+            getLogger().info("The chosen translation is: " + translation.getKey() + ".");
+        } else {
+            getLogger().info("The chosen translation doesn't exist or you disabled this option.");
+        }
+
         setupMetrics();
         UpdateChecker.checkForUpdates();
     }
@@ -153,6 +178,10 @@ public final class Main extends JavaPlugin {
 
     public PermissionsIntegration getPermissionsIntegration() {
         return permissionsIntegration;
+    }
+
+    public Translation getTranslation() {
+        return translation;
     }
 
     public static Main getInstance() {

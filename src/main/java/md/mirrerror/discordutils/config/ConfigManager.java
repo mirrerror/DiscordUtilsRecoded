@@ -50,4 +50,7 @@ public class ConfigManager {
         return lang;
     }
 
+    public void setLang(LangConfig lang) {
+        this.lang = lang;
+    }
 }

@@ -1,4 +1,4 @@
-package md.mirrerror.discordutils.config;
+package md.mirrerror.discordutils.config.messages;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.utils.HexUtils;

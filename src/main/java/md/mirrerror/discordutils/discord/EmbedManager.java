@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 

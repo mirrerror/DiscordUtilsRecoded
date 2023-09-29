@@ -9,6 +9,7 @@ public class MainConfig extends CustomConfig {
     public void initializeFields() {
         getFileConfiguration().addDefault("PermissionsPlugin", "LuckPerms");
         getFileConfiguration().addDefault("CheckForUpdates", true);
+        getFileConfiguration().addDefault("Language", "");
         getFileConfiguration().addDefault("Database.Type", "");
         getFileConfiguration().addDefault("Database.Host", "localhost");
         getFileConfiguration().addDefault("Database.Port", 3306);
