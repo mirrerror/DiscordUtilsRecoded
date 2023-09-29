@@ -97,10 +97,10 @@ public final class Main extends JavaPlugin {
         getLogger().info("The commands have been successfully loaded.");
 
         TranslationsManager.registerTranslations(Set.of(
-                new Translation("ru", "mirrerror", "4.1"),
-                new Translation("cz", "Esterze", "4.1"),
-                new Translation("ua", "msgumor", "4.1"),
-                new Translation("es", "NovaCraft254", "4.1")
+                new Translation("ru", "mirrerror"),
+                new Translation("cz", "Esterze"),
+                new Translation("ua", "msgumor"),
+                new Translation("es", "NovaCraft254")
         ));
         getLogger().info("Translations have been successfully registered.");
 
@@ -116,7 +116,7 @@ public final class Main extends JavaPlugin {
 
         if(translation != null) {
             translation.download();
-            getLogger().info("The chosen translation is: " + translation.getKey() + ".");
+            getLogger().info("The chosen translation is: " + translation.getKey() + ". Translation's author: " + translation.getAuthor() + ".");
         } else {
             getLogger().info("The chosen translation doesn't exist or you disabled this option.");
         }

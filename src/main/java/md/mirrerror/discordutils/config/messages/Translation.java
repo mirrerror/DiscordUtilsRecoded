@@ -4,12 +4,10 @@ public class Translation {
 
     private String key;
     private String author;
-    private String version;
 
-    public Translation(String key, String author, String version) {
+    public Translation(String key, String author) {
         this.key = key;
         this.author = author;
-        this.version = version;
     }
 
     public void download() {
@@ -22,14 +20,6 @@ public class Translation {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public String getKey() {
