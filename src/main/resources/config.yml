@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # PermissionsPlugin
 # Permission plugin that you are currently using (set it to '' if you want to disable the permission integration)
 # Available plugins: LuckPerms, Vault (includes many plugins support: https://www.spigotmc.org/resources/vault.34315/)
@@ -25,32 +24,4 @@ Database:
   Database: 'DiscordUtils'
   Username: 'root'
   Password: ''
-=======
-# PermissionsPlugin
-# Permission plugin that you are currently using (set it to '' if you want to disable the permission integration)
-# Available plugins: LuckPerms, Vault (includes many plugins support: https://www.spigotmc.org/resources/vault.34315/)
-# ------------------------------------------------------------------
-# CheckForUpdates
-# Set it to true if you want plugin to check for available updates, otherwise set it to false
-# ------------------------------------------------------------------
-# Database
-# Usage of the database instead of the data.yml file to save and load your data
-# Type - database type (available: mysql) (set it to '' to disable this feature, in this case the data will be stored in the data.yml file)
-# Host - database host (by default - localhost)
-# Port - database port (by default - 3306)
-# Database - database name
-# Username - database username (by default - root)
-# Password - database password (by default there is not a password)
-# ConnectionUrl - the URL that is used to connect to the database
-
-PermissionsPlugin: 'LuckPerms'
-CheckForUpdates: true
-Database:
-  Type: ''
-  Host: 'localhost'
-  Port: 3306
-  Database: 'DiscordUtils'
-  Username: 'root'
-  Password: ''
->>>>>>> update
   ConnectionUrl: 'jdbc:mysql://%host%:%port%/%database%?autoReconnect=true&useSSL=false'
