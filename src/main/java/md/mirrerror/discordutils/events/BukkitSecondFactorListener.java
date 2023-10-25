@@ -123,19 +123,19 @@ public class BukkitSecondFactorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInteract(PlayerInteractEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDrop(PlayerDropItemEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
@@ -148,7 +148,7 @@ public class BukkitSecondFactorListener implements Listener {
                 Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("ForceVerification") && !discordUtilsUser.isLinked()) {
 
             if(!isAllowedCommand(event.getMessage().substring(1))) {
-                checkTwoFactor(event.getPlayer(), event);
+                checkSecondFactor(event.getPlayer(), event);
                 checkVerification(event.getPlayer(), event);
             }
 
@@ -192,7 +192,7 @@ public class BukkitSecondFactorListener implements Listener {
                 }
             }
         } else {
-            checkTwoFactor(event.getPlayer(), event);
+            checkSecondFactor(event.getPlayer(), event);
             checkVerification(event.getPlayer(), event);
         }
     }
@@ -200,25 +200,25 @@ public class BukkitSecondFactorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageEvent event) {
         if(!(event.getEntity() instanceof Player)) return;
-        checkTwoFactor((Player) event.getEntity(), event);
+        checkSecondFactor((Player) event.getEntity(), event);
         checkVerification((Player) event.getEntity(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBreak(BlockBreakEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlace(BlockPlaceEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onConsume(PlayerItemConsumeEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
@@ -238,29 +238,29 @@ public class BukkitSecondFactorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDamageItem(PlayerItemDamageEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onHeldItem(PlayerItemHeldEvent event) {
-        checkTwoFactor(event.getPlayer(), event);
+        checkSecondFactor(event.getPlayer(), event);
         checkVerification(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onClick(InventoryClickEvent event) {
-        checkTwoFactor((Player) event.getWhoClicked(), event);
+        checkSecondFactor((Player) event.getWhoClicked(), event);
         checkVerification((Player) event.getWhoClicked(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onOpenInventory(InventoryOpenEvent event) {
-        checkTwoFactor((Player) event.getPlayer(), event);
+        checkSecondFactor((Player) event.getPlayer(), event);
         checkVerification((Player) event.getPlayer(), event);
     }
 
-    private void checkTwoFactor(Player player, Cancellable event) {
+    private void checkSecondFactor(Player player, Cancellable event) {
         if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) {
             event.setCancelled(true);
             Message.SECONDFACTOR_NEEDED.send(player, true);
@@ -269,6 +269,20 @@ public class BukkitSecondFactorListener implements Listener {
 
     private void checkVerification(Player player, Cancellable event) {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
+        if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("ForceVerification")) {
+            if(!discordUtilsUser.isLinked()) {
+                event.setCancelled(true);
+                Message.VERIFICATION_NEEDED.send(player, true);
+            }
+        }
+    }
+
+    private void checkObligatorySecondFactor(Player player, Cancellable event) {
+        DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
+
+        for(long roleId : Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("Forced2FARoles"))
+            if(discordUtilsUser.)
+
         if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("ForceVerification")) {
             if(!discordUtilsUser.isLinked()) {
                 event.setCancelled(true);

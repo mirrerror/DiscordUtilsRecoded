@@ -201,6 +201,8 @@ CodeLength: 10
 2FASessionTime: 900
 2FATimeToAuthorize: 30
 Default2FAValue: false
+Forced2FARoles: []
+Forced2FAGroups: []
 NotifyAboutDisabled2FA: true
 ForceVerification: false
 AllowedCommandsBeforePassing2FA: []

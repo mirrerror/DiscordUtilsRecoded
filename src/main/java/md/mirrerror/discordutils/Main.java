@@ -70,9 +70,11 @@ public final class Main extends JavaPlugin {
         }
 
         dataManager.setup().whenComplete((unused, throwable) -> {
-            Main.getInstance().getLogger().severe("Something went wrong while connecting to the database. Disabling the plugin...");
-            Main.getInstance().getLogger().severe("Cause: " + throwable.getCause() + "; message: " + throwable.getMessage() + ".");
-            Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
+            if(throwable != null) {
+                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database. Disabling the plugin...");
+                Main.getInstance().getLogger().severe("Cause: " + throwable.getCause() + "; message: " + throwable.getMessage() + ".");
+                Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
+            }
         });
 
         if(configManager.getBotSettings().getFileConfiguration().getBoolean("AsyncBotLoading")) {
