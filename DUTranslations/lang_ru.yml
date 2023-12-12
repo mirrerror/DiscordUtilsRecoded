@@ -1,0 +1,142 @@
+SECONDFACTOR_REJECTED: Владелец аккаунта отклонил авторизацию аккаунта.
+SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Вы не успели пройти двухфакторную аутентификацию. Пожалуйста, попробуйте снова.
+DISCORDUTILS_SECONDFACTOR_SUCCESSFUL: '2FA: %status%'
+SECONDFACTOR_NEEDED: Вам необходимо авторизоваться. Проверьте ЛС в Discord.
+SECONDFACTOR_AUTHORIZED: Вы успешно авторизовались. Приятной игры. :)
+SECONDFACTOR_CODE_MESSAGE: 'Ваш код для авторизации: || %code% ||. Не сообщайте его никому! IP: %playerIp%.'
+SECONDFACTOR_REACTION_MESSAGE: 'Кто-то пытается зайти в Ваш аккаунт. Выберите, авторизовать его или нет. IP: %playerIp%.'
+SECONDFACTOR_DISABLED_REMINDER: '&cВнимание!&f У Вас отключена двухфакторная аутентификация. Для большей безопасности мы советуем включить ее. 
+  Чтобы сделать это, используйте данную команду: &b/discordutils twofactor'
+UNLINK_ALREADY_INITIATED: Вы уже отправили запрос на отвязку аккаунта. Проверьте ЛС в Discord.
+DISCORDUTILS_SENDTODISCORD_SUCCESSFUL: Вы успешно отправили сообщение в Discord.
+COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL: В данном канале не работают команды.
+DISCORD_TO_CHAT_FORMAT: '&b%user%&7 (&b%player%&7)&f: %message%'
+DISCORDUTILSADMIN_STATS_FORMAT:
+- 'Статистика плагина &9DiscordUtils&f:'
+- '&7-&f Привязанных аккаунтов: &b%linkedPlayers%'
+'YES': '&aда'
+'NO': '&cнет'
+NOT_AVAILABLE: '&c-'
+LINK_SLASH_COMMAND_DESCRIPTION: Привязывает Ваш аккаунт в Discord к Вашему аккаунту на сервере.
+ONLINE_SLASH_COMMAND_DESCRIPTION: Позволяет посмотреть текущее количество игроков онлайн на сервере в Minecraft.
+SUDO_SLASH_COMMAND_DESCRIPTION: Позволяет выполнять команды от имени консоли в Discord.
+SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME: command
+SUDO_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Команда, которая будет выполнена.
+EMBED_SLASH_COMMAND_DESCRIPTION: Отправлет embed-сообщение с заданными параметрами в текущий канал.
+EMBED_SLASH_COMMAND_FIRST_ARGUMENT_NAME: title
+EMBED_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Заголовок embed-сообщения.
+EMBED_SLASH_COMMAND_SECOND_ARGUMENT_NAME: color
+EMBED_SLASH_COMMAND_SECOND_ARGUMENT_DESCRIPTION: Цвет embed-сообщения.
+EMBED_SLASH_COMMAND_THIRD_ARGUMENT_NAME: text
+EMBED_SLASH_COMMAND_THIRD_ARGUMENT_DESCRIPTION: Текст embed-сообщения.
+STATS_SLASH_COMMAND_DESCRIPTION: Позволяет узнать свою статистику или статистику другого игрока (если указан).
+STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME: name
+STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Ник игрока.
+HELP_SLASH_COMMAND_DESCRIPTION: Отправляет Вам список доступных команд.
+PREFIX: '&9DiscordUtils &7/&f'
+INSUFFICIENT_PERMISSIONS: У вас недостаточно прав для использования данной команды.
+ACCOUNT_SUCCESSFULLY_LINKED: Аккаунт успешно верифицирован.
+ACCOUNT_UNLINK_REQUEST_SENT: Запрос на отмену верификации данного аккаунта отправлен.
+ACCOUNT_SUCCESSFULLY_UNLINKED: Верификация аккаунта успешно отменена.
+ACCOUNT_UNLINK_CONFIRMATION: 'Верификацию Вашего аккаунта пытаются отменить. Выберите,
+  отменять верификацию или нет. IP запросившего отмену верификации: %playerIp%.'
+ACCOUNT_UNLINK_CANCELLED: Отмена верификации аккаунта отклонена.
+INVALID_LINK_CODE: Неверный код.
+TWOFACTOR_REJECTED: Владелец аккаунта отклонил авторизацию аккаунта.
+TWOFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Вы не успели пройти двухфакторную аутентификацию.
+  Попробуйте снова.
+ACCOUNT_ALREADY_VERIFIED: Ваш аккаунт уже верифицирован.
+DISCORDUTILS_LINK_USAGE: 'Используйте: &b/discordutils link [код]'
+DISCORDUTILS_GETDISCORD_USAGE: 'Используйте: &b/discordutils getdiscord [ник]'
+GETDISCORD_SUCCESSFUL: 'Discord, привязанный к аккаунту игрока: &b%discord%'
+SENDER_IS_NOT_A_PLAYER: Данную команду могут использовать только игроки.
+CONFIG_FILES_RELOADED: Конфиг-файлы перезагружены.
+ACCOUNT_IS_NOT_VERIFIED: Ваш аккаунт должен быть верифицирован для выполнения данного
+  действия.
+ENABLED: '&aвключена'
+DISABLED: '&cвыключена'
+DISCORDUTILS_TWOFACTOR_SUCCESSFUL: 'Режим двухфакторной аутентификации: %status%'
+TWOFACTOR_NEEDED: Для выполнения данного действия Вам необходимо пройти двухфакторную
+  аутентификацию. Для этого введите в чат код, отправленный Вам личным сообщением
+  в Discord.
+VERIFICATION_NEEDED: Для выполнения данного действия Вам необходимо пройти верификацию.
+  Для этого введите на нашем сервере в Discord '&b!link&f', и Вам будут высланы дальнейшие
+  инструкции.
+TWOFACTOR_AUTHORIZED: Вы успешно авторизовались. Приятной игры! :)
+TWOFACTOR_CODE_MESSAGE: 'Ваш код для авторизации на сервере: || %code% ||. Никому
+  его не сообщайте! IP заходящего: %playerIp%.'
+TWOFACTOR_REACTION_MESSAGE: 'На Ваш аккаунт пытаются зайти. Выберите, авторизовать
+  аккаунт или нет. IP заходящего: %playerIp%.'
+TWOFACTOR_DISABLED_REMINDER: '&cВнимание!&f У Вас отключена двухфакторная аутентификация.
+  Советуем включить ее для повышения безопасности Вашего аккаунта. Для этого введите
+  команду: &b/discordutils twofactor'
+VERIFICATION_MESSAGE: Код для верификации Вашего аккаунта отправлен Вам в ЛС.
+VERIFICATION_CODE_MESSAGE: 'Ваш код для верификации на сервере: || %code% ||. Никому
+  его не сообщайте! Для завершения верификации введите на сервере команду: /discordutils
+  link [код].'
+CAN_NOT_SEND_MESSAGE: Не удалось отправить Вам личное сообщение. Возможно, у Вас закрыты
+  личные сообщения (вообще, либо от тех, кто с этого сервера).
+UNKNOWN_SUBCOMMAND: Неизвестная субкоманда.
+LINK_ALREADY_INITIATED: Вы уже запросили код для верификации.
+DISCORDUTILS_SENDTODISCORD_USAGE: 'Используйте: &b/discordutils sendtodiscord [заголовок]
+  [цвет] [текст]'
+SENDTODISCORD_SENT_BY: 'Отправитель: %sender%'
+DISCORDUTILSADMIN_FORCEUNLINK_USAGE: 'Используйте: &b/discordutilsadmin forceunlink
+  [ник]'
+DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_SENDER: Вы успешно отвязали аккаунт игрока
+  &b%target%&f от связанного с ним аккаунта в &9Discord&f.
+DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: Ваш &9Discord&f-аккаунт был отвязан
+  от Вашего игрового аккаунта администратором &b%sender%&f.
+COMMAND_DISABLED: Данная команда отключена администрацией.
+INVALID_COLOR_VALUE: Неверное значение цвета.
+ONLINE: 'Игроков онлайн в данный момент: **%online%**'
+COMMAND_EXECUTED: Команда успешно выполнена.
+DISCORD_SUDO_USAGE: 'Используйте: !sudo [команда]'
+DISCORD_EMBED_USAGE: 'Используйте: !embed [заголовок] [цвет] [текст]'
+VOICE_INVITE_SENT: Приглашение отправлено.
+VOICE_INVITE: Игрок &b%sender%&f приглашает всех игроков присоединиться к его голосовому
+  каналу. &bКлините&f по этому сообщению для подключения.
+VOICE_INVITE_HOVER: '&bКликните&f для перехода в голосовой канал.'
+SENDER_IS_NOT_IN_A_VOICE_CHANNEL: Вы не находитесь в голосовом канале.
+UNKNOWN_ERROR: Неизвестная ошибка.
+EMBED_SENT_BY: 'Отправитель: %sender%'
+ERROR: Ошибка
+INFORMATION: Информация
+SUCCESSFULLY: Успешно
+EMBED_FOOTER: Bot by mirrerror
+STATS_FORMAT:
+- 'Ник: %player_name%'
+- 'Последний заход на сервер: %player_last_join_date%'
+DISCORD_HELP:
+- '**Доступные команды:**'
+- '**!link** — привязать свой аккаунт в Discord к своему аккаунту на сервере'
+- '**!online** — посмотреть текущий онлайн сервера'
+- '**!stats [player]** — проверить свою статистику или статистику другого игрока (если
+  не указать ник, то будет выведена ваша статистика)'
+- '**!sudo [команда]** — выполнить команду от имени консоли (только для администрации)'
+- '**!embed [заголовок] [цвет] [текст]** — отправить embed-сообщение (только для администрации)'
+HELP:
+- '&9DiscordUtils&f plugin help:'
+- '&7-&b /du help&f - помощь по командам'
+- '&7-&b /du link [код]&f - привязать свой аккаунт на сервере к аккаунту в Discord'
+- '&7-&b /du unlink&f - отвязать свой аккаунт на сервере от аккаунта в Discord'
+- '&7-&b /du twofactor&f - включить/выключить двухфакторную аутентификацию через Discord'
+- '&7-&b /du sendtodiscord [заголовок] [цвет] [текст]&f - отправить сообщение из игры
+  в Discord'
+- '&7-&b /du voiceinvite&f - пригласить всех игроков онлайн в голосовой канал Discord,
+  в котором Вы находитесь'
+- '&7-&b /du getdiscord [ник]&f - узнать, какой аккаунт Discord привязан к аккаунту
+  игрока'
+- '&7-&b /dua reload&f - перезагрузить конфиг-файлы'
+- '&7-&b /dua forceunlink [ник]&f - принудительно отвязать Discord-аккаунт игрока
+  от его игрового аккаунта'
+CHAT_LOGGING_EMBED_TITLE: 'Сообщение в чате от: %player%'
+CHAT_LOGGING_EMBED_TEXT: '%message%'
+JOIN_LOGGING_EMBED_TITLE: Подключение
+JOIN_LOGGING_EMBED_TEXT: '%player% подключился к серверу'
+QUIT_LOGGING_EMBED_TITLE: Отключение
+QUIT_LOGGING_EMBED_TEXT: '%player% отключился от сервера'
+DEATH_LOGGING_EMBED_TITLE: Смерть
+DEATH_LOGGING_EMBED_TEXT: '%player% умер'
+THIS_COMMAND_IS_BLACKLISTED: Данная команда заблокирована.
+INVALID_PLAYER_NAME_OR_UNVERIFIED: Данный игрок не верифицирован или не существует.

@@ -1,0 +1,133 @@
+SECONDFACTOR_REJECTED: Vlastník účtu odmítnul verfikaci tohoto účtu.
+SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Neprošel jsi 2FA. Prosím, zkus to znovu.
+DISCORDUTILS_SECONDFACTOR_SUCCESSFUL: '2FA: %status%'
+SECONDFACTOR_NEEDED: Musíš se ověřit. Zkontroluj své DM na Discordu.
+SECONDFACTOR_AUTHORIZED: Úspěšně ses ověřil. Bav se! :)
+SECONDFACTOR_CODE_MESSAGE: 'Tvůj autorizační kód je: || %code% ||. Nikomu ho neukazuj! IP: %playerIp%.'
+SECONDFACTOR_REACTION_MESSAGE: 'Někdo se snaží přihlásit k tvému účtu. Zvol, zda ho chceš autorizovat nebo ne. IP: %playerIp%.'
+SECONDFACTOR_DISABLED_REMINDER: '&cVarování!&f Máš vypnutý 2FA. Doporučujeme, aby sis ho zapnul pro lepší zabezpečení účtu. Abys to udělal, použij příkaz: &b/discordutils twofactor'
+UNLINK_ALREADY_INITIATED: Už jsi požádal o zrušení propojení. Zkontroluj své DM na Discordu.
+DISCORDUTILS_SENDTODISCORD_SUCCESSFUL: Úspěšně jsi poslal svoji zprávu na Discord.
+COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL: V této místnosti nemůžeš používat příkazy.
+DISCORD_TO_CHAT_FORMAT: '&b%user%&7 (&b%player%&7)&f: %message%'
+DISCORDUTILSADMIN_STATS_FORMAT:
+- '&9DiscordUtils&f statistiky pluginu:'
+- '&7-&f Propojených účtů: &b%linkedPlayers%'
+'YES': '&aano'
+'NO': '&cne'
+NOT_AVAILABLE: '&cn/a'
+LINK_SLASH_COMMAND_DESCRIPTION: Propojí tvůj herní účet s tvým účtem na serveru.
+ONLINE_SLASH_COMMAND_DESCRIPTION: Pošle ti aktuální počet aktivních hráčů na serveru.
+SUDO_SLASH_COMMAND_DESCRIPTION: Umožní ti používat konzoli z Discordu.
+SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME: příkaz
+SUDO_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Příkaz, který bude odeslán.
+EMBED_SLASH_COMMAND_DESCRIPTION: Pošle vloženou zprávu s uvedenými parametry v této místnosti.
+EMBED_SLASH_COMMAND_FIRST_ARGUMENT_NAME: titul
+EMBED_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Titul vložené zprávy.
+EMBED_SLASH_COMMAND_SECOND_ARGUMENT_NAME: barva
+EMBED_SLASH_COMMAND_SECOND_ARGUMENT_DESCRIPTION: Barva vložené zprávy.
+EMBED_SLASH_COMMAND_THIRD_ARGUMENT_NAME: text
+EMBED_SLASH_COMMAND_THIRD_ARGUMENT_DESCRIPTION: Text vložené zprávy.
+STATS_SLASH_COMMAND_DESCRIPTION: Zobrazí statistiky tebe nebo jiného hráče (pokud upřesněno).
+STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME: jméno
+STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Hráčovo jméno.
+HELP_SLASH_COMMAND_DESCRIPTION: Zobrazí seznam příkazů.
+PREFIX: '&9DiscordUtils &7/&f'
+INSUFFICIENT_PERMISSIONS: Na tento příkaz nemáš práva.
+ACCOUNT_SUCCESSFULLY_LINKED: Tvůj účet byl úspěšně propojen.
+ACCOUNT_UNLINK_REQUEST_SENT: Žádost o odpojení účtu odeslána. Zkontroluj své soukromé
+  zprávy.
+ACCOUNT_SUCCESSFULLY_UNLINKED: Tvůj účet byl úspěšně odpojen.
+ACCOUNT_UNLINK_CONFIRMATION: 'Opravdu chceš odpojit svůj účet?\nProsím vyber si zda
+  ho mám odpojit. IP: %playerIp%.'
+ACCOUNT_UNLINK_CANCELLED: Žádost o odpojení účtu byla zrušena.
+INVALID_LINK_CODE: Neplatný kód.
+TWOFACTOR_REJECTED: Majitel účtu odmítl autorizaci účtu.
+TWOFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Nepovedlo se ti projít 2FA.\nProsím, zkus
+  to znova.
+ACCOUNT_ALREADY_VERIFIED: Tvůj účet již je ověřený.
+DISCORDUTILS_LINK_USAGE: 'Použití: &b/discordutils link TVŮJ KÓD'
+DISCORDUTILS_GETDISCORD_USAGE: 'Použití: &b/discordutils getdiscord HRÁČ'
+GETDISCORD_SUCCESSFUL: 'Hráčův Discord účet: &b%discord%'
+SENDER_IS_NOT_A_PLAYER: Only players can use this command.
+CONFIG_FILES_RELOADED: Configuration files reloaded.
+ACCOUNT_IS_NOT_VERIFIED: Tvůj účet musí být ověřený.
+ENABLED: '&apovoleno'
+DISABLED: '&cvypnuto'
+DISCORDUTILS_TWOFACTOR_SUCCESSFUL: '2FA: %status%'
+TWOFACTOR_NEEDED: Musíš se autorizovat.\nAutorizaci musíš potvrdit na Discordu.
+VERIFICATION_NEEDED: Musíš ověřit svůj účet.\nPro ověření napiš '!link&f' na našem
+  Discord serveru.
+TWOFACTOR_AUTHORIZED: Úspěšně ses autorizoval. Bav se! :)
+TWOFACTOR_CODE_MESSAGE: 'Tvůj autorizační kód: || %code% ||.\nNikomu ho neukazuj!
+  IP: %playerIp%.'
+TWOFACTOR_REACTION_MESSAGE: 'Snažíš se připojit se na svůj účet?\nProsím vyber si
+  zda chceš být autorizován.\nIP: %playerIp%.'
+TWOFACTOR_DISABLED_REMINDER: '&cVarování!&f Máš vypnuté 2fA.\nDoporučujeme aby sis
+  ho zapnul a tím lépe chránil svůj účet.\nZapneš si ho pomocí příkazu: &b/discordutils
+  twofactor'
+VERIFICATION_MESSAGE: Tvůj verifikační kód ti byl odeslán. Zkontroluj své DMs.
+VERIFICATION_CODE_MESSAGE: 'Tvůj verifikační kód: || %code% ||.\nNikomu ho neukazuj!\nPro
+  dokončení verifikace použij tento příkaz: `/du link KÓD`'
+CAN_NOT_SEND_MESSAGE: Nemohu ti poslat soukromou zprávu.\nPravděpodobně máš soukromé
+  zprávy zakázané.
+UNKNOWN_SUBCOMMAND: Neznámý podpříkaz.
+LINK_ALREADY_INITIATED: Již jsi požádal o verifikační kód.
+DISCORDUTILS_SENDTODISCORD_USAGE: 'Použití: &b/discordutils sendtodiscord [title]
+  [color] [text]'
+SENDTODISCORD_SENT_BY: 'Odesláno hráčem: %sender%'
+DISCORDUTILSADMIN_FORCEUNLINK_USAGE: 'Použití: &b/discordutilsadmin forceunlink [hráč]'
+DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_SENDER: Zrušil jsi propojení účtu hráče
+  &b%target%&f.
+DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: Tvému Discord účtu bylo zrušeno
+  propojení administrátorem &b%sender%&f.
+COMMAND_DISABLED: Tento příkaz je na serveru zakázán.
+INVALID_COLOR_VALUE: Invalidní barva.
+ONLINE: 'Aktivní hráči: **%online%**'
+COMMAND_EXECUTED: Příkaz byl úspěšně odeslán.
+DISCORD_SUDO_USAGE: 'Použití: !sudo [command]'
+DISCORD_EMBED_USAGE: 'Použití: !embed [title] [color] [text]'
+VOICE_INVITE_SENT: Pozvánka byla úspěšně odeslána.
+VOICE_INVITE: Hráč &b%sender%&f zve všechny aktivní hráče do konverzace v hlasové
+  místnosti. &bKlikni&f na tuto zprávu pro připojení.
+VOICE_INVITE_HOVER: '&bKlikni&f pro připojení do hlasové místnosti.'
+SENDER_IS_NOT_IN_A_VOICE_CHANNEL: Nejsi v hlasové místnosti.
+UNKNOWN_ERROR: Neznámá chyba.
+EMBED_SENT_BY: 'Odesláno hráčem: %sender%'
+ERROR: Chyba
+INFORMATION: Informace
+SUCCESSFULLY: Úspěch
+EMBED_FOOTER: Bot od mirrerror
+STATS_FORMAT:
+- 'Přezdívka: %player_name%'
+- 'Naposled se připojil: %player_last_join_date%'
+DISCORD_HELP:
+- '**Dostupné příkazy:**'
+- '**!link** — propojíš svůj Discord účet s herním účtem'
+- '**!online** — zkontroluj počet hráčů na serveru'
+- '**!stats [hráč]** — zkontroluj svoje nebo jiného hráče staty (zobrazí tvoje, pokud
+  neurčíš hráče)'
+- '**!sudo [příkaz]** — odešli příkaz do konzole serveru (pouze administrátoři)'
+- '**!embed [titul] [barva] [text]** — pošli přiloženou zprávu (pouze administrátoři)'
+HELP:
+- '&9DiscordUtils&f nápověda:'
+- '&7-&b /du help&f - zobrazíš nápovědu'
+- '&7-&b /du link [code]&f - propojíš svůj Discord účet se serverem'
+- '&7-&b /du unlink&f - zrušíš propojení svého Discord účtu se serverem'
+- '&7-&b /du twofactor&f - zapneš/vypneš 2FA'
+- '&7-&b /du sendtodiscord [titul] [barva] [text]&f - pošleš přiloženou zprávu na
+  Discord'
+- '&7-&b /du voiceinvite&f - pozveš všechny online hráče do hlasové místnosti'
+- '&7-&b /du getdiscord [player]&f - zjistíš Discord účet hráče'
+- '&7-&b /dua reload&f - načteš konfigurační soubory'
+- '&7-&b /dua forceunlink [player]&f - zrušíš propojení hráčovo Discord účtu'
+CHAT_LOGGING_EMBED_TITLE: 'Chatovací: %player%'
+CHAT_LOGGING_EMBED_TEXT: '%message%'
+JOIN_LOGGING_EMBED_TITLE: Připojení
+JOIN_LOGGING_EMBED_TEXT: '%player% se připojil na server'
+QUIT_LOGGING_EMBED_TITLE: Odpojení
+QUIT_LOGGING_EMBED_TEXT: '%player% se odpojil ze serveru'
+DEATH_LOGGING_EMBED_TITLE: Smrt
+DEATH_LOGGING_EMBED_TEXT: '%player% zemřel'
+THIS_COMMAND_IS_BLACKLISTED: Tento příkaz je zakázaný.
+INVALID_PLAYER_NAME_OR_UNVERIFIED: Zvolený hráč není ověřený nebo neexistuje.
