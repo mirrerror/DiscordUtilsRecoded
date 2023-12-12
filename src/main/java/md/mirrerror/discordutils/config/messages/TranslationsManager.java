@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.config.messages;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.customconfigs.LangConfig;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Getter
 public class TranslationsManager {
 
     private static Set<Translation> translations;

@@ -27,7 +27,7 @@ public class SecondFactor implements SubCommand {
             return;
         }
 
-        if(discordUtilsUser.hasSecondFactor()) {
+        if(discordUtilsUser.isSecondFactorEnabled()) {
 
             discordUtilsUser.setSecondFactor(false);
             sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.DISABLED.getText()));

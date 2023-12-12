@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class VoiceRewardsListener extends ListenerAdapter {
 
-    private Map<Long, BukkitTask> rewardTimers = new HashMap<>();
+    private final Map<Long, BukkitTask> rewardTimers = new HashMap<>();
     private static final Map<Long, Long> voiceTime = new HashMap<>();
 
     /*@Override

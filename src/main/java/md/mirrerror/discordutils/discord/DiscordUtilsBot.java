@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.discord;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
@@ -19,10 +20,11 @@ import org.bukkit.Bukkit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Getter
 public class DiscordUtilsBot {
 
     private JDA jda;
-    private String token;
+    private final String token;
     private String prefix;
     private BotSettingsConfig botSettings = Main.getInstance().getConfigManager().getBotSettings();
     private Activities activities;
@@ -286,75 +288,4 @@ public class DiscordUtilsBot {
         textChannel.sendMessageEmbeds(message).complete().delete().queueAfter(delay, TimeUnit.SECONDS);
     }
 
-    public List<Long> getAdminRoles() {
-        return adminRoles;
-    }
-
-    public Map<Long, List<String>> getGroupRoles() {
-        return groupRoles;
-    }
-
-    public Role getVerifiedRole() {
-        return verifiedRole;
-    }
-
-    public TextChannel getConsoleLoggingTextChannel() {
-        return consoleLoggingTextChannel;
-    }
-
-    public TextChannel getServerActivityLoggingTextChannel() {
-        return serverActivityLoggingTextChannel;
-    }
-
-    public TextChannel getMessagesTextChannel() {
-        return messagesTextChannel;
-    }
-
-    public JDA getJda() {
-        return jda;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public Map<String, Long> getLinkCodes() {
-        return linkCodes;
-    }
-
-    public Map<UUID, Message> getUnlinkPlayers() {
-        return unlinkPlayers;
-    }
-
-    public List<Long> getVoiceRewardsBlacklistedChannels() {
-        return voiceRewardsBlacklistedChannels;
-    }
-
-    public List<String> getVirtualConsoleBlacklistedCommands() {
-        return virtualConsoleBlacklistedCommands;
-    }
-
-    public Map<UUID, String> getSecondFactorPlayers() {
-        return secondFactorPlayers;
-    }
-
-    public Map<String, Integer> getSecondFactorAttempts() {
-        return secondFactorAttempts;
-    }
-
-    public Map<UUID, SecondFactorSession> getSecondFactorSessions() {
-        return secondFactorSessions;
-    }
-
-    public SecondFactorType getSecondFactorType() {
-        return secondFactorType;
-    }
-
-    public List<Long> getNotifyAboutMentionsBlacklistedChannels() {
-        return notifyAboutMentionsBlacklistedChannels;
-    }
-
-    public TextChannel getChatTextChannel() {
-        return chatTextChannel;
-    }
 }

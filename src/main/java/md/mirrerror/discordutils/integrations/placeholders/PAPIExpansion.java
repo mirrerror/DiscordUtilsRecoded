@@ -43,7 +43,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
         }
 
         if(params.equalsIgnoreCase("2fa")) {
-            if(discordUtilsUser.hasSecondFactor()) return Message.YES.getText();
+            if(discordUtilsUser.isSecondFactorEnabled()) return Message.YES.getText();
             else return Message.NO.getText();
         }
 

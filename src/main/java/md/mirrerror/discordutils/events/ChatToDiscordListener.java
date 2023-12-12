@@ -9,7 +9,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatToDiscordListener implements Listener {
 
-    private WebhookClient client;
+    private final WebhookClient client;
 
     public ChatToDiscordListener(String webhookUrl) {
         WebhookClientBuilder builder = new WebhookClientBuilder(webhookUrl);

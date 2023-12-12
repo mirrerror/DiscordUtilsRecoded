@@ -1,7 +1,9 @@
 package md.mirrerror.discordutils.config;
 
+import lombok.Data;
 import md.mirrerror.discordutils.config.customconfigs.*;
 
+@Data
 public class ConfigManager {
 
     public ConfigManager() {
@@ -34,23 +36,4 @@ public class ConfigManager {
         lang.reloadConfigFile();
     }
 
-    public MainConfig getConfig() {
-        return config;
-    }
-
-    public BotSettingsConfig getBotSettings() {
-        return botSettings;
-    }
-
-    public DataConfig getData() {
-        return data;
-    }
-
-    public LangConfig getLang() {
-        return lang;
-    }
-
-    public void setLang(LangConfig lang) {
-        this.lang = lang;
-    }
 }

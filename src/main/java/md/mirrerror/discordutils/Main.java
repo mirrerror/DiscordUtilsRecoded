@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
@@ -27,8 +28,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
+@Getter
 public final class Main extends JavaPlugin {
 
+    @Getter
     private static Main instance;
     private ConfigManager configManager;
     private DataManager dataManager;
@@ -40,7 +43,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
         configManager = new ConfigManager();
         papiManager = new PAPIManager();
@@ -128,9 +130,7 @@ public final class Main extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+    public void onDisable() {}
 
     private void setupMetrics() {
         Metrics metrics = new Metrics(this, 13243);
@@ -162,31 +162,4 @@ public final class Main extends JavaPlugin {
         commandManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
     }
 
-    public DiscordUtilsBot getBot() {
-        return bot;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public DataManager getDataManager() {
-        return dataManager;
-    }
-
-    public PAPIManager getPapiManager() {
-        return papiManager;
-    }
-
-    public PermissionsIntegration getPermissionsIntegration() {
-        return permissionsIntegration;
-    }
-
-    public Translation getTranslation() {
-        return translation;
-    }
-
-    public static Main getInstance() {
-        return instance;
-    }
 }

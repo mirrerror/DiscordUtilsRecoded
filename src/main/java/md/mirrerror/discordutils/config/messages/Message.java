@@ -1,5 +1,7 @@
 package md.mirrerror.discordutils.config.messages;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.utils.HexUtils;
 import org.bukkit.command.CommandSender;
@@ -7,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@AllArgsConstructor
 public enum Message {
 
     PREFIX(false),
@@ -102,11 +106,7 @@ public enum Message {
     STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION(false),
     HELP_SLASH_COMMAND_DESCRIPTION(false);
 
-    private boolean isList;
-
-    Message(boolean isList) {
-        this.isList = isList;
-    }
+    private final boolean isList;
 
     public String getText() {
         return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
@@ -148,10 +148,6 @@ public enum Message {
         } else {
             send(commandSender);
         }
-    }
-
-    public boolean isList() {
-        return isList;
     }
 
 }
