@@ -1,3 +1,4 @@
+# Translation by mirrerror
 SECONDFACTOR_REJECTED: Владелец аккаунта отклонил авторизацию аккаунта.
 SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Вы не успели пройти двухфакторную аутентификацию. Пожалуйста, попробуйте снова.
 DISCORDUTILS_SECONDFACTOR_SUCCESSFUL: '2FA: %status%'
