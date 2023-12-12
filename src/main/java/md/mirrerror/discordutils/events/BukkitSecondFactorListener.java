@@ -164,7 +164,7 @@ public class BukkitSecondFactorListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onBreakItem(PlayerItemBreakEvent event) { // todo
+    public void onBreakItem(PlayerItemBreakEvent event) {
         Player player = event.getPlayer();
         if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) {
             player.getInventory().addItem(event.getBrokenItem());
