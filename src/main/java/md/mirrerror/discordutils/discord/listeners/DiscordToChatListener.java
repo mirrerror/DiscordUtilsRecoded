@@ -26,7 +26,7 @@ public class DiscordToChatListener extends ListenerAdapter {
             return;
         }
 
-        Bukkit.broadcastMessage(Message.DISCORD_TO_CHAT_FORMAT.getText().replace("%user%", event.getAuthor().getAsTag())
+        Bukkit.broadcastMessage(Message.DISCORD_TO_CHAT_FORMAT.getText().replace("%user%", event.getAuthor().getName())
                 .replace("%message%", event.getMessage().getContentRaw()).replace("%player%", discordUtilsUser.getOfflinePlayer().getName()));
     }
 
