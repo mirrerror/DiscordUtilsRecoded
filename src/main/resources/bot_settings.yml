@@ -66,6 +66,14 @@
 # Default2FAValue
 # Whether to enable or not 2FA for the player when he verify his account
 # ------------------------------------------------------------------
+# Forced2FARoles
+# Members with these roles must pass the 2FA, the plugin will ignore if they disable 2FA in their settings
+# For example: Forced2FARoles: [905508941230915684, 123123123131231233]
+# ------------------------------------------------------------------
+# Forced2FAGroups
+# Players with these permission groups must pass the 2FA, the plugin will ignore if they disable 2FA in their settings
+# For example: Forced2FARoles: [moderator, admin]
+# ------------------------------------------------------------------
 # NotifyAboutDisabled2FA
 # Whether to send for the player or not information about disabled 2FA (if it is disabled)
 # ------------------------------------------------------------------
