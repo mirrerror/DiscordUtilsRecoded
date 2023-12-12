@@ -236,7 +236,7 @@ public class BukkitSecondFactorListener implements Listener {
     }
 
     private void applySecondFactor(Player player, DiscordUtilsUser discordUtilsUser) {
-        if(discordUtilsUser.isSecondFactorEnabled() || checkForcedSecondFactor(discordUtilsUser)) {
+        if(discordUtilsUser.isSecondFactorEnabled() || !checkForcedSecondFactor(discordUtilsUser)) {
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
             if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("2FASessions"))
