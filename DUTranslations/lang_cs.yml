@@ -1,3 +1,4 @@
+# Translation by Esterze
 SECONDFACTOR_REJECTED: Vlastník účtu odmítnul verfikaci tohoto účtu.
 SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Neprošel jsi 2FA. Prosím, zkus to znovu.
 DISCORDUTILS_SECONDFACTOR_SUCCESSFUL: '2FA: %status%'
