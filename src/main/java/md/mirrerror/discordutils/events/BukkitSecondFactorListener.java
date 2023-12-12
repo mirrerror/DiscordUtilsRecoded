@@ -227,6 +227,10 @@ public class BukkitSecondFactorListener implements Listener {
     }
 
     private boolean checkForcedSecondFactor(DiscordUtilsUser discordUtilsUser) {
+        for(String group : Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("Forced2FAGroups"))
+            for(String userGroup : Main.getInstance().getPermissionsIntegration().getUserGroups(discordUtilsUser.getOfflinePlayer()))
+                if(userGroup.equals(group)) return false;
+
         for(long roleId : Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("Forced2FARoles"))
             for(Guild guild : Main.getInstance().getBot().getJda().getGuilds())
                 for(Role role : guild.getMemberById(discordUtilsUser.getUser().getIdLong()).getRoles())
