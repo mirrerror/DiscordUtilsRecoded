@@ -5,6 +5,10 @@
 # CheckForUpdates
 # Set it to true if you want plugin to check for available updates, otherwise set it to false
 # ------------------------------------------------------------------
+# Language
+# You can choose a translation of the plugin, and the plugin will download it automatically. Available ones: ru (Russian), cs (Czech), ua (Ukrainian), es (Spanish)
+# Set it to '' of you don't need any official translations (the default plugin language is English)
+# ------------------------------------------------------------------
 # Database
 # Usage of the database instead of the data.yml file to save and load your data
 # Type - database type (available: mysql) (set it to '' to disable this feature, in this case the data will be stored in the data.yml file)
@@ -17,6 +21,7 @@
 
 PermissionsPlugin: 'LuckPerms'
 CheckForUpdates: true
+Language: ''
 Database:
   Type: ''
   Host: 'localhost'

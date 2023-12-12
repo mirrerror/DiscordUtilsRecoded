@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.commands;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

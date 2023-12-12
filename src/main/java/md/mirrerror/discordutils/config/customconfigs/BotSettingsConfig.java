@@ -33,6 +33,8 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("2FASessionTime", 900);
         getFileConfiguration().addDefault("2FATimeToAuthorize", 30);
         getFileConfiguration().addDefault("Default2FAValue", false);
+        getFileConfiguration().addDefault("Forced2FARoles", Collections.emptyList());
+        getFileConfiguration().addDefault("Forced2FAGroups", Collections.emptyList());
         getFileConfiguration().addDefault("NotifyAboutDisabled2FA", true);
         getFileConfiguration().addDefault("ForceVerification", false);
         getFileConfiguration().addDefault("AllowedCommandsBeforePassing2FA", Collections.emptyList());

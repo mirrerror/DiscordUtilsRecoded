@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
@@ -26,7 +26,7 @@ public class DiscordToChatListener extends ListenerAdapter {
             return;
         }
 
-        Bukkit.broadcastMessage(Message.DISCORD_TO_CHAT_FORMAT.getText().replace("%user%", event.getAuthor().getAsTag())
+        Bukkit.broadcastMessage(Message.DISCORD_TO_CHAT_FORMAT.getText().replace("%user%", event.getAuthor().getName())
                 .replace("%message%", event.getMessage().getContentRaw()).replace("%player%", discordUtilsUser.getOfflinePlayer().getName()));
     }
 

@@ -21,15 +21,17 @@ public class BoostListener extends ListenerAdapter {
 
         if(!discordUtilsUser.isLinked()) return;
 
-        if(newTime != null) {
-            Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfterServerBoosting").forEach(command -> {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getAsTag()));
-            });
-        } else {
-            Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfterStoppingServerBoosting").forEach(command -> {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getAsTag()));
-            });
-        }
+        Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
+            if(newTime != null) {
+                Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfterServerBoosting").forEach(command -> {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
+                });
+            } else {
+                Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfterStoppingServerBoosting").forEach(command -> {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
+                });
+            }
+        });
     }
 
 }

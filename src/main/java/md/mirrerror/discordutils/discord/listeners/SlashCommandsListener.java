@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsBot;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
@@ -146,7 +146,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                 }
 
                 event.getHook().sendMessageEmbeds(embedManager.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
-                        event.getUser().getAsTag()))).queue();
+                        event.getUser().getName()))).queue();
                 break;
             }
             case "stats": {
@@ -164,25 +164,25 @@ public class SlashCommandsListener extends ListenerAdapter {
                     player = Bukkit.getOfflinePlayer(firstArg.getAsString());
                 }
 
-                String messageToSend = "";
+                StringBuilder messageToSend = new StringBuilder();
                 for (String s : Message.STATS_FORMAT.getTextList()) {
-                    messageToSend += s + "\n";
+                    messageToSend.append(s).append("\n");
                 }
 
-                messageToSend = Main.getInstance().getPapiManager().setPlaceholders(player, messageToSend);
+                messageToSend = new StringBuilder(Main.getInstance().getPapiManager().setPlaceholders(player, messageToSend.toString()));
 
-                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend)).queue();
+                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
 
                 break;
             }
             case "help": {
                 event.deferReply().queue();
-                String messageToSend = "";
+                StringBuilder messageToSend = new StringBuilder();
                 for (String s : Message.DISCORD_HELP.getTextList()) {
-                    messageToSend += s + "\n";
+                    messageToSend.append(s).append("\n");
                 }
 
-                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend)).queue();
+                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
 
                 break;
             }

@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.integrations.placeholders;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -39,11 +39,11 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
         if(params.equalsIgnoreCase("discord")) {
             if(!discordUtilsUser.isLinked()) return Message.NOT_AVAILABLE.getText();
-            return discordUtilsUser.getUser().getAsTag();
+            return discordUtilsUser.getUser().getName();
         }
 
         if(params.equalsIgnoreCase("2fa")) {
-            if(discordUtilsUser.hasSecondFactor()) return Message.YES.getText();
+            if(discordUtilsUser.isSecondFactorEnabled()) return Message.YES.getText();
             else return Message.NO.getText();
         }
 

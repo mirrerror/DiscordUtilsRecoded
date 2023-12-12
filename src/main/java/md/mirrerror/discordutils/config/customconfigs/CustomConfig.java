@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.config.customconfigs;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
+@Getter
 public abstract class CustomConfig {
 
     private final File file;
@@ -56,11 +58,4 @@ public abstract class CustomConfig {
 
     public abstract void initializeFields();
 
-    public File getFile() {
-        return file;
-    }
-
-    public FileConfiguration getFileConfiguration() {
-        return fileConfiguration;
-    }
 }

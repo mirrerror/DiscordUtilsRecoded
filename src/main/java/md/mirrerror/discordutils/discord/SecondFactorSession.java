@@ -1,16 +1,16 @@
 package md.mirrerror.discordutils.discord;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@AllArgsConstructor
 public class SecondFactorSession {
+
     private String ipAddress;
     private LocalDateTime start, end;
-
-    public SecondFactorSession(String ipAddress, LocalDateTime start, LocalDateTime end) {
-        this.ipAddress = ipAddress;
-        this.start = start;
-        this.end = end;
-    }
 
     public SecondFactorSession(String ipAddress, LocalDateTime end) {
         this.ipAddress = ipAddress;
@@ -18,15 +18,4 @@ public class SecondFactorSession {
         this.end = end;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
 }

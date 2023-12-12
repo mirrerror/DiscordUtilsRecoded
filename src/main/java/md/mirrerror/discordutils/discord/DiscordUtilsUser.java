@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.discord;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
@@ -14,18 +15,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter
 public class DiscordUtilsUser {
 
     private DataManager dataManager = Main.getInstance().getDataManager();
 
     private User user;
     private OfflinePlayer offlinePlayer;
-    private boolean hasSecondFactor;
+    private boolean secondFactorEnabled;
 
     public DiscordUtilsUser(OfflinePlayer offlinePlayer, User user, boolean hasSecondFactor) {
         this.offlinePlayer = offlinePlayer;
         this.user = user;
-        this.hasSecondFactor = hasSecondFactor;
+        this.secondFactorEnabled = hasSecondFactor;
     }
 
     public void setUser(User user) {
@@ -35,13 +37,9 @@ public class DiscordUtilsUser {
     }
 
     public void setSecondFactor(boolean secondFactor) {
-        this.hasSecondFactor = secondFactor;
+        this.secondFactorEnabled = secondFactor;
         dataManager.setSecondFactor(offlinePlayer.getUniqueId(), secondFactor);
         DiscordUtilsUsersCacheManager.addToCache(this);
-    }
-
-    public boolean hasSecondFactor() {
-        return hasSecondFactor;
     }
 
     public boolean isLinked() {
@@ -109,17 +107,9 @@ public class DiscordUtilsUser {
 
     public void unregister() {
         this.user = null;
-        this.hasSecondFactor = false;
+        this.secondFactorEnabled = false;
         Main.getInstance().getDataManager().unregisterUser(offlinePlayer.getUniqueId());
         DiscordUtilsUsersCacheManager.addToCache(this);
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public OfflinePlayer getOfflinePlayer() {
-        return offlinePlayer;
     }
 
 }

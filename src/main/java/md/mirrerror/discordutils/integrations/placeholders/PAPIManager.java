@@ -1,11 +1,13 @@
 package md.mirrerror.discordutils.integrations.placeholders;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+@Getter
 public class PAPIManager {
 
     private final boolean isEnabled;
@@ -30,7 +32,4 @@ public class PAPIManager {
         return s;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
-    }
 }

@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.discord;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
 import net.dv8tion.jda.api.entities.Activity;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class Activities {
 
+    @Getter
     private final List<Activity> botActivities;
     private Iterator<Activity> botActivitiesIterator;
     private static BotSettingsConfig botSettings = Main.getInstance().getConfigManager().getBotSettings();
@@ -35,10 +37,8 @@ public class Activities {
                 botActivities.add(Activity.of(activityType, activityText));
             }
         });
+
         return botActivities;
     }
 
-    public List<Activity> getBotActivities() {
-        return botActivities;
-    }
 }

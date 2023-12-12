@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
 import md.mirrerror.discordutils.commands.SubCommand;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public class SecondFactor implements SubCommand {
             return;
         }
 
-        if(discordUtilsUser.hasSecondFactor()) {
+        if(discordUtilsUser.isSecondFactorEnabled()) {
 
             discordUtilsUser.setSecondFactor(false);
             sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.DISABLED.getText()));

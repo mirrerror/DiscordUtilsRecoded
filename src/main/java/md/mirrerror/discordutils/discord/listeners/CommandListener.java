@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.Message;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsBot;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
@@ -67,7 +67,7 @@ public class CommandListener extends ListenerAdapter {
                 break;
             }
             case "online": {
-                event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().replace("%online%", "" + Bukkit.getOnlinePlayers().size()))).queue();
+                event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size())))).queue();
                 break;
             }
             case "sudo": {
@@ -106,9 +106,8 @@ public class CommandListener extends ListenerAdapter {
                     event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_EMBED_USAGE.getText())).queue();
                     return;
                 }
-                String text = "";
-                for(int i = 3; i < args.length; i++) text += args[i] + " ";
-                text = text.trim();
+                StringBuilder text = new StringBuilder();
+                for(int i = 3; i < args.length; i++) text.append(args[i]).append(" ");
 
                 Color color;
                 try {
@@ -122,8 +121,8 @@ public class CommandListener extends ListenerAdapter {
                     return;
                 }
 
-                event.getChannel().sendMessageEmbeds(embedManager.embed(args[1], text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
-                        event.getAuthor().getAsTag()))).queue();
+                event.getChannel().sendMessageEmbeds(embedManager.embed(args[1], text.toString().trim(), color, Message.EMBED_SENT_BY.getText().replace("%sender%",
+                        event.getAuthor().getName()))).queue();
                 break;
             }
             case "stats": {
@@ -137,14 +136,14 @@ public class CommandListener extends ListenerAdapter {
                             return;
                         }
 
-                        String messageToSend = "";
+                        StringBuilder messageToSend = new StringBuilder();
                         for (String s : Message.STATS_FORMAT.getTextList()) {
-                            messageToSend += s + "\n";
+                            messageToSend.append(s).append("\n");
                         }
 
-                        messageToSend = Main.getInstance().getPapiManager().setPlaceholders(disUtilsUser.getOfflinePlayer(), messageToSend);
+                        messageToSend = new StringBuilder(Main.getInstance().getPapiManager().setPlaceholders(disUtilsUser.getOfflinePlayer(), messageToSend.toString()));
 
-                        event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend)).queue();
+                        event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
                     }
                 } else {
                     OfflinePlayer player;
@@ -164,26 +163,26 @@ public class CommandListener extends ListenerAdapter {
 
                     }
 
-                    String messageToSend = "";
+                    StringBuilder messageToSend = new StringBuilder();
                     for (String s : Message.STATS_FORMAT.getTextList()) {
-                        messageToSend += s + "\n";
+                        messageToSend.append(s).append("\n");
                     }
 
-                    messageToSend = Main.getInstance().getPapiManager().setPlaceholders(player, messageToSend);
+                    messageToSend = new StringBuilder(Main.getInstance().getPapiManager().setPlaceholders(player, messageToSend.toString()));
 
-                    event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend)).queue();
+                    event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
                 }
 
                 break;
             }
             case "help": {
 
-                String messageToSend = "";
+                StringBuilder messageToSend = new StringBuilder();
                 for (String s : Message.DISCORD_HELP.getTextList()) {
-                    messageToSend += s + "\n";
+                    messageToSend.append(s).append("\n");
                 }
 
-                event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend)).queue();
+                event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
 
                 break;
             }

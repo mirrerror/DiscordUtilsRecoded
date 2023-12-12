@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
@@ -7,6 +8,7 @@ import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
 import md.mirrerror.discordutils.config.ConfigManager;
+import md.mirrerror.discordutils.config.messages.TranslationsManager;
 import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.data.MySQLDataManager;
@@ -23,13 +25,12 @@ import md.mirrerror.discordutils.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Getter
 public final class Main extends JavaPlugin {
 
+    @Getter
     private static Main instance;
     private ConfigManager configManager;
     private DataManager dataManager;
@@ -40,7 +41,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
         configManager = new ConfigManager();
         papiManager = new PAPIManager();
@@ -98,14 +98,19 @@ public final class Main extends JavaPlugin {
         registerCommands();
         getLogger().info("The commands have been successfully loaded.");
 
+        String chosenTranslation = configManager.getConfig().getFileConfiguration().getString("Language");
+        if(!chosenTranslation.isEmpty()) {
+            TranslationsManager.downloadTranslation(chosenTranslation);
+        } else {
+            getLogger().info("The chosen translation doesn't exist or you disabled this option.");
+        }
+
         setupMetrics();
         UpdateChecker.checkForUpdates();
     }
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+    public void onDisable() {}
 
     private void setupMetrics() {
         Metrics metrics = new Metrics(this, 13243);
@@ -137,27 +142,4 @@ public final class Main extends JavaPlugin {
         commandManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
     }
 
-    public DiscordUtilsBot getBot() {
-        return bot;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public DataManager getDataManager() {
-        return dataManager;
-    }
-
-    public PAPIManager getPapiManager() {
-        return papiManager;
-    }
-
-    public PermissionsIntegration getPermissionsIntegration() {
-        return permissionsIntegration;
-    }
-
-    public static Main getInstance() {
-        return instance;
-    }
 }
