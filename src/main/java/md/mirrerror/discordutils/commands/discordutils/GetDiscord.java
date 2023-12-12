@@ -52,7 +52,7 @@ public class GetDiscord implements SubCommand {
                 return;
             }
 
-            sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", discordUtilsUser.getUser().getAsTag()));
+            sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", discordUtilsUser.getUser().getName()));
         }
 
     }

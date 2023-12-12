@@ -39,7 +39,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
         if(params.equalsIgnoreCase("discord")) {
             if(!discordUtilsUser.isLinked()) return Message.NOT_AVAILABLE.getText();
-            return discordUtilsUser.getUser().getAsTag();
+            return discordUtilsUser.getUser().getName();
         }
 
         if(params.equalsIgnoreCase("2fa")) {
