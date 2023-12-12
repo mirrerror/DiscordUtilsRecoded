@@ -37,7 +37,6 @@ public final class Main extends JavaPlugin {
     private DataManager dataManager;
     private PAPIManager papiManager;
     private PermissionsIntegration permissionsIntegration;
-    private Translation translation;
 
     private DiscordUtilsBot bot;
 
@@ -100,27 +99,9 @@ public final class Main extends JavaPlugin {
         registerCommands();
         getLogger().info("The commands have been successfully loaded.");
 
-        TranslationsManager.registerTranslations(Set.of(
-                new Translation("ru", "mirrerror"),
-                new Translation("cz", "Esterze"),
-                new Translation("ua", "msgumor"),
-                new Translation("es", "NovaCraft254")
-        ));
-        getLogger().info("Translations have been successfully registered.");
-
         String chosenTranslation = configManager.getConfig().getFileConfiguration().getString("Language");
         if(!chosenTranslation.isEmpty()) {
-            for(Translation translation : TranslationsManager.getTranslations()) {
-                if(translation.getKey().equalsIgnoreCase(chosenTranslation)) {
-                    this.translation = translation;
-                    break;
-                }
-            }
-        }
-
-        if(translation != null) {
-            translation.download();
-            getLogger().info("The chosen translation is: " + translation.getKey() + ". Translation's author: " + translation.getAuthor() + ".");
+            TranslationsManager.downloadTranslation(chosenTranslation);
         } else {
             getLogger().info("The chosen translation doesn't exist or you disabled this option.");
         }
