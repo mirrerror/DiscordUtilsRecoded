@@ -5,12 +5,14 @@ import md.mirrerror.discordutils.config.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandsManager implements CommandExecutor {
+public class CommandsManager implements CommandExecutor, TabCompleter {
 
     private static final Map<String, List<SubCommand>> commands = new HashMap<>();
 
@@ -53,5 +55,16 @@ public class CommandsManager implements CommandExecutor {
 
     public static Map<String, List<SubCommand>> getCommands() {
         return commands;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        ArrayList<String> results = new ArrayList<>();
+        for(SubCommand subCommand : commands.get(command.getName())){
+            if(sender.hasPermission(subCommand.getPermission())) {
+                results.add(subCommand.getName());
+            }
+        }
+        return results;
     }
 }
