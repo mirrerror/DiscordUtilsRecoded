@@ -1,11 +1,11 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.Invite;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.utils.Validator;
 import net.dv8tion.jda.api.entities.Member;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -25,10 +25,7 @@ public class VoiceInvite implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) {
-            Message.SENDER_IS_NOT_A_PLAYER.send(sender, true);
-            return;
-        }
+        if(!Validator.validatePlayerSender(sender)) return;
 
         Player player = (Player) sender;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
@@ -46,9 +43,7 @@ public class VoiceInvite implements SubCommand {
                         return;
                     }
 
-                    Invite invite = member.getVoiceState().getChannel().createInvite().setMaxAge(15L, TimeUnit.MINUTES).complete();
-
-                    String url = invite.getUrl();
+                    String url = Main.getInstance().getBot().createVoiceInviteUrl(member, 15L, TimeUnit.MINUTES);
 
                     TextComponent textComponent = new TextComponent(Message.VOICE_INVITE.getText(true).replace("%sender%", player.getName()));
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
@@ -74,6 +69,16 @@ public class VoiceInvite implements SubCommand {
     @Override
     public List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("vinvite", "vcinvite", "vinv", "vcinv"));
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 0;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return null;
     }
 
 }

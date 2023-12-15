@@ -32,4 +32,14 @@ public class Reload implements SubCommand {
     public List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("rl", "rel"));
     }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 0;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return null;
+    }
 }

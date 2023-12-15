@@ -19,10 +19,6 @@ public class SendToDiscord implements SubCommand {
             Message.COMMAND_DISABLED.send(sender, true);
             return;
         }
-        if(args.length < 3) {
-            Message.DISCORDUTILS_SENDTODISCORD_USAGE.send(sender, true);
-            return;
-        }
 
         Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
             StringBuilder text = new StringBuilder();
@@ -40,7 +36,8 @@ public class SendToDiscord implements SubCommand {
                 return;
             }
 
-            Main.getInstance().getBot().getMessagesTextChannel().sendMessageEmbeds(new EmbedManager().embed(args[0], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName()))).queue();
+            Main.getInstance().getBot().sendMessageEmbed(Main.getInstance().getBot().getMessagesTextChannel(),
+                    new EmbedManager().embed(args[0], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));
             Message.DISCORDUTILS_SENDTODISCORD_SUCCESSFUL.send(sender, true);
         });
     }
@@ -58,6 +55,16 @@ public class SendToDiscord implements SubCommand {
     @Override
     public java.util.List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("sendtodis", "std", "stodis", "stdis"));
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 3;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_SENDTODISCORD_USAGE;
     }
 
 }
