@@ -39,17 +39,7 @@ public class Link implements SubCommand {
         discordUtilsUser.setUser(Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getBot().getLinkCodes().get(args[0])));
         discordUtilsUser.setSecondFactor(defaultSecondFactorValue);
 
-        if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("VerifiedRole.Enabled")) {
-            Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
-                Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
-                Member member = guild.getMemberById(Main.getInstance().getBot().getLinkCodes().get(args[0]));
-                if(verifiedRole != null && member != null) {
-                    try {
-                        guild.addRoleToMember(member, verifiedRole).queue();
-                    } catch (HierarchyException ignored) {}
-                }
-            });
-        }
+        Main.getInstance().getBot().assignVerifiedRole(Main.getInstance().getBot().getLinkCodes().get(args[0]));
 
         Main.getInstance().getBot().getLinkCodes().remove(args[0]);
         Message.ACCOUNT_SUCCESSFULLY_LINKED.send(sender, true);

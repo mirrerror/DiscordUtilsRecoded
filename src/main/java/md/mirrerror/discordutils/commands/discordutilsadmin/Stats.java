@@ -12,13 +12,8 @@ import java.util.List;
 public class Stats implements SubCommand {
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Main.getInstance().getDataManager().countLinkedUsers().whenComplete((count, throwable) -> {
-            if(throwable != null) {
-                Main.getInstance().getLogger().severe("Something went wrong while counting the linked players!");
-                return;
-            }
-            Message.DISCORDUTILSADMIN_STATS_FORMAT.getTextList().forEach(msg -> sender.sendMessage(msg.replace("%linkedPlayers%", String.valueOf(count))));
-        });
+        Message.DISCORDUTILSADMIN_STATS_FORMAT.getTextList().forEach(msg -> sender.sendMessage(msg.replace("%linkedPlayers%",
+                String.valueOf(Main.getInstance().getBot().countLinkedUsers()))));
     }
 
     @Override

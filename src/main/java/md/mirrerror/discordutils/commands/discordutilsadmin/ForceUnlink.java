@@ -30,15 +30,7 @@ public class ForceUnlink implements SubCommand {
             return;
         }
 
-        Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
-            Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
-            Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
-            if(verifiedRole != null && member != null) {
-                try {
-                    guild.removeRoleFromMember(member, verifiedRole).queue();
-                } catch (HierarchyException ignored) {}
-            }
-        });
+        Main.getInstance().getBot().unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 
         if(player.isOnline()) {
             Player onlinePlayer = player.getPlayer();

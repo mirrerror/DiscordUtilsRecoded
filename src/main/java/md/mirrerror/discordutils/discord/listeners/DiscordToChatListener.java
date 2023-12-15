@@ -22,7 +22,7 @@ public class DiscordToChatListener extends ListenerAdapter {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
         EmbedManager embedManager = new EmbedManager();
         if(!discordUtilsUser.isLinked()) {
-            Main.getInstance().getBot().sendTimedMessageEmbeds(event.getGuildChannel().asTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()), 10);
+            Main.getInstance().getBot().sendTimedMessageEmbed(event.getGuildChannel().asTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()), 10);
             return;
         }
 

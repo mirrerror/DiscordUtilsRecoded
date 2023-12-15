@@ -16,12 +16,14 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -284,12 +286,60 @@ public class DiscordUtilsBot {
         return textChannel.sendMessage(message).complete();
     }
 
+    public void sendMessageEmbed(TextChannel textChannel, MessageEmbed message) {
+        textChannel.sendMessageEmbeds(message).queue();
+    }
+
+    public Message sendAndGetMessageEmbed(TextChannel textChannel, MessageEmbed message) {
+        return textChannel.sendMessageEmbeds(message).complete();
+    }
+
     public void sendTimedMessage(TextChannel textChannel, String message, int delay) {
         textChannel.sendMessage(message).complete().delete().queueAfter(delay, TimeUnit.SECONDS);
     }
 
-    public void sendTimedMessageEmbeds(TextChannel textChannel, MessageEmbed message, int delay) {
+    public void sendTimedMessageEmbed(TextChannel textChannel, MessageEmbed message, int delay) {
         textChannel.sendMessageEmbeds(message).complete().delete().queueAfter(delay, TimeUnit.SECONDS);
+    }
+
+    public long countLinkedUsers() {
+        try {
+            return Main.getInstance().getDataManager().countLinkedUsers().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Main.getInstance().getLogger().severe("Something went wrong while counting the linked players!");
+            Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+        }
+        return -1L;
+    }
+
+    public void assignVerifiedRole(long userId) {
+        if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("VerifiedRole.Enabled")) {
+            Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
+                Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
+                Member member = guild.getMemberById(userId);
+                if(verifiedRole != null && member != null) {
+                    try {
+                        guild.addRoleToMember(member, verifiedRole).queue();
+                    } catch (HierarchyException ignored) {}
+                }
+            });
+        }
+    }
+
+    public void unAssignVerifiedRole(long userId) {
+        Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
+            Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
+            Member member = guild.getMemberById(userId);
+            if(verifiedRole != null && member != null) {
+                try {
+                    guild.removeRoleFromMember(member, verifiedRole).queue();
+                } catch (HierarchyException ignored) {}
+            }
+        });
+    }
+
+    public String createVoiceInviteUrl(Member member, long maxAgeValue, TimeUnit maxAgeUnit) {
+        return member.getVoiceState().getChannel().createInvite().setMaxAge(maxAgeValue, maxAgeUnit).complete().getUrl();
     }
 
 }

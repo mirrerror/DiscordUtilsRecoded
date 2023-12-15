@@ -44,9 +44,7 @@ public class VoiceInvite implements SubCommand {
                         return;
                     }
 
-                    Invite invite = member.getVoiceState().getChannel().createInvite().setMaxAge(15L, TimeUnit.MINUTES).complete();
-
-                    String url = invite.getUrl();
+                    String url = Main.getInstance().getBot().createVoiceInviteUrl(member, 15L, TimeUnit.MINUTES);
 
                     TextComponent textComponent = new TextComponent(Message.VOICE_INVITE.getText(true).replace("%sender%", player.getName()));
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
