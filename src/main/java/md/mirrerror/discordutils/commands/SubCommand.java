@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.commands;
 
+import md.mirrerror.discordutils.config.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -11,5 +12,7 @@ public interface SubCommand {
     String getName();
     String getPermission();
     List<String> getAliases();
+    int getMinArgsNeeded();
+    Message getIncorrectUsageErrorMessage();
 
 }

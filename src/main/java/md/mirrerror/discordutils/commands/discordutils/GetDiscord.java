@@ -3,8 +3,8 @@ package md.mirrerror.discordutils.commands.discordutils;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -19,12 +19,6 @@ public class GetDiscord implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        if(args.length < 1) {
-            Message.DISCORDUTILS_GETDISCORD_USAGE.send(sender, true);
-            return;
-        }
-
         String playerName = args[0];
         Player player = Bukkit.getPlayer(playerName);
 
@@ -39,7 +33,7 @@ public class GetDiscord implements SubCommand {
                     }
 
                     try {
-                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", Main.getInstance().getBot().getJda().getUserById(userId).getAsTag()));
+                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", Main.getInstance().getBot().getJda().getUserById(userId).getName()));
                     } catch (NullPointerException ignored) {
                         Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.send(sender, true);
                     }
@@ -70,6 +64,16 @@ public class GetDiscord implements SubCommand {
     @Override
     public List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("gdis", "gdiscord", "gd"));
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 1;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_GETDISCORD_USAGE;
     }
 
 }

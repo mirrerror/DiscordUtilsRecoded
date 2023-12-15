@@ -28,4 +28,14 @@ public class Help implements SubCommand {
     public List<String> getAliases() {
         return Collections.singletonList("h");
     }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 0;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return null;
+    }
 }

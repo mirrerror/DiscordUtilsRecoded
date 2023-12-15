@@ -1,11 +1,11 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsBot;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.awt.*;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -49,21 +48,9 @@ public class CommandListener extends ListenerAdapter {
                     event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
                     return;
                 }
-                AtomicReference<String> code = new AtomicReference<>("");
-                byte[] secureRandomSeed = new SecureRandom().generateSeed(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("CodeLength"));
-                for(byte b : secureRandomSeed) code.set(code.get() + b);
-                code.set(code.get().replace("-", "").trim());
 
-                event.getAuthor().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.VERIFICATION_CODE_MESSAGE.getText().replace("%code%", code.get()))).submit())
-                        .whenComplete((msg, error) -> {
-                            if(error == null) {
-                                event.getChannel().sendMessageEmbeds(embedManager.successfulEmbed(Message.VERIFICATION_MESSAGE.getText())).queue();
-                                bot.getLinkCodes().put(code.get(), event.getAuthor().getIdLong());
-                                return;
-                            }
-                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
-                        });
+                bot.startLinkingProcess(event.getAuthor(), event.getChannel());
+
                 break;
             }
             case "online": {

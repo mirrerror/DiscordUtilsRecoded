@@ -1,13 +1,10 @@
 package md.mirrerror.discordutils.commands.discordutilsadmin;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -22,11 +19,6 @@ public class ForceUnlink implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length < 1) {
-            Message.DISCORDUTILSADMIN_FORCEUNLINK_USAGE.send(sender, true);
-            return;
-        }
-
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
@@ -35,15 +27,7 @@ public class ForceUnlink implements SubCommand {
             return;
         }
 
-        Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
-            Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
-            Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
-            if(verifiedRole != null && member != null) {
-                try {
-                    guild.removeRoleFromMember(member, verifiedRole).queue();
-                } catch (HierarchyException ignored) {}
-            }
-        });
+        Main.getInstance().getBot().unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 
         if(player.isOnline()) {
             Player onlinePlayer = player.getPlayer();
@@ -72,6 +56,16 @@ public class ForceUnlink implements SubCommand {
     @Override
     public List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("funlink", "fulink", "forceulink"));
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 1;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILSADMIN_FORCEUNLINK_USAGE;
     }
 
 }

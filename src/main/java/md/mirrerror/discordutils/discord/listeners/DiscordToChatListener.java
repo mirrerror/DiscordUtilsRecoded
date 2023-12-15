@@ -2,9 +2,9 @@ package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
@@ -22,7 +22,7 @@ public class DiscordToChatListener extends ListenerAdapter {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
         EmbedManager embedManager = new EmbedManager();
         if(!discordUtilsUser.isLinked()) {
-            Main.getInstance().getBot().sendTimedMessageEmbeds(event.getGuildChannel().asTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()), 10);
+            Main.getInstance().getBot().sendTimedMessageEmbed(event.getGuildChannel().asTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()), 10);
             return;
         }
 
