@@ -75,12 +75,13 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> results = new ArrayList<>();
 
-        for(SubCommand subCommand : commands.get(command.getName()))
-            if(sender.hasPermission(subCommand.getPermission()))
-                results.add(subCommand.getName());
+        if(args.length == 1)
+            for(SubCommand subCommand : commands.get(command.getName()))
+                if(sender.hasPermission(subCommand.getPermission()))
+                    results.add(subCommand.getName());
 
         return results;
     }
