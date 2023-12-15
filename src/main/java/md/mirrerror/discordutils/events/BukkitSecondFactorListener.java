@@ -2,11 +2,11 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsBot;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.emoji.Emoji;

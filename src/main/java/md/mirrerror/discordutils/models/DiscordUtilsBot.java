@@ -1,12 +1,16 @@
-package md.mirrerror.discordutils.discord;
+package md.mirrerror.discordutils.models;
 
 import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.discord.Activities;
+import md.mirrerror.discordutils.discord.ConsoleLoggingManager;
+import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.listeners.*;
 import md.mirrerror.discordutils.events.ChatToDiscordListener;
 import md.mirrerror.discordutils.events.ServerActivityListener;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;

@@ -2,8 +2,8 @@ package md.mirrerror.discordutils.commands.discordutils;
 
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

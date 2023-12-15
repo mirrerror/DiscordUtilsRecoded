@@ -1,7 +1,7 @@
-package md.mirrerror.discordutils.discord.cache;
+package md.mirrerror.discordutils.cache;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 

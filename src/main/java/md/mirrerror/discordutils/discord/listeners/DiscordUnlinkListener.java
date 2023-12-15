@@ -2,8 +2,8 @@ package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.ChannelType;

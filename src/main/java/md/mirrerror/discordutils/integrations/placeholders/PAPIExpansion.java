@@ -2,8 +2,8 @@ package md.mirrerror.discordutils.integrations.placeholders;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 

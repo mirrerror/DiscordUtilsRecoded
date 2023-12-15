@@ -1,8 +1,8 @@
 package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.discord.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Guild;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
