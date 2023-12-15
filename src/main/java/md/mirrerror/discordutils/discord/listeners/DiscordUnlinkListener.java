@@ -1,14 +1,11 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -33,15 +30,7 @@ public class DiscordUnlinkListener extends ListenerAdapter {
             if(Main.getInstance().getBot().getUnlinkPlayers().get(uuid).getIdLong() == messageId) {
 
                 if(event.getReaction().getEmoji().getName().equals("✅")) {
-                    Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
-                        Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
-                        Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
-                        if(verifiedRole != null && member != null) if(member.getRoles().contains(verifiedRole)) {
-                            try {
-                                guild.removeRoleFromMember(member, verifiedRole).queue();
-                            } catch (HierarchyException ignored) {}
-                        }
-                    });
+                    Main.getInstance().getBot().unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 
                     Main.getInstance().getBot().getUnlinkPlayers().remove(uuid);
                     if(discordUtilsUser.getOfflinePlayer().isOnline()) Message.ACCOUNT_SUCCESSFULLY_UNLINKED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);

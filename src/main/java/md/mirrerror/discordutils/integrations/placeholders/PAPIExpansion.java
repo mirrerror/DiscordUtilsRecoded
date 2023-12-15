@@ -6,20 +6,21 @@ import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class PAPIExpansion extends PlaceholderExpansion {
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "mirrerror";
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "discordutils";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return Main.getInstance().getDescription().getVersion();
     }
 
