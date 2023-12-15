@@ -112,4 +112,8 @@ public class DiscordUtilsUser {
         DiscordUtilsUsersCacheManager.addToCache(this);
     }
 
+    public boolean isSecondFactorAuthorized() {
+        return !Main.getInstance().getBot().getSecondFactorPlayers().containsKey(offlinePlayer.getUniqueId());
+    }
+
 }

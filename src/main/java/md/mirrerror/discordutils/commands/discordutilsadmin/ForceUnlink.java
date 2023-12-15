@@ -1,13 +1,10 @@
 package md.mirrerror.discordutils.commands.discordutilsadmin;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;

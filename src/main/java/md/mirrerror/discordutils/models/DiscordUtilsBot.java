@@ -2,29 +2,37 @@ package md.mirrerror.discordutils.models;
 
 import lombok.Getter;
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
 import md.mirrerror.discordutils.discord.Activities;
 import md.mirrerror.discordutils.discord.ConsoleLoggingManager;
+import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.listeners.*;
 import md.mirrerror.discordutils.events.ChatToDiscordListener;
 import md.mirrerror.discordutils.events.ServerActivityListener;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public class DiscordUtilsBot {
@@ -54,6 +62,8 @@ public class DiscordUtilsBot {
     private List<String> virtualConsoleBlacklistedCommands;
     private List<Long> notifyAboutMentionsBlacklistedChannels;
 
+    private final EmbedManager embedManager;
+
     public enum SecondFactorType {
         CODE, REACTION;
 
@@ -70,6 +80,7 @@ public class DiscordUtilsBot {
     public DiscordUtilsBot(String token, String prefix) {
         this.token = token;
         this.prefix = prefix;
+        this.embedManager = new EmbedManager();
     }
 
     public void setupBot() {
@@ -340,6 +351,108 @@ public class DiscordUtilsBot {
 
     public String createVoiceInviteUrl(Member member, long maxAgeValue, TimeUnit maxAgeUnit) {
         return member.getVoiceState().getChannel().createInvite().setMaxAge(maxAgeValue, maxAgeUnit).complete().getUrl();
+    }
+
+    public void startLinkingProcess(User user, Object channel) {
+        if (linkCodes.containsValue(user.getIdLong())) return;
+
+        AtomicReference<String> code = new AtomicReference<>("");
+        byte[] secureRandomSeed = new SecureRandom().generateSeed(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("CodeLength"));
+        for (byte b : secureRandomSeed) code.set(code.get() + b);
+        code.set(code.get().replace("-", "").trim());
+
+        user.openPrivateChannel().submit()
+                .thenCompose(privateChannel -> privateChannel.sendMessageEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_CODE_MESSAGE.getText().replace("%code%", code.get()))).submit())
+                .whenComplete((msg, error) -> {
+                    if (error == null) {
+                        if (channel instanceof InteractionHook) {
+                            ((InteractionHook) channel).sendMessageEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
+                        } else if (channel instanceof MessageChannelUnion) {
+                            ((MessageChannelUnion) channel).sendMessageEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
+                        } else {
+                            Main.getInstance().getLogger().severe("Something went wrong while starting the verification process!");
+                            return;
+                        }
+                        linkCodes.put(code.get(), user.getIdLong());
+                    } else {
+                        if (channel instanceof InteractionHook) {
+                            ((InteractionHook) channel).sendMessageEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
+                        } else if (channel instanceof MessageChannelUnion) {
+                            ((MessageChannelUnion) channel).sendMessageEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
+                        } else {
+                            Main.getInstance().getLogger().severe("Something went wrong while starting the verification process!");
+                        }
+                    }
+                });
+    }
+
+    public boolean checkForcedSecondFactor(DiscordUtilsUser discordUtilsUser) {
+        for(String group : Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("Forced2FAGroups"))
+            for(String userGroup : Main.getInstance().getPermissionsIntegration().getUserGroups(discordUtilsUser.getOfflinePlayer()))
+                if(userGroup.equals(group)) return false;
+
+        for(long roleId : Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("Forced2FARoles"))
+            for(Guild guild : Main.getInstance().getBot().getJda().getGuilds())
+                for(Role role : guild.getMemberById(discordUtilsUser.getUser().getIdLong()).getRoles())
+                    if(role.getIdLong() == roleId) return false;
+
+        return true;
+    }
+
+    public void applySecondFactor(Player player, DiscordUtilsUser discordUtilsUser) {
+        if(discordUtilsUser.isSecondFactorEnabled() || !checkForcedSecondFactor(discordUtilsUser)) {
+            String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
+
+            if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("2FASessions"))
+                if(Main.getInstance().getBot().getSecondFactorSessions().containsKey(player.getUniqueId())) {
+                    if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLong("2FASessionTime") > 0) {
+
+                        if(Main.getInstance().getBot().getSecondFactorSessions().get(player.getUniqueId()).getEnd().isAfter(LocalDateTime.now()))
+                            if(Main.getInstance().getBot().getSecondFactorSessions().get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
+
+                    } else if(Main.getInstance().getBot().getSecondFactorSessions().get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
+                }
+
+            EmbedManager embedManager = new EmbedManager();
+
+            if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.REACTION) {
+                discordUtilsUser.getUser().openPrivateChannel().submit()
+                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText().replace("%playerIp%", playerIp))).submit())
+                        .whenComplete((msg, error) -> {
+                            if (error == null) {
+                                msg.addReaction(Emoji.fromUnicode("✅")).queue();
+                                msg.addReaction(Emoji.fromUnicode("❎")).queue();
+                                Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), msg.getId());
+                                return;
+                            }
+                            md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
+                        });
+            }
+            if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.CODE) {
+                AtomicReference<String> code = new AtomicReference<>("");
+                byte[] secureRandomSeed = new SecureRandom().generateSeed(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("CodeLength"));
+                for(byte b : secureRandomSeed) code.set(code.get() + b);
+                code.set(code.get().replace("-", ""));
+
+                discordUtilsUser.getUser().openPrivateChannel().submit()
+                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_CODE_MESSAGE.getText().replace("%code%", code.get()).replace("%playerIp%", playerIp))).submit())
+                        .whenComplete((msg, error) -> {
+                            if (error == null) {
+                                Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), code.get());
+                                return;
+                            }
+                            md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
+                        });
+            }
+
+            long timeToAuthorize = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLong("2FATimeToAuthorize");
+
+            if(timeToAuthorize > 0) Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                if(player != null) {
+                    if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
+                }
+            }, timeToAuthorize*20L);
+        }
     }
 
 }

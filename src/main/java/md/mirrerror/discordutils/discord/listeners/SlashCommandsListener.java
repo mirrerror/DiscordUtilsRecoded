@@ -1,11 +1,11 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.EmbedManager;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -18,10 +18,8 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SlashCommandsListener extends ListenerAdapter {
 
@@ -77,21 +75,9 @@ public class SlashCommandsListener extends ListenerAdapter {
                     event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
                     return;
                 }
-                AtomicReference<String> code = new AtomicReference<>("");
-                byte[] secureRandomSeed = new SecureRandom().generateSeed(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("CodeLength"));
-                for(byte b : secureRandomSeed) code.set(code.get() + b);
-                code.set(code.get().replace("-", "").trim());
 
-                event.getUser().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(Message.VERIFICATION_CODE_MESSAGE.getText().replace("%code%", code.get()))).submit())
-                        .whenComplete((msg, error) -> {
-                            if(error == null) {
-                                event.getHook().sendMessageEmbeds(embedManager.successfulEmbed(Message.VERIFICATION_MESSAGE.getText())).queue();
-                                bot.getLinkCodes().put(code.get(), event.getUser().getIdLong());
-                                return;
-                            }
-                            event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
-                        });
+                bot.startLinkingProcess(event.getUser(), event.getHook());
+
                 break;
             }
             case "online": {
