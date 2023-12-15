@@ -22,11 +22,6 @@ public class ForceUnlink implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length < 1) {
-            Message.DISCORDUTILSADMIN_FORCEUNLINK_USAGE.send(sender, true);
-            return;
-        }
-
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
@@ -72,6 +67,16 @@ public class ForceUnlink implements SubCommand {
     @Override
     public List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("funlink", "fulink", "forceulink"));
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 1;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILSADMIN_FORCEUNLINK_USAGE;
     }
 
 }

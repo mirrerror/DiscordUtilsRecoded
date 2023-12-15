@@ -19,10 +19,6 @@ public class SendToDiscord implements SubCommand {
             Message.COMMAND_DISABLED.send(sender, true);
             return;
         }
-        if(args.length < 3) {
-            Message.DISCORDUTILS_SENDTODISCORD_USAGE.send(sender, true);
-            return;
-        }
 
         Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
             StringBuilder text = new StringBuilder();
@@ -58,6 +54,16 @@ public class SendToDiscord implements SubCommand {
     @Override
     public java.util.List<String> getAliases() {
         return Collections.unmodifiableList(Arrays.asList("sendtodis", "std", "stodis", "stdis"));
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 3;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_SENDTODISCORD_USAGE;
     }
 
 }

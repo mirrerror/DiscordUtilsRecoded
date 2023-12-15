@@ -35,4 +35,14 @@ public class Stats implements SubCommand {
     public List<String> getAliases() {
         return Collections.singletonList("stat");
     }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 0;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return null;
+    }
 }

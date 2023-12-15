@@ -5,6 +5,7 @@ import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.utils.Validator;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
@@ -19,15 +20,7 @@ import java.util.List;
 public class Link implements SubCommand {
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) {
-            Message.SENDER_IS_NOT_A_PLAYER.send(sender, true);
-            return;
-        }
-
-        if(args.length < 1) {
-            Message.DISCORDUTILS_LINK_USAGE.send(sender, true);
-            return;
-        }
+        if(!Validator.validatePlayerSender(sender)) return;
 
         Player player = (Player) sender;
         if(DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId()).isLinked()) {
@@ -78,6 +71,16 @@ public class Link implements SubCommand {
     @Override
     public List<String> getAliases() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public int getMinArgsNeeded() {
+        return 1;
+    }
+
+    @Override
+    public Message getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_LINK_USAGE;
     }
 
 }
