@@ -55,7 +55,7 @@ public class SlashCommandsListener extends ListenerAdapter {
         if(event.getUser().isBot()) return;
         if(!event.isFromGuild()) return;
 
-        if(!DiscordValidator.validateCommandChannel(event.getChannel())) return;
+        if(!DiscordValidator.validateCommandChannel(event)) return;
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUser().getIdLong());
 
@@ -63,8 +63,8 @@ public class SlashCommandsListener extends ListenerAdapter {
 
         switch(event.getName()) {
             case "link": {
-                if(!DiscordValidator.validateNotLinkedUser(event.getChannel(), discordUtilsUser)) return;
-                if(!DiscordValidator.validateLinkAvailability(event.getChannel(), event.getUser())) return;
+                if(!DiscordValidator.validateNotLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkAvailability(event.getHook(), event.getUser())) return;
 
                 bot.startLinkingProcess(event.getUser(), event.getHook());
 
@@ -75,8 +75,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "sudo": {
-                if(!DiscordValidator.validateLinkedUser(event.getChannel(), discordUtilsUser)) return;
-                if(!DiscordValidator.validateAdminPermissions(event.getChannel(), event.getGuild(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
 
                 String command = event.getOption(Message.SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
 
@@ -85,8 +85,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "embed": {
-                if(!DiscordValidator.validateLinkedUser(event.getChannel(), discordUtilsUser)) return;
-                if(!DiscordValidator.validateAdminPermissions(event.getChannel(), event.getGuild(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
 
                 String title = event.getOption(Message.EMBED_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
                 String text = event.getOption(Message.EMBED_SLASH_COMMAND_THIRD_ARGUMENT_NAME.getText()).getAsString();
@@ -98,7 +98,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                     color = null;
                 }
 
-                if(!DiscordValidator.validateColor(event.getChannel(), color)) return;
+                if(!DiscordValidator.validateColor(event.getHook(), color)) return;
 
                 event.getHook().sendMessageEmbeds(embedManager.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
                         event.getUser().getName()))).queue();
@@ -108,7 +108,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                 OfflinePlayer player;
                 OptionMapping firstArg = event.getOption(Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText());
                 if(firstArg == null) {
-                    if(!DiscordValidator.validateLinkedUser(event.getChannel(), discordUtilsUser)) return;
+                    if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
                     player = discordUtilsUser.getOfflinePlayer();
                 } else {
                     player = Bukkit.getOfflinePlayer(firstArg.getAsString());
