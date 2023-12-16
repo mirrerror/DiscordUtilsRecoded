@@ -6,6 +6,7 @@ import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.utils.DiscordValidator;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -54,27 +55,16 @@ public class SlashCommandsListener extends ListenerAdapter {
         if(event.getUser().isBot()) return;
         if(!event.isFromGuild()) return;
 
-        List<Long> botCommandTextChannels = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("BotCommandTextChannels");
-        if(!botCommandTextChannels.isEmpty()) {
-            if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("BotCommandTextChannels").contains(event.getChannel().getIdLong())) {
-                event.replyEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();
-                return;
-            }
-        }
+        if(!DiscordValidator.validateCommandChannel(event)) return;
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUser().getIdLong());
 
+        event.deferReply().queue();
+
         switch(event.getName()) {
             case "link": {
-                event.deferReply().queue();
-                if(discordUtilsUser.isLinked()) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_ALREADY_VERIFIED.getText())).queue();
-                    return;
-                }
-                if(bot.getLinkCodes().containsValue(event.getUser().getIdLong())) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateNotLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkAvailability(event.getHook(), event.getUser())) return;
 
                 bot.startLinkingProcess(event.getUser(), event.getHook());
 
@@ -85,17 +75,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "sudo": {
-                event.deferReply().queue();
-
-                if(!discordUtilsUser.isLinked()) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                    return;
-                }
-
-                if(!discordUtilsUser.isAdmin(event.getGuild())) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
 
                 String command = event.getOption(Message.SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
 
@@ -104,17 +85,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "embed": {
-                event.deferReply().queue();
-
-                if(!discordUtilsUser.isLinked()) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                    return;
-                }
-
-                if(!discordUtilsUser.isAdmin(event.getGuild())) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
 
                 String title = event.getOption(Message.EMBED_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
                 String text = event.getOption(Message.EMBED_SLASH_COMMAND_THIRD_ARGUMENT_NAME.getText()).getAsString();
@@ -126,25 +98,17 @@ public class SlashCommandsListener extends ListenerAdapter {
                     color = null;
                 }
 
-                if(color == null) {
-                    event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.INVALID_COLOR_VALUE.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateColor(event.getHook(), color)) return;
 
                 event.getHook().sendMessageEmbeds(embedManager.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
                         event.getUser().getName()))).queue();
                 break;
             }
             case "stats": {
-                event.deferReply().queue();
-
                 OfflinePlayer player;
                 OptionMapping firstArg = event.getOption(Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText());
                 if(firstArg == null) {
-                    if(!discordUtilsUser.isLinked()) {
-                        event.getHook().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                        return;
-                    }
+                    if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
                     player = discordUtilsUser.getOfflinePlayer();
                 } else {
                     player = Bukkit.getOfflinePlayer(firstArg.getAsString());
@@ -162,7 +126,6 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "help": {
-                event.deferReply().queue();
                 StringBuilder messageToSend = new StringBuilder();
                 for (String s : Message.DISCORD_HELP.getTextList()) {
                     messageToSend.append(s).append("\n");

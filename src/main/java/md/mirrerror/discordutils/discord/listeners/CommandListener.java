@@ -6,6 +6,7 @@ import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.utils.DiscordValidator;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -13,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.awt.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CommandListener extends ListenerAdapter {
@@ -27,27 +27,16 @@ public class CommandListener extends ListenerAdapter {
         if(!event.getMessage().getContentRaw().startsWith(bot.getPrefix())) return;
         if(!event.isFromGuild()) return;
 
-        List<Long> botCommandTextChannels = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("BotCommandTextChannels");
-        if(!botCommandTextChannels.isEmpty()) {
-            if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLongList("BotCommandTextChannels").contains(event.getChannel().getIdLong())) {
-                event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();
-                return;
-            }
-        }
+        if(!DiscordValidator.validateCommandChannel(event.getChannel())) return;
+
         String[] args = event.getMessage().getContentRaw().replaceFirst(bot.getPrefix(), "").split(" ");
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
 
         switch (args[0]) {
             case "link": {
-                if(discordUtilsUser.isLinked()) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_ALREADY_VERIFIED.getText())).queue();
-                    return;
-                }
-                if(bot.getLinkCodes().containsValue(event.getAuthor().getIdLong())) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateNotLinkedUser(event.getChannel(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkAvailability(event.getChannel(), event.getAuthor())) return;
 
                 bot.startLinkingProcess(event.getAuthor(), event.getChannel());
 
@@ -58,19 +47,14 @@ public class CommandListener extends ListenerAdapter {
                 break;
             }
             case "sudo": {
-                if(!discordUtilsUser.isLinked()) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateLinkedUser(event.getChannel(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(event.getChannel(), event.getGuild(), discordUtilsUser)) return;
 
-                if(!discordUtilsUser.isAdmin(event.getGuild())) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
-                    return;
-                }
                 if(args.length < 2) {
                     event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_SUDO_USAGE.getText())).queue();
                     return;
                 }
+
                 AtomicReference<String> command = new AtomicReference<>("");
                 for(int i = 1; i < args.length; i++) command.set(command.get() + args[i] + " ");
                 command.set(command.get().trim());
@@ -80,19 +64,14 @@ public class CommandListener extends ListenerAdapter {
                 break;
             }
             case "embed": {
-                if(!discordUtilsUser.isLinked()) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateLinkedUser(event.getChannel(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(event.getChannel(), event.getGuild(), discordUtilsUser)) return;
 
-                if(!discordUtilsUser.isAdmin(event.getGuild())) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
-                    return;
-                }
                 if(args.length < 4) {
                     event.getChannel().sendMessageEmbeds(embedManager.infoEmbed(Message.DISCORD_EMBED_USAGE.getText())).queue();
                     return;
                 }
+
                 StringBuilder text = new StringBuilder();
                 for(int i = 3; i < args.length; i++) text.append(args[i]).append(" ");
 
@@ -103,10 +82,7 @@ public class CommandListener extends ListenerAdapter {
                     color = null;
                 }
 
-                if(color == null) {
-                    event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.INVALID_COLOR_VALUE.getText())).queue();
-                    return;
-                }
+                if(!DiscordValidator.validateColor(event.getChannel(), color)) return;
 
                 event.getChannel().sendMessageEmbeds(embedManager.embed(args[1], text.toString().trim(), color, Message.EMBED_SENT_BY.getText().replace("%sender%",
                         event.getAuthor().getName()))).queue();
@@ -118,10 +94,7 @@ public class CommandListener extends ListenerAdapter {
                     for(Member member : event.getMessage().getMentions().getMembers()) {
                         DiscordUtilsUser disUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(member.getUser().getIdLong());
 
-                        if(!disUtilsUser.isLinked()) {
-                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                            return;
-                        }
+                        if(!DiscordValidator.validateLinkedUser(event.getChannel(), disUtilsUser)) return;
 
                         StringBuilder messageToSend = new StringBuilder();
                         for (String s : Message.STATS_FORMAT.getTextList()) {
@@ -141,10 +114,7 @@ public class CommandListener extends ListenerAdapter {
 
                     } else {
 
-                        if(!discordUtilsUser.isLinked()) {
-                            event.getChannel().sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
-                            return;
-                        }
+                        if(!DiscordValidator.validateLinkedUser(event.getChannel(), discordUtilsUser)) return;
 
                         player = discordUtilsUser.getOfflinePlayer();
 

@@ -47,6 +47,8 @@ public class BukkitSecondFactorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
+        if(!Main.getInstance().isMainReady() || !Main.getInstance().isBotReady()) return;
+
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
