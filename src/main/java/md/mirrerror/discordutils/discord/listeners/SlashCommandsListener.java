@@ -81,7 +81,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "online": {
-                event.replyEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().replace("%online%", "" + Bukkit.getOnlinePlayers().size()))).queue();
+                event.replyEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size())))).queue();
                 break;
             }
             case "sudo": {
