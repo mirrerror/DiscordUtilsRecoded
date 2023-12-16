@@ -20,15 +20,10 @@ public class Link implements SubCommand {
         if(!Validator.validatePlayerSender(sender)) return;
 
         Player player = (Player) sender;
-        if(DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId()).isLinked()) {
-            Message.ACCOUNT_ALREADY_VERIFIED.send(sender, true);
-            return;
-        }
 
-        if(!Main.getInstance().getBot().getLinkCodes().containsKey(args[0])) {
-            Message.INVALID_LINK_CODE.send(sender, true);
-            return;
-        }
+        if(!Validator.validateNotLinkedUser(sender, DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId()))) return;
+
+        if(!Validator.validateLinkCode(sender, args[0])) return;
 
         boolean defaultSecondFactorValue = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("Default2FAValue");
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());

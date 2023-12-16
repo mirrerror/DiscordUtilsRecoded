@@ -5,6 +5,7 @@ import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
+import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -22,10 +23,7 @@ public class ForceUnlink implements SubCommand {
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(!discordUtilsUser.isLinked()) {
-            Message.ACCOUNT_IS_NOT_VERIFIED.send(sender, true);
-            return;
-        }
+        if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
         Main.getInstance().getBot().unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 

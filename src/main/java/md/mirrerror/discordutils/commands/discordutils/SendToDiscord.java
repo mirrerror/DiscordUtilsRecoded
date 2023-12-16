@@ -4,6 +4,7 @@ import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -15,10 +16,8 @@ public class SendToDiscord implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("MessagesChannel.Enabled")) {
-            Message.COMMAND_DISABLED.send(sender, true);
+        if(!Validator.validateCommandToggleness(sender, Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("MessagesChannel.Enabled")))
             return;
-        }
 
         Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
             StringBuilder text = new StringBuilder();
@@ -31,10 +30,7 @@ public class SendToDiscord implements SubCommand {
                 color = null;
             }
 
-            if(color == null) {
-                Message.INVALID_COLOR_VALUE.send(sender, true);
-                return;
-            }
+            if(!Validator.validateColor(sender, color)) return;
 
             Main.getInstance().getBot().sendMessageEmbed(Main.getInstance().getBot().getMessagesTextChannel(),
                     new EmbedManager().embed(args[0], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));

@@ -5,6 +5,7 @@ import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -41,10 +42,7 @@ public class GetDiscord implements SubCommand {
             }
         } else {
             DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-            if(!discordUtilsUser.isLinked()) {
-                Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.send(sender, true);
-                return;
-            }
+            if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
             sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", discordUtilsUser.getUser().getName()));
         }

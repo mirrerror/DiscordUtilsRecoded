@@ -24,15 +24,10 @@ public class Unlink implements SubCommand {
 
         Player player = (Player) sender;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if(!discordUtilsUser.isLinked()) {
-            Message.ACCOUNT_IS_NOT_VERIFIED.send(sender, true);
-            return;
-        }
 
-        if(Main.getInstance().getBot().getUnlinkPlayers().containsKey(player.getUniqueId())) {
-            Message.UNLINK_ALREADY_INITIATED.send(sender, true);
-            return;
-        }
+        if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
+
+        if(!Validator.validateUnlinkAvailability(sender, player)) return;
 
         String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 

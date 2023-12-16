@@ -20,10 +20,8 @@ public class SecondFactor implements SubCommand {
 
         Player player = (Player) sender;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if(!discordUtilsUser.isLinked()) {
-            Message.ACCOUNT_IS_NOT_VERIFIED.send(sender, true);
-            return;
-        }
+
+        if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
         if(discordUtilsUser.isSecondFactorEnabled()) {
 

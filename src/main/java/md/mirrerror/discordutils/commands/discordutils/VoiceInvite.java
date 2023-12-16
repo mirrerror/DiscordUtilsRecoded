@@ -29,19 +29,14 @@ public class VoiceInvite implements SubCommand {
 
         Player player = (Player) sender;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if(!discordUtilsUser.isLinked()) {
-            Message.ACCOUNT_IS_NOT_VERIFIED.send(sender, true);
-            return;
-        }
+
+        if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
             Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
                 Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
                 if(member != null) {
-                    if(member.getVoiceState().getChannel() == null) {
-                        Message.SENDER_IS_NOT_IN_A_VOICE_CHANNEL.send(sender, true);
-                        return;
-                    }
+                    if(!Validator.validateVoiceChannelPresence(sender, member)) return;
 
                     String url = Main.getInstance().getBot().createVoiceInviteUrl(member, 15L, TimeUnit.MINUTES);
 
