@@ -54,6 +54,7 @@ public enum Message {
     COMMAND_DISABLED(false),
     INVALID_COLOR_VALUE(false),
     INVALID_PLAYER_NAME_OR_UNVERIFIED(false),
+    PLUGIN_IS_NOT_READY_YET(false),
     ONLINE(false),
     COMMAND_EXECUTED(false),
     DISCORD_SUDO_USAGE(false),

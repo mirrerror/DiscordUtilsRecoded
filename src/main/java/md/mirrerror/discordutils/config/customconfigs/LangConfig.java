@@ -50,6 +50,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("COMMAND_DISABLED", "This command is disabled by the server administration.");
         getFileConfiguration().addDefault("INVALID_COLOR_VALUE", "Invalid color value.");
         getFileConfiguration().addDefault("INVALID_PLAYER_NAME_OR_UNVERIFIED", "The given player is unverified or doesn't exist.");
+        getFileConfiguration().addDefault("PLUGIN_IS_NOT_READY_YET", "&cThe server is still loading, please, wait a bit and try joining again.");
         getFileConfiguration().addDefault("ONLINE", "Players online: **%online%**");
         getFileConfiguration().addDefault("COMMAND_EXECUTED", "The command has been successfully executed.");
         getFileConfiguration().addDefault("DISCORD_SUDO_USAGE", "Usage: !sudo [command]");

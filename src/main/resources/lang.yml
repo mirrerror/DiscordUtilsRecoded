@@ -39,6 +39,7 @@ DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: 'Your Discord account has be
 COMMAND_DISABLED: 'This command is disabled by the server administration.'
 INVALID_COLOR_VALUE: 'Invalid color value.'
 INVALID_PLAYER_NAME_OR_UNVERIFIED: 'The given player is unverified or doesn''t exist.'
+PLUGIN_IS_NOT_READY_YET: '&cThe server is still loading, please, wait a bit and try joining again.'
 ONLINE: 'Players online: **%online%**'
 COMMAND_EXECUTED: 'The command has been successfully executed.'
 DISCORD_SUDO_USAGE: 'Usage: !sudo [command]'

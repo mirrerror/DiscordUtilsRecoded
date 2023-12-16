@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,8 +15,12 @@ public class CacheListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        if(!Main.getInstance().isMainReady() || !Main.getInstance().isBotReady())
+            player.kickPlayer(Message.PLUGIN_IS_NOT_READY_YET.getText());
+
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            Player player = event.getPlayer();
             DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
             for(Guild guild : Main.getInstance().getBot().getJda().getGuilds()) {
                 discordUtilsUser.synchronizeRoles(guild);

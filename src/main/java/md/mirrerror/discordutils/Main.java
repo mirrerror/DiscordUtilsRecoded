@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils;
 
 import lombok.Getter;
+import lombok.Setter;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
@@ -38,6 +39,10 @@ public final class Main extends JavaPlugin {
     private PermissionsIntegration permissionsIntegration;
 
     private DiscordUtilsBot bot;
+
+    private boolean isMainReady;
+    @Setter
+    private boolean isBotReady;
 
     @Override
     public void onEnable() {
@@ -104,6 +109,8 @@ public final class Main extends JavaPlugin {
         } else {
             getLogger().info("The chosen translation doesn't exist or you disabled this option.");
         }
+
+        isMainReady = true;
 
         setupMetrics();
         UpdateChecker.checkForUpdates();

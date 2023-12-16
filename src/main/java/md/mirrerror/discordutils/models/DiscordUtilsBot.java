@@ -287,6 +287,8 @@ public class DiscordUtilsBot {
             Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
 
         }
+
+        Main.getInstance().setBotReady(true);
     }
 
     public void sendMessage(TextChannel textChannel, String message) {
