@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.utils;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
@@ -67,7 +67,7 @@ public class DiscordValidator {
     }
 
     public static boolean validateCommandChannel(MessageChannelUnion messageChannelUnion) {
-        List<Long> botCommandTextChannels = BotSettingsManager.BOT_COMMAND_TEXT_CHANNELS;
+        List<Long> botCommandTextChannels = BotSettings.BOT_COMMAND_TEXT_CHANNELS;
         if(!botCommandTextChannels.isEmpty()) {
             if(!botCommandTextChannels.contains(messageChannelUnion.getIdLong())) {
                 messageChannelUnion.sendMessageEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();
@@ -78,7 +78,7 @@ public class DiscordValidator {
     }
 
     public static boolean validateCommandChannel(SlashCommandInteractionEvent event) {
-        List<Long> botCommandTextChannels = BotSettingsManager.BOT_COMMAND_TEXT_CHANNELS;
+        List<Long> botCommandTextChannels = BotSettings.BOT_COMMAND_TEXT_CHANNELS;
         if(!botCommandTextChannels.isEmpty()) {
             if(!botCommandTextChannels.contains(event.getChannel().getIdLong())) {
                 event.replyEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();

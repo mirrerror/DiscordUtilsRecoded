@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class ServerActivityListener implements Listener {
                 embedManager.embed(
                         Message.CHAT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()).replace("%message%", message),
                         Message.CHAT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()).replace("%message%", message),
-                        Color.decode(BotSettingsManager.SERVER_ACTIVITY_LOGGING_CHAT_EMBED_COLOR)
+                        Color.decode(BotSettings.SERVER_ACTIVITY_LOGGING_CHAT_EMBED_COLOR)
                 )
         ).queue();
     }
@@ -38,7 +38,7 @@ public class ServerActivityListener implements Listener {
                 embedManager.embed(
                         Message.JOIN_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
                         Message.JOIN_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
-                        Color.decode(BotSettingsManager.SERVER_ACTIVITY_LOGGING_JOIN_EMBED_COLOR)
+                        Color.decode(BotSettings.SERVER_ACTIVITY_LOGGING_JOIN_EMBED_COLOR)
                 )
         ).queue();
     }
@@ -50,7 +50,7 @@ public class ServerActivityListener implements Listener {
                 embedManager.embed(
                         Message.QUIT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
                         Message.QUIT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
-                        Color.decode(BotSettingsManager.SERVER_ACTIVITY_LOGGING_QUIT_EMBED_COLOR)
+                        Color.decode(BotSettings.SERVER_ACTIVITY_LOGGING_QUIT_EMBED_COLOR)
                 )
         ).queue();
     }
@@ -62,7 +62,7 @@ public class ServerActivityListener implements Listener {
                 embedManager.embed(
                         Message.DEATH_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
                         Message.DEATH_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
-                        Color.decode(BotSettingsManager.SERVER_ACTIVITY_LOGGING_DEATH_EMBED_COLOR)
+                        Color.decode(BotSettings.SERVER_ACTIVITY_LOGGING_DEATH_EMBED_COLOR)
                 )
         ).queue();
     }

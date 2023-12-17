@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Member;
@@ -17,7 +17,7 @@ public class MentionsListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if(!BotSettingsManager.NOTIFY_ABOUT_MENTIONS_ENABLED) return;
+        if(!BotSettings.NOTIFY_ABOUT_MENTIONS_ENABLED) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
         if(Main.getInstance().getBot().getNotifyAboutMentionsBlacklistedChannels().contains(event.getChannel().asTextChannel().getIdLong())) return;
@@ -31,24 +31,24 @@ public class MentionsListener extends ListenerAdapter {
 
             Player player = discordUtilsUser.getOfflinePlayer().getPlayer();
 
-            if(BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_ENABLED) {
-                int fadeIn = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_IN;
-                int stay = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_STAY;
-                int fadeOut = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_OUT;
-                String title = ChatColor.translateAlternateColorCodes('&', BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_TITLE);
-                String subtitle = ChatColor.translateAlternateColorCodes('&', BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_SUBTITLE);
+            if(BotSettings.NOTIFY_ABOUT_MENTIONS_TITLE_ENABLED) {
+                int fadeIn = BotSettings.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_IN;
+                int stay = BotSettings.NOTIFY_ABOUT_MENTIONS_TITLE_STAY;
+                int fadeOut = BotSettings.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_OUT;
+                String title = ChatColor.translateAlternateColorCodes('&', BotSettings.NOTIFY_ABOUT_MENTIONS_TITLE_TITLE);
+                String subtitle = ChatColor.translateAlternateColorCodes('&', BotSettings.NOTIFY_ABOUT_MENTIONS_TITLE_SUBTITLE);
 
                 player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             }
 
-            if(BotSettingsManager.NOTIFY_ABOUT_MENTIONS_MESSAGE_ENABLED) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', BotSettingsManager.NOTIFY_ABOUT_MENTIONS_MESSAGE_TEXT));
+            if(BotSettings.NOTIFY_ABOUT_MENTIONS_MESSAGE_ENABLED) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', BotSettings.NOTIFY_ABOUT_MENTIONS_MESSAGE_TEXT));
             }
 
-            if(BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_ENABLED) {
-                String soundType = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_TYPE;
-                float volume = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_VOLUME;
-                float pitch = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_PITCH;
+            if(BotSettings.NOTIFY_ABOUT_MENTIONS_SOUND_ENABLED) {
+                String soundType = BotSettings.NOTIFY_ABOUT_MENTIONS_SOUND_TYPE;
+                float volume = BotSettings.NOTIFY_ABOUT_MENTIONS_SOUND_VOLUME;
+                float pitch = BotSettings.NOTIFY_ABOUT_MENTIONS_SOUND_PITCH;
                 player.playSound(player.getLocation(), Sound.valueOf(soundType.toUpperCase()), volume, pitch);
             }
 

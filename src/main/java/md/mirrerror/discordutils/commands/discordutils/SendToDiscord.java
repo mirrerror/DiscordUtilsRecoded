@@ -2,7 +2,7 @@ package md.mirrerror.discordutils.commands.discordutils;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.commands.SubCommand;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.utils.Validator;
@@ -17,7 +17,7 @@ public class SendToDiscord implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!Validator.validateCommandToggleness(sender, BotSettingsManager.MESSAGES_CHANNEL_ENABLED))
+        if(!Validator.validateCommandToggleness(sender, BotSettings.MESSAGES_CHANNEL_ENABLED))
             return;
 
         Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {

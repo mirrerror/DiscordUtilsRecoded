@@ -3,7 +3,7 @@ package md.mirrerror.discordutils.config;
 import md.mirrerror.discordutils.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class MainSettingsManager {
+public class MainSettings {
 
     private static final FileConfiguration config = Main.getInstance().getConfigManager().getConfig().getFileConfiguration();
 

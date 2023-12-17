@@ -9,9 +9,9 @@ import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.ConfigManager;
-import md.mirrerror.discordutils.config.MainSettingsManager;
+import md.mirrerror.discordutils.config.MainSettings;
 import md.mirrerror.discordutils.config.messages.TranslationsManager;
 import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
@@ -55,7 +55,7 @@ public final class Main extends JavaPlugin {
         configManager = new ConfigManager();
         papiManager = new PAPIManager();
 
-        String permissionsPlugin = MainSettingsManager.PERMISSIONS_PLUGIN.toLowerCase();
+        String permissionsPlugin = MainSettings.PERMISSIONS_PLUGIN.toLowerCase();
         switch (permissionsPlugin) {
             case "vault": {
                 permissionsIntegration = new VaultIntegration();
@@ -67,7 +67,7 @@ public final class Main extends JavaPlugin {
             }
         }
 
-        String dataType = MainSettingsManager.DATABASE_TYPE.toLowerCase();
+        String dataType = MainSettings.DATABASE_TYPE.toLowerCase();
         switch (dataType) {
             case "mysql": {
                 dataManager = new MySQLDataManager();
@@ -87,13 +87,13 @@ public final class Main extends JavaPlugin {
             }
         });
 
-        if(BotSettingsManager.ASYNC_BOT_LOADING) {
+        if(BotSettings.ASYNC_BOT_LOADING) {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                bot = new DiscordUtilsBot(BotSettingsManager.BOT_TOKEN);
+                bot = new DiscordUtilsBot(BotSettings.BOT_TOKEN);
                 bot.setupBot();
             });
         } else {
-            bot = new DiscordUtilsBot(BotSettingsManager.BOT_TOKEN);
+            bot = new DiscordUtilsBot(BotSettings.BOT_TOKEN);
             bot.setupBot();
         }
 
@@ -106,7 +106,7 @@ public final class Main extends JavaPlugin {
         registerCommands();
         getLogger().info("The commands have been successfully loaded.");
 
-        String chosenTranslation = MainSettingsManager.LANGUAGE;
+        String chosenTranslation = MainSettings.LANGUAGE;
         if(!chosenTranslation.isEmpty()) {
             TranslationsManager.downloadTranslation(chosenTranslation);
         } else {
@@ -116,7 +116,7 @@ public final class Main extends JavaPlugin {
         isMainReady = true;
 
         setupMetrics();
-        if(MainSettingsManager.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
+        if(MainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
     }
 
     @Override

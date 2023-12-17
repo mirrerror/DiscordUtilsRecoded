@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.User;
@@ -24,11 +24,11 @@ public class BoostListener extends ListenerAdapter {
 
         Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
             if(newTime != null) {
-                BotSettingsManager.COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
+                BotSettings.COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });
             } else {
-                BotSettingsManager.COMMANDS_AFTER_STOPPING_SERVER_BOOSTING.forEach(command -> {
+                BotSettings.COMMANDS_AFTER_STOPPING_SERVER_BOOSTING.forEach(command -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });
             }

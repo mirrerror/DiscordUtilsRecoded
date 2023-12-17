@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
@@ -40,16 +40,16 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Message.SECONDFACTOR_AUTHORIZED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
                     Main.getInstance().getBot().getSecondFactorSessions().put(uuid, new SecondFactorSession(StringUtils.remove(player.getAddress().getAddress().toString(), '/'),
-                            LocalDateTime.now().plusSeconds(BotSettingsManager.SECOND_FACTOR_SESSION_TIME)));
+                            LocalDateTime.now().plusSeconds(BotSettings.SECOND_FACTOR_SESSION_TIME)));
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                        BotSettingsManager.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                        BotSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }
                 if(event.getReaction().getEmoji().getName().equals("❎")) {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
                         player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
-                        BotSettingsManager.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                        BotSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }
 

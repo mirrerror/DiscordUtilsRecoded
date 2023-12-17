@@ -1,6 +1,6 @@
 package md.mirrerror.discordutils.discord;
 
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,7 +14,7 @@ public class EmbedManager {
 
     public MessageEmbed errorEmbed(String text) {
         embedBuilder.setTitle(Message.ERROR.getText());
-        embedBuilder.setColor(Color.decode(BotSettingsManager.ERROR_EMBED_COLOR));
+        embedBuilder.setColor(Color.decode(BotSettings.ERROR_EMBED_COLOR));
         embedBuilder.setDescription(text);
         embedBuilder.setFooter(FOOTER);
         return embedBuilder.build();
@@ -22,7 +22,7 @@ public class EmbedManager {
 
     public MessageEmbed successfulEmbed(String text) {
         embedBuilder.setTitle(Message.SUCCESSFULLY.getText());
-        embedBuilder.setColor(Color.decode(BotSettingsManager.SUCCESSFUL_EMBED_COLOR));
+        embedBuilder.setColor(Color.decode(BotSettings.SUCCESSFUL_EMBED_COLOR));
         embedBuilder.setDescription(text);
         embedBuilder.setFooter(FOOTER);
         return embedBuilder.build();
@@ -30,7 +30,7 @@ public class EmbedManager {
 
     public MessageEmbed infoEmbed(String text) {
         embedBuilder.setTitle(Message.INFORMATION.getText());
-        embedBuilder.setColor(Color.decode(BotSettingsManager.INFORMATION_EMBED_COLOR));
+        embedBuilder.setColor(Color.decode(BotSettings.INFORMATION_EMBED_COLOR));
         embedBuilder.setDescription(text);
         embedBuilder.setFooter(FOOTER);
         return embedBuilder.build();

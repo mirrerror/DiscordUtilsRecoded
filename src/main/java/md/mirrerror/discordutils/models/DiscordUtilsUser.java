@@ -2,7 +2,7 @@ package md.mirrerror.discordutils.models;
 
 import lombok.Getter;
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -61,7 +61,7 @@ public class DiscordUtilsUser {
         Set<Long> assignedRoles = new HashSet<>();
         Member member = guild.getMemberById(user.getIdLong());
 
-        if(BotSettingsManager.ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP) {
+        if(BotSettings.ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP) {
             String primaryGroup = Main.getInstance().getPermissionsIntegration().getHighestUserGroup(offlinePlayer);
 
             for(long roleId : Main.getInstance().getBot().getGroupRoles().keySet()) {
@@ -98,7 +98,7 @@ public class DiscordUtilsUser {
 
     public void synchronizeNickname(Guild guild) {
         if(!isLinked()) return;
-        String format = Main.getInstance().getPapiManager().setPlaceholders(offlinePlayer, BotSettingsManager.NAMES_SYNCHRONIZATION_FORMAT
+        String format = Main.getInstance().getPapiManager().setPlaceholders(offlinePlayer, BotSettings.NAMES_SYNCHRONIZATION_FORMAT
                         .replace("%player%", offlinePlayer.getName()));
         try {
             guild.modifyNickname(guild.getMemberById(user.getIdLong()), format).queue();

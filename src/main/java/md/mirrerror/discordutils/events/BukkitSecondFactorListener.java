@@ -2,7 +2,7 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
-import md.mirrerror.discordutils.config.BotSettingsManager;
+import md.mirrerror.discordutils.config.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
@@ -32,7 +32,7 @@ public class BukkitSecondFactorListener implements Listener {
     private final List<String> allowedCommands = new ArrayList<>();
 
     public BukkitSecondFactorListener() {
-        allowedCommands.addAll(BotSettingsManager.ALLOWED_COMMANDS_BEFORE_PASSING_SECOND_FACTOR);
+        allowedCommands.addAll(BotSettings.ALLOWED_COMMANDS_BEFORE_PASSING_SECOND_FACTOR);
         Iterator<String> stringIterator = allowedCommands.iterator();
         int index = 0;
         while(stringIterator.hasNext()) {
@@ -57,7 +57,7 @@ public class BukkitSecondFactorListener implements Listener {
 
         Main.getInstance().getBot().applySecondFactor(player, discordUtilsUser);
 
-        if(BotSettingsManager.NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
+        if(BotSettings.NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
             if(!discordUtilsUser.isSecondFactorEnabled()) Message.SECONDFACTOR_DISABLED_REMINDER.send(player, true);
         }
     }
@@ -89,7 +89,7 @@ public class BukkitSecondFactorListener implements Listener {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
         if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId()) ||
-                BotSettingsManager.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
+                BotSettings.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
 
             if(!isAllowedCommand(event.getMessage().substring(1))) {
                 performChecks(event.getPlayer(), event);
@@ -109,9 +109,9 @@ public class BukkitSecondFactorListener implements Listener {
                 Main.getInstance().getBot().getSecondFactorPlayers().remove(player.getUniqueId());
                 Message.SECONDFACTOR_AUTHORIZED.send(player, true);
                 Main.getInstance().getBot().getSecondFactorSessions().put(player.getUniqueId(), new SecondFactorSession(playerIp,
-                        LocalDateTime.now().plusSeconds(BotSettingsManager.SECOND_FACTOR_SESSION_TIME)));
+                        LocalDateTime.now().plusSeconds(BotSettings.SECOND_FACTOR_SESSION_TIME)));
                 Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                    BotSettingsManager.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+                    BotSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
                 });
             } else {
                 int attempts = 1;
@@ -171,7 +171,7 @@ public class BukkitSecondFactorListener implements Listener {
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(BotSettingsManager.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
+        if(BotSettings.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
             player.getInventory().addItem(event.getBrokenItem());
             Message.VERIFICATION_NEEDED.send(player, true);
         }
@@ -214,7 +214,7 @@ public class BukkitSecondFactorListener implements Listener {
 
     private boolean checkVerification(Player player, Cancellable event) {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if(BotSettingsManager.FORCE_LINKING_ENABLED) {
+        if(BotSettings.FORCE_LINKING_ENABLED) {
             if(!discordUtilsUser.isLinked()) {
                 event.setCancelled(true);
                 Message.VERIFICATION_NEEDED.send(player, true);

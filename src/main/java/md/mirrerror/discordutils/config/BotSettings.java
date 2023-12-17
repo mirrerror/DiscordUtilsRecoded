@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BotSettingsManager {
+public class BotSettings {
 
     private static final FileConfiguration config = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration();
 
