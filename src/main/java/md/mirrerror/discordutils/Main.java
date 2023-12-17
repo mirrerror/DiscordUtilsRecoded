@@ -9,7 +9,6 @@ import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
-import md.mirrerror.discordutils.config.BotSettingsManager;
 import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.config.messages.TranslationsManager;
 import md.mirrerror.discordutils.data.ConfigDataManager;
