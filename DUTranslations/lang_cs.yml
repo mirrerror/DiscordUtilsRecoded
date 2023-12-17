@@ -85,6 +85,9 @@ DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: Tvému Discord účtu bylo z
 COMMAND_DISABLED: Tento příkaz je na serveru zakázán.
 INVALID_COLOR_VALUE: Invalidní barva.
 PLUGIN_IS_NOT_READY_YET: '&cServer se stále načítá, prosím, počkejte chvíli a zkuste se připojit znovu.'
+SECONDFACTOR_DISABLE_CONFIRMATION: 'Někdo se snaží vypnout dvoufázové ověřování na Vašem účtě. Vyberte zda to chcete nebo ne IP: %playerIp%.'
+SECONDFACTOR_DISABLE_REQUEST_SENT: 'Žádost o vypnutí dvoufázového ověřování byla odeslána. Zkontrolujte svoje soukromé zprávy.'
+SECONDFACTOR_DISABLE_CANCELLED: 'Žádost o vypnutí dvoufázového ověřování byla zrušena.'
 ONLINE: 'Aktivní hráči: **%online%**'
 COMMAND_EXECUTED: Příkaz byl úspěšně odeslán.
 DISCORD_SUDO_USAGE: 'Použití: !sudo [command]'
