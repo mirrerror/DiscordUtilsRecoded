@@ -1,5 +1,5 @@
 name: DiscordUtils
-version: '4.3'
+version: ${project.version}
 main: md.mirrerror.discordutils.Main
 authors: [ mirrerror ]
 softdepend:

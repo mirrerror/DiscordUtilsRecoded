@@ -2,31 +2,36 @@ package md.mirrerror.discordutils;
 
 import lombok.Getter;
 import lombok.Setter;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.ConfigManager;
+import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.config.messages.TranslationsManager;
 import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.data.MySQLDataManager;
-import md.mirrerror.discordutils.models.DiscordUtilsBot;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.events.BukkitSecondFactorListener;
 import md.mirrerror.discordutils.events.CacheListener;
 import md.mirrerror.discordutils.integrations.permissions.LuckPermsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.VaultIntegration;
 import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.utils.Metrics;
 import md.mirrerror.discordutils.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 public final class Main extends JavaPlugin {
@@ -44,13 +49,21 @@ public final class Main extends JavaPlugin {
     @Setter
     private boolean isBotReady;
 
+    @Setter
+    private BotSettings botSettings;
+    @Setter
+    private MainSettings mainSettings;
+
     @Override
     public void onEnable() {
         instance = this;
         configManager = new ConfigManager();
         papiManager = new PAPIManager();
 
-        String permissionsPlugin = configManager.getConfig().getFileConfiguration().getString("PermissionsPlugin").toLowerCase();
+        mainSettings = new MainSettings();
+        botSettings = new BotSettings();
+
+        String permissionsPlugin = mainSettings.PERMISSIONS_PLUGIN.toLowerCase();
         switch (permissionsPlugin) {
             case "vault": {
                 permissionsIntegration = new VaultIntegration();
@@ -62,7 +75,7 @@ public final class Main extends JavaPlugin {
             }
         }
 
-        String dataType = configManager.getConfig().getFileConfiguration().getString("Database.Type").toLowerCase();
+        String dataType = mainSettings.DATABASE_TYPE.toLowerCase();
         switch (dataType) {
             case "mysql": {
                 dataManager = new MySQLDataManager();
@@ -82,15 +95,13 @@ public final class Main extends JavaPlugin {
             }
         });
 
-        if(configManager.getBotSettings().getFileConfiguration().getBoolean("AsyncBotLoading")) {
+        if(botSettings.ASYNC_BOT_LOADING) {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                bot = new DiscordUtilsBot(configManager.getBotSettings().getFileConfiguration().getString("BotToken"),
-                        configManager.getBotSettings().getFileConfiguration().getString("BotPrefix"));
+                bot = new DiscordUtilsBot(botSettings.BOT_TOKEN);
                 bot.setupBot();
             });
         } else {
-            bot = new DiscordUtilsBot(configManager.getBotSettings().getFileConfiguration().getString("BotToken"),
-                    configManager.getBotSettings().getFileConfiguration().getString("BotPrefix"));
+            bot = new DiscordUtilsBot(botSettings.BOT_TOKEN);
             bot.setupBot();
         }
 
@@ -103,7 +114,7 @@ public final class Main extends JavaPlugin {
         registerCommands();
         getLogger().info("The commands have been successfully loaded.");
 
-        String chosenTranslation = configManager.getConfig().getFileConfiguration().getString("Language");
+        String chosenTranslation = mainSettings.LANGUAGE;
         if(!chosenTranslation.isEmpty()) {
             TranslationsManager.downloadTranslation(chosenTranslation);
         } else {
@@ -113,7 +124,7 @@ public final class Main extends JavaPlugin {
         isMainReady = true;
 
         setupMetrics();
-        UpdateChecker.checkForUpdates();
+        if(mainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
     }
 
     @Override

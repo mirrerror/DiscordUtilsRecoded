@@ -1,9 +1,6 @@
 # BotToken
 # Token that is required for the bot to work. You can get it here: https://discord.com/developers/applications
 # ------------------------------------------------------------------
-# BotPrefix
-# Prefix that is used in the bot's commands
-# ------------------------------------------------------------------
 # BotCommandTextChannels
 # The text channels, in which the bot handles the commands (if it is empty, the bot will handle the commands in all the text channels)
 # ------------------------------------------------------------------
@@ -178,11 +175,11 @@
 # Volume - sound volume
 # Pitch - sound pitch
 
-BotToken: ''
-BotPrefix: '!'
-BotCommandTextChannels: []
-AsyncBotLoading: true
-OnlineStatus: 'online'
+MainSettings:
+  BotToken: ''
+  BotCommandTextChannels: []
+  AsyncBotLoading: true
+  OnlineStatus: 'online'
 Activities:
   Enabled: true
   UpdateDelay: 10
@@ -195,40 +192,45 @@ Activities:
   3:
     Type: 'watching'
     Text: 'DiscordUtils'
-SuccessfulEmbedColor: '#0AAC00'
-InformationEmbedColor: '#ECC846'
-ErrorEmbedColor: '#A80000'
-GroupRoles: {}
-AdminRoles: []
-VerifiedRole:
-  Enabled: false
-  ID: -1
-CodeLength: 10
-2FAType: 'reaction'
-2FASessions: true
-2FASessionTime: 900
-2FATimeToAuthorize: 30
-Default2FAValue: false
-Forced2FARoles: []
-Forced2FAGroups: []
-NotifyAboutDisabled2FA: true
-ForceVerification: false
-AllowedCommandsBeforePassing2FA: []
-ActionsAfterFailing2FA:
-  1:
-    Messages:
-      - 'You have failed 2FA for &bone&f time. If you will have failed 2FA &btwo&f more times, your IP address will be banned.'
-    Commands: []
-  3:
-    Messages: []
-    Commands:
-      - 'banip %player% 30m Suspicious activity.'
-CommandsAfter2FADeclining: []
-CommandsAfter2FAPassing: []
-CommandsAfterVerification: []
-CommandsAfterUnlink: []
-CommandsAfterServerBoosting: []
-CommandsAfterStoppingServerBoosting: []
+EmbedMessages:
+  SuccessfulEmbedColor: '#0AAC00'
+  InformationEmbedColor: '#ECC846'
+  ErrorEmbedColor: '#A80000'
+Roles:
+  GroupRoles: {}
+  AdminRoles: []
+  VerifiedRole:
+    Enabled: false
+    ID: -1
+2FA:
+  CodeLength: 10
+  Type: 'reaction'
+  SessionsEnabled: true
+  SessionTime: 900
+  TimeToAuthorize: 30
+  Default2FAValue: false
+  ForcedRoles: []
+  ForcedGroups: []
+  NotifyAboutDisabled2FA: true
+  AllowedCommandsBeforePassing2FA: []
+  ActionsAfterFailing2FA:
+    1:
+      Messages:
+        - 'You have failed 2FA for &bone&f time. If you will have failed 2FA &btwo&f more times, your IP address will be banned.'
+      Commands: []
+    3:
+      Messages: []
+      Commands:
+        - 'banip %player% 30m Suspicious activity.'
+  CommandsAfter2FADeclining: []
+  CommandsAfter2FAPassing: []
+Linking:
+  ForceLinking: false
+  CommandsAfterLinking: []
+  CommandsAfterUnlinking: []
+Boosting:
+  CommandsAfterServerBoosting: []
+  CommandsAfterStoppingServerBoosting: []
 RolesSynchronization:
   Enabled: true
   AssignOnlyPrimaryGroup: true
@@ -252,7 +254,7 @@ MessagesChannel:
   ID: -1
 ServerActivityLogging:
   Enabled: false
-  ChannelId: -1
+  ChannelID: -1
   JoinEmbedColor: '#8de113'
   QuitEmbedColor: '#f34520'
   DeathEmbedColor: '#f34520'
@@ -260,13 +262,13 @@ ServerActivityLogging:
 Console:
   Enabled: false
   ClearOnEveryInit: true
-  ChannelId: -1
+  ChannelID: -1
   DeleteMessagesDelay: 10
   BlacklistedCommands: []
 Chat:
   Enabled: false
   WebhookUrl: ''
-  ChannelId: -1
+  ChannelID: -1
 NotifyAboutMentions:
   Enabled: true
   BlacklistedChannels: []

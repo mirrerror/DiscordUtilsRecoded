@@ -14,11 +14,11 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> setup() {
         return CompletableFuture.runAsync(() -> {
 
-            String host = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Host");
-            int port = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getInt("Database.Port");
-            String database = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Database");
-            String username = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Username");
-            String password = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Password");
+            String host = Main.getInstance().getMainSettings().DATABASE_HOST;
+            int port = Main.getInstance().getMainSettings().DATABASE_PORT;
+            String database = Main.getInstance().getMainSettings().DATABASE_DATABASE;
+            String username = Main.getInstance().getMainSettings().DATABASE_USERNAME;
+            String password = Main.getInstance().getMainSettings().DATABASE_PASSWORD;
 
             try {
                 if (getConnection() != null && !getConnection().isClosed()) {
@@ -28,7 +28,7 @@ public class MySQLDataManager implements DataManager {
                 if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
                 else Class.forName("com.mysql.jdbc.Driver");
 
-                connection = DriverManager.getConnection(Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.ConnectionUrl")
+                connection = DriverManager.getConnection(Main.getInstance().getMainSettings().DATABASE_CONNECTION_URL
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
                 setupTable();
             } catch (SQLException | ClassNotFoundException ignored) {

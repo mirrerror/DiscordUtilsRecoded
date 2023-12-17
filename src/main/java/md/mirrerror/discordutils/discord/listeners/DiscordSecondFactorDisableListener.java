@@ -2,18 +2,16 @@ package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
-import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class DiscordUnlinkListener extends ListenerAdapter {
+public class DiscordSecondFactorDisableListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
@@ -27,23 +25,22 @@ public class DiscordUnlinkListener extends ListenerAdapter {
         long messageId = event.getMessageIdLong();
         UUID uuid = discordUtilsUser.getOfflinePlayer().getUniqueId();
 
-        if(Main.getInstance().getBot().getUnlinkPlayers().containsKey(uuid)) {
-            if(Main.getInstance().getBot().getUnlinkPlayers().get(uuid).getIdLong() == messageId) {
+        if(Main.getInstance().getBot().getSecondFactorDisablePlayers().containsKey(uuid)) {
+            if(Main.getInstance().getBot().getSecondFactorDisablePlayers().get(uuid).getIdLong() == messageId) {
 
                 if(event.getReaction().getEmoji().getName().equals("✅")) {
-                    Main.getInstance().getBot().unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 
-                    Main.getInstance().getBot().getUnlinkPlayers().remove(uuid);
-                    if(discordUtilsUser.getOfflinePlayer().isOnline()) Message.ACCOUNT_SUCCESSFULLY_UNLINKED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
-                    Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                        Main.getInstance().getBotSettings().COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
-                    });
+                    discordUtilsUser.setSecondFactor(false);
 
-                    discordUtilsUser.unregister();
+                    Main.getInstance().getBot().getSecondFactorDisablePlayers().remove(uuid);
+
+                    if(discordUtilsUser.getOfflinePlayer().isOnline())
+                        discordUtilsUser.getOfflinePlayer().getPlayer().sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.DISABLED.getText()));
+
                 }
                 if(event.getReaction().getEmoji().getName().equals("❎")) {
-                    Main.getInstance().getBot().getUnlinkPlayers().remove(uuid);
-                    if(discordUtilsUser.getOfflinePlayer().isOnline()) Message.ACCOUNT_UNLINK_CANCELLED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
+                    Main.getInstance().getBot().getSecondFactorDisablePlayers().remove(uuid);
+                    if(discordUtilsUser.getOfflinePlayer().isOnline()) Message.SECONDFACTOR_DISABLE_CANCELLED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
                 }
 
                 event.getChannel().deleteMessageById(event.getMessageId()).queue();

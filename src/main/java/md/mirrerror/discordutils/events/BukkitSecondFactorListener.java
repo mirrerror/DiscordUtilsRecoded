@@ -2,6 +2,7 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
@@ -31,7 +32,7 @@ public class BukkitSecondFactorListener implements Listener {
     private final List<String> allowedCommands = new ArrayList<>();
 
     public BukkitSecondFactorListener() {
-        allowedCommands.addAll(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("AllowedCommandsBeforePassing2FA"));
+        allowedCommands.addAll(Main.getInstance().getBotSettings().ALLOWED_COMMANDS_BEFORE_PASSING_SECOND_FACTOR);
         Iterator<String> stringIterator = allowedCommands.iterator();
         int index = 0;
         while(stringIterator.hasNext()) {
@@ -56,7 +57,7 @@ public class BukkitSecondFactorListener implements Listener {
 
         Main.getInstance().getBot().applySecondFactor(player, discordUtilsUser);
 
-        if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("NotifyAboutDisabled2FA")) {
+        if(Main.getInstance().getBotSettings().NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
             if(!discordUtilsUser.isSecondFactorEnabled()) Message.SECONDFACTOR_DISABLED_REMINDER.send(player, true);
         }
     }
@@ -88,7 +89,7 @@ public class BukkitSecondFactorListener implements Listener {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
         if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId()) ||
-                Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("ForceVerification") && !discordUtilsUser.isLinked()) {
+                Main.getInstance().getBotSettings().FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
 
             if(!isAllowedCommand(event.getMessage().substring(1))) {
                 performChecks(event.getPlayer(), event);
@@ -108,9 +109,9 @@ public class BukkitSecondFactorListener implements Listener {
                 Main.getInstance().getBot().getSecondFactorPlayers().remove(player.getUniqueId());
                 Message.SECONDFACTOR_AUTHORIZED.send(player, true);
                 Main.getInstance().getBot().getSecondFactorSessions().put(player.getUniqueId(), new SecondFactorSession(playerIp,
-                        LocalDateTime.now().plusSeconds(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLong("2FASessionTime"))));
+                        LocalDateTime.now().plusSeconds(Main.getInstance().getBotSettings().SECOND_FACTOR_SESSION_TIME)));
                 Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                    Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("CommandsAfter2FAPassing").forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+                    Main.getInstance().getBotSettings().COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
                 });
             } else {
                 int attempts = 1;
@@ -170,7 +171,7 @@ public class BukkitSecondFactorListener implements Listener {
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("ForceVerification") && !discordUtilsUser.isLinked()) {
+        if(Main.getInstance().getBotSettings().FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
             player.getInventory().addItem(event.getBrokenItem());
             Message.VERIFICATION_NEEDED.send(player, true);
         }
@@ -213,7 +214,7 @@ public class BukkitSecondFactorListener implements Listener {
 
     private boolean checkVerification(Player player, Cancellable event) {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("ForceVerification")) {
+        if(Main.getInstance().getBotSettings().FORCE_LINKING_ENABLED) {
             if(!discordUtilsUser.isLinked()) {
                 event.setCancelled(true);
                 Message.VERIFICATION_NEEDED.send(player, true);

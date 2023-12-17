@@ -3,6 +3,7 @@ package md.mirrerror.discordutils.commands.discordutilsadmin;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
@@ -34,7 +35,7 @@ public class ForceUnlink implements SubCommand {
         }
 
         Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-            Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getStringList("Discord.CommandsAfterUnlink").forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+            Main.getInstance().getBotSettings().COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
         });
         discordUtilsUser.unregister();
 
