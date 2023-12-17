@@ -39,6 +39,7 @@ DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_SENDER: 'Has desvinculado con éxito
 DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: 'Tú cuenta de discord ha sido desvinculado en juego por &b%sender%&f.'
 COMMAND_DISABLED: 'Este comando está desactivado por un administrador.'
 INVALID_COLOR_VALUE: 'El valor del color es inválido.'
+PLUGIN_IS_NOT_READY_YET: '&cEl servidor aún continua cargando, por favor, espera un poco e intenta ingresar de nuevo.'
 INVALID_PLAYER_NAME_OR_UNVERIFIED: 'El jugador dado no está verificado o no existe.'
 ONLINE: 'Jugadores conectados: **%online%**'
 COMMAND_EXECUTED: 'El comando ha sido ejecutado de forma correcta.'
