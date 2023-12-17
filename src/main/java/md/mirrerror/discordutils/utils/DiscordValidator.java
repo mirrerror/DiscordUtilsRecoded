@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.utils;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.BotSettings;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;

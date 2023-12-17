@@ -2,7 +2,7 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
-import md.mirrerror.discordutils.config.BotSettings;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;

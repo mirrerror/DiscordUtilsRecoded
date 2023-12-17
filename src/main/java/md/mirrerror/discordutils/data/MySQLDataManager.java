@@ -1,7 +1,7 @@
 package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.MainSettings;
+import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 
 import java.sql.*;

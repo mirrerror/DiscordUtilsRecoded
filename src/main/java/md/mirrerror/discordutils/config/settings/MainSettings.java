@@ -1,4 +1,4 @@
-package md.mirrerror.discordutils.config;
+package md.mirrerror.discordutils.config.settings;
 
 import md.mirrerror.discordutils.Main;
 import org.bukkit.configuration.file.FileConfiguration;
