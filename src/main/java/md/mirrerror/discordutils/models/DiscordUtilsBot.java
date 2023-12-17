@@ -43,15 +43,15 @@ public class DiscordUtilsBot {
     private Activities activities;
     private SecondFactorType secondFactorType;
 
-    private List<Long> adminRoles = new ArrayList<>();
-    private Map<Long, List<String>> groupRoles = new HashMap<>(); // group, roles
-    private Map<UUID, Message> unlinkPlayers = new HashMap<>();
-    private Map<UUID, String> secondFactorPlayers = new HashMap<>();
+    private final List<Long> adminRoles = new ArrayList<>();
+    private final Map<Long, List<String>> groupRoles = new HashMap<>(); // group, roles
+    private final Map<UUID, Message> unlinkPlayers = new HashMap<>();
+    private final Map<UUID, String> secondFactorPlayers = new HashMap<>();
     private Role verifiedRole;
 
-    private Map<String, Long> linkCodes = new HashMap<>(); // code, userId
-    private Map<String, Integer> secondFactorAttempts = new HashMap<>();
-    private Map<UUID, SecondFactorSession> secondFactorSessions = new HashMap<>();
+    private final Map<String, Long> linkCodes = new HashMap<>(); // code, userId
+    private final Map<String, Integer> secondFactorAttempts = new HashMap<>();
+    private final Map<UUID, SecondFactorSession> secondFactorSessions = new HashMap<>();
 
     private TextChannel messagesTextChannel;
     private TextChannel serverActivityLoggingTextChannel;
@@ -134,7 +134,7 @@ public class DiscordUtilsBot {
                 Main.getInstance().getLogger().info("The Verified Role module is disabled by the user.");
             }
 
-            groupRoles = BotSettingsManager.GROUP_ROLES;
+            groupRoles.putAll(BotSettingsManager.GROUP_ROLES);
             Main.getInstance().getLogger().info("Successfully loaded respective roles for the " + groupRoles.size() + " groups.");
 
             if(BotSettingsManager.ROLES_SYNCHRONIZATION_ENABLED && BotSettingsManager.DELAYED_ROLES_CHECK_ENABLED) {
@@ -159,7 +159,7 @@ public class DiscordUtilsBot {
                 Main.getInstance().getLogger().info("The Names Synchronization module is disabled by the user.");
             }
 
-            adminRoles = BotSettingsManager.ADMIN_ROLES;
+            adminRoles.addAll(BotSettingsManager.ADMIN_ROLES);
             Main.getInstance().getLogger().info("Successfully loaded " + adminRoles.size() + " admin roles.");
 
             if(BotSettingsManager.ACTIVITIES_ENABLED) {
