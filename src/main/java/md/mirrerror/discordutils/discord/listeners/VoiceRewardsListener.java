@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.config.BotSettingsManager;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -75,7 +76,7 @@ public class VoiceRewardsListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
         if(event.getChannelJoined() != null) {
-            if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("GuildVoiceRewards.Enabled")) return;
+            if(!BotSettingsManager.GUILD_VOICE_REWARDS_ENABLED) return;
             if(Main.getInstance().getBot().getVoiceRewardsBlacklistedChannels().contains(event.getChannelJoined().getIdLong())) return;
 
             Member member = event.getMember();
@@ -88,19 +89,18 @@ public class VoiceRewardsListener extends ListenerAdapter {
                 if(voiceState == null) return;
                 if(voiceState.isSelfDeafened() || voiceState.isSelfMuted()) return;
                 if(event.getChannelJoined() == null) return;
-                if(event.getChannelJoined().getMembers().size() < Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("GuildVoiceRewards.MinMembers")) return;
+                if(event.getChannelJoined().getMembers().size() < BotSettingsManager.GUILD_VOICE_REWARDS_MIN_MEMBERS) return;
 
                 long id = member.getIdLong();
 
                 if(voiceTime.containsKey(id)) voiceTime.put(id, voiceTime.get(id)+1L);
                 else voiceTime.put(id, 1L);
 
-                long minTime = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getLong("GuildVoiceRewards.Time");
+                long minTime = BotSettingsManager.GUILD_VOICE_REWARDS_TIME;
                 long time = voiceTime.get(id);
 
                 if(time >= minTime) {
-                    String command = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("GuildVoiceRewards.Reward")
-                            .replace("%player%", discordUtilsUser.getOfflinePlayer().getName());
+                    String command = BotSettingsManager.GUILD_VOICE_REWARDS_REWARD.replace("%player%", discordUtilsUser.getOfflinePlayer().getName());
                     Bukkit.getScheduler().callSyncMethod(Main.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
                     voiceTime.put(id, 0L);
                 }
@@ -110,7 +110,7 @@ public class VoiceRewardsListener extends ListenerAdapter {
         }
 
         if(event.getChannelLeft() != null) {
-            if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("GuildVoiceRewards.Enabled")) return;
+            if(!BotSettingsManager.GUILD_VOICE_REWARDS_ENABLED) return;
             if(Main.getInstance().getBot().getVoiceRewardsBlacklistedChannels().contains(event.getChannelLeft().getIdLong())) return;
 
             Member member = event.getMember();

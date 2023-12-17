@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.config.BotSettingsManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.discord.EmbedManager;
@@ -18,13 +19,13 @@ public class VirtualConsoleCommandsListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("Console.Enabled")) return;
+        if(!BotSettingsManager.CONSOLE_ENABLED) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
         if(event.getChannelType() != ChannelType.TEXT) return;
 
         TextChannel textChannel = event.getChannel().asTextChannel();
-        int deleteDelay = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("Console.DeleteMessagesDelay");
+        int deleteDelay = BotSettingsManager.CONSOLE_DELETE_MESSAGES_DELAY;
 
         if(!textChannel.getId().equals(Main.getInstance().getBot().getConsoleLoggingTextChannel().getId())) return;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());

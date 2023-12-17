@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.config.BotSettingsManager;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import net.dv8tion.jda.api.entities.Member;
@@ -16,7 +17,7 @@ public class MentionsListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if(!Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("NotifyAboutMentions.Enabled")) return;
+        if(!BotSettingsManager.NOTIFY_ABOUT_MENTIONS_ENABLED) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
         if(Main.getInstance().getBot().getNotifyAboutMentionsBlacklistedChannels().contains(event.getChannel().asTextChannel().getIdLong())) return;
@@ -30,27 +31,24 @@ public class MentionsListener extends ListenerAdapter {
 
             Player player = discordUtilsUser.getOfflinePlayer().getPlayer();
 
-            if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("NotifyAboutMentions.Title.Enabled")) {
-                int fadeIn = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("NotifyAboutMentions.Title.FadeIn");
-                int stay = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("NotifyAboutMentions.Title.Stay");
-                int fadeOut = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getInt("NotifyAboutMentions.Title.FadeOut");
-                String title = ChatColor.translateAlternateColorCodes('&',
-                        Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("NotifyAboutMentions.Title.Title"));
-                String subtitle = ChatColor.translateAlternateColorCodes('&',
-                        Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("NotifyAboutMentions.Title.Subtitle"));
+            if(BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_ENABLED) {
+                int fadeIn = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_IN;
+                int stay = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_STAY;
+                int fadeOut = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_OUT;
+                String title = ChatColor.translateAlternateColorCodes('&', BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_TITLE);
+                String subtitle = ChatColor.translateAlternateColorCodes('&', BotSettingsManager.NOTIFY_ABOUT_MENTIONS_TITLE_SUBTITLE);
 
                 player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             }
 
-            if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("NotifyAboutMentions.Message.Enabled")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("NotifyAboutMentions.Message.Text")));
+            if(BotSettingsManager.NOTIFY_ABOUT_MENTIONS_MESSAGE_ENABLED) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', BotSettingsManager.NOTIFY_ABOUT_MENTIONS_MESSAGE_TEXT));
             }
 
-            if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getBoolean("NotifyAboutMentions.Sound.Enabled")) {
-                String soundType = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getString("NotifyAboutMentions.Sound.Type");
-                float volume = (float) Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getDouble("NotifyAboutMentions.Sound.Volume");
-                float pitch = (float) Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getDouble("NotifyAboutMentions.Sound.Pitch");
+            if(BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_ENABLED) {
+                String soundType = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_TYPE;
+                float volume = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_VOLUME;
+                float pitch = BotSettingsManager.NOTIFY_ABOUT_MENTIONS_SOUND_PITCH;
                 player.playSound(player.getLocation(), Sound.valueOf(soundType.toUpperCase()), volume, pitch);
             }
 

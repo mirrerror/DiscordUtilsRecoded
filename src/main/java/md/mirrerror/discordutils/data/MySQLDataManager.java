@@ -1,6 +1,7 @@
 package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.config.MainSettingsManager;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 
 import java.sql.*;
@@ -14,11 +15,11 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> setup() {
         return CompletableFuture.runAsync(() -> {
 
-            String host = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Host");
-            int port = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getInt("Database.Port");
-            String database = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Database");
-            String username = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Username");
-            String password = Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.Password");
+            String host = MainSettingsManager.DATABASE_HOST;
+            int port = MainSettingsManager.DATABASE_PORT;
+            String database = MainSettingsManager.DATABASE_DATABASE;
+            String username = MainSettingsManager.DATABASE_USERNAME;
+            String password = MainSettingsManager.DATABASE_PASSWORD;
 
             try {
                 if (getConnection() != null && !getConnection().isClosed()) {
@@ -28,7 +29,7 @@ public class MySQLDataManager implements DataManager {
                 if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
                 else Class.forName("com.mysql.jdbc.Driver");
 
-                connection = DriverManager.getConnection(Main.getInstance().getConfigManager().getConfig().getFileConfiguration().getString("Database.ConnectionUrl")
+                connection = DriverManager.getConnection(MainSettingsManager.DATABASE_CONNECTION_URL
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
                 setupTable();
             } catch (SQLException | ClassNotFoundException ignored) {

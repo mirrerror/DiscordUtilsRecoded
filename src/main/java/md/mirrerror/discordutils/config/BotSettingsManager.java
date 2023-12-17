@@ -71,7 +71,7 @@ public class BotSettingsManager {
     public static final long DELAYED_NAMES_CHECK_DELAY = config.getLong("NamesSynchronization.DelayedNamesCheck.Delay");
     public static final boolean GUILD_VOICE_REWARDS_ENABLED = config.getBoolean("GuildVoiceRewards.Enabled");
     public static final long GUILD_VOICE_REWARDS_TIME = config.getLong("GuildVoiceRewards.Time");
-    public static final List<String> GUILD_VOICE_REWARDS_REWARD = config.getStringList("GuildVoiceRewards.Reward");
+    public static final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");
     public static final List<Long> GUILD_VOICE_REWARDS_BLACKLISTED_CHANNELS = config.getLongList("GuildVoiceRewards.BlacklistedChannels");
     public static final int GUILD_VOICE_REWARDS_MIN_MEMBERS = config.getInt("GuildVoiceRewards.MinMembers");
     public static final boolean MESSAGES_CHANNEL_ENABLED = config.getBoolean("MessagesChannel.Enabled");
@@ -85,7 +85,7 @@ public class BotSettingsManager {
     public static final boolean CONSOLE_ENABLED = config.getBoolean("Console.Enabled");
     public static final boolean CONSOLE_CLEAR_ON_EVERY_INIT = config.getBoolean("Console.ClearOnEveryInit");
     public static final long CONSOLE_CHANNEL_ID = config.getLong("Console.ChannelID");
-    public static final long CONSOLE_DELETE_MESSAGES_DELAY = config.getLong("Console.DeleteMessagesDelay");
+    public static final int CONSOLE_DELETE_MESSAGES_DELAY = config.getInt("Console.DeleteMessagesDelay");
     public static final List<String> CONSOLE_BLACKLISTED_COMMANDS = config.getStringList("Console.BlacklistedCommands");
     public static final boolean CHAT_ENABLED = config.getBoolean("Chat.Enabled");
     public static final String CHAT_WEBHOOK_URL = config.getString("Chat.WebhookUrl");
