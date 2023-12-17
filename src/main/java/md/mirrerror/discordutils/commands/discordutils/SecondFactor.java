@@ -1,10 +1,14 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
+import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.utils.Validator;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,8 +29,19 @@ public class SecondFactor implements SubCommand {
 
         if(discordUtilsUser.isSecondFactorEnabled()) {
 
-            discordUtilsUser.setSecondFactor(false);
-            sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.DISABLED.getText()));
+            String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
+
+            discordUtilsUser.getUser().openPrivateChannel().submit()
+                    .thenCompose(channel -> channel.sendMessageEmbeds(new EmbedManager().infoEmbed(Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText().replace("%playerIp%", playerIp))).submit())
+                    .whenComplete((msg, error) -> {
+                        if (error == null) {
+                            Main.getInstance().getBot().getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
+                            msg.addReaction(Emoji.fromUnicode("✅")).queue();
+                            msg.addReaction(Emoji.fromUnicode("❎")).queue();
+                            return;
+                        }
+                        Message.CAN_NOT_SEND_MESSAGE.send(sender, true);
+                    });
 
         } else {
 

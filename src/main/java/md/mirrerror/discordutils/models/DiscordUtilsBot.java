@@ -46,6 +46,7 @@ public class DiscordUtilsBot {
     private final List<Long> adminRoles = new ArrayList<>();
     private final Map<Long, List<String>> groupRoles = new HashMap<>(); // group, roles
     private final Map<UUID, Message> unlinkPlayers = new HashMap<>();
+    private final Map<UUID, Message> secondFactorDisablePlayers = new HashMap<>();
     private final Map<UUID, String> secondFactorPlayers = new HashMap<>();
     private Role verifiedRole;
 
@@ -107,6 +108,7 @@ public class DiscordUtilsBot {
                     .addEventListeners(new DiscordUnlinkListener())
                     .addEventListeners(new DiscordSecondFactorListener())
                     .addEventListeners(new DiscordToChatListener())
+                    .addEventListeners(new DiscordSecondFactorListener())
                     .setAutoReconnect(true)
                     .setToken(token)
                     .setContextEnabled(false)

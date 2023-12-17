@@ -15,6 +15,9 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("ACCOUNT_UNLINK_REQUEST_SENT", "Account unlink request has been sent. Check your DMs.");
         getFileConfiguration().addDefault("ACCOUNT_SUCCESSFULLY_UNLINKED", "Account has been successfully unlinked.");
         getFileConfiguration().addDefault("ACCOUNT_UNLINK_CONFIRMATION", "Somebody is trying to unlink your account. Choose if I should unlink your account or no. IP: %playerIp%.");
+        getFileConfiguration().addDefault("SECONDFACTOR_DISABLE_CONFIRMATION", "Somebody is trying to disable the 2FA on your account. Choose if I should do this or no. IP: %playerIp%.");
+        getFileConfiguration().addDefault("SECONDFACTOR_DISABLE_REQUEST_SENT", "2FA disable request has been sent. Check your DMs.");
+        getFileConfiguration().addDefault("SECONDFACTOR_DISABLE_CANCELLED", "2FA disable request has been cancelled.");
         getFileConfiguration().addDefault("ACCOUNT_UNLINK_CANCELLED", "Account unlink request has been cancelled.");
         getFileConfiguration().addDefault("INVALID_LINK_CODE", "Invalid code.");
         getFileConfiguration().addDefault("SECONDFACTOR_REJECTED", "The account owner has rejected authorization of the account.");
