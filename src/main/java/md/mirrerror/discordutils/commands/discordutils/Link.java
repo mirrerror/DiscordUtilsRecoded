@@ -3,7 +3,6 @@ package md.mirrerror.discordutils.commands.discordutils;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
-import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
@@ -26,7 +25,7 @@ public class Link implements SubCommand {
 
         if(!Validator.validateLinkCode(sender, args[0])) return;
 
-        boolean defaultSecondFactorValue = BotSettings.DEFAULT_SECOND_FACTOR_VALUE;
+        boolean defaultSecondFactorValue = Main.getInstance().getBotSettings().DEFAULT_SECOND_FACTOR_VALUE;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
         discordUtilsUser.setUser(Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getBot().getLinkCodes().get(args[0])));
@@ -36,7 +35,7 @@ public class Link implements SubCommand {
 
         Main.getInstance().getBot().getLinkCodes().remove(args[0]);
         Message.ACCOUNT_SUCCESSFULLY_LINKED.send(sender, true);
-        BotSettings.COMMANDS_AFTER_LINKING
+        Main.getInstance().getBotSettings().COMMANDS_AFTER_LINKING
                 .forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
     }
 

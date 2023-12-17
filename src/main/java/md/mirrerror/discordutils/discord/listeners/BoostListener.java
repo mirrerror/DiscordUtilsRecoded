@@ -24,11 +24,11 @@ public class BoostListener extends ListenerAdapter {
 
         Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
             if(newTime != null) {
-                BotSettings.COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
+                Main.getInstance().getBotSettings().COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });
             } else {
-                BotSettings.COMMANDS_AFTER_STOPPING_SERVER_BOOSTING.forEach(command -> {
+                Main.getInstance().getBotSettings().COMMANDS_AFTER_STOPPING_SERVER_BOOSTING.forEach(command -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });
             }

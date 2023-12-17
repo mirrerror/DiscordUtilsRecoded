@@ -1,7 +1,6 @@
 package md.mirrerror.discordutils.data;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 
 import java.sql.*;
@@ -15,11 +14,11 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> setup() {
         return CompletableFuture.runAsync(() -> {
 
-            String host = MainSettings.DATABASE_HOST;
-            int port = MainSettings.DATABASE_PORT;
-            String database = MainSettings.DATABASE_DATABASE;
-            String username = MainSettings.DATABASE_USERNAME;
-            String password = MainSettings.DATABASE_PASSWORD;
+            String host = Main.getInstance().getMainSettings().DATABASE_HOST;
+            int port = Main.getInstance().getMainSettings().DATABASE_PORT;
+            String database = Main.getInstance().getMainSettings().DATABASE_DATABASE;
+            String username = Main.getInstance().getMainSettings().DATABASE_USERNAME;
+            String password = Main.getInstance().getMainSettings().DATABASE_PASSWORD;
 
             try {
                 if (getConnection() != null && !getConnection().isClosed()) {
@@ -29,7 +28,7 @@ public class MySQLDataManager implements DataManager {
                 if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
                 else Class.forName("com.mysql.jdbc.Driver");
 
-                connection = DriverManager.getConnection(MainSettings.DATABASE_CONNECTION_URL
+                connection = DriverManager.getConnection(Main.getInstance().getMainSettings().DATABASE_CONNECTION_URL
                         .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
                 setupTable();
             } catch (SQLException | ClassNotFoundException ignored) {

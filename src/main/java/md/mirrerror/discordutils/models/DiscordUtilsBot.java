@@ -113,7 +113,7 @@ public class DiscordUtilsBot {
                     .setToken(token)
                     .setContextEnabled(false)
                     .setBulkDeleteSplittingEnabled(false)
-                    .setStatus(BotSettings.ONLINE_STATUS)
+                    .setStatus(Main.getInstance().getBotSettings().ONLINE_STATUS)
                     .disableCache(CacheFlag.SCHEDULED_EVENTS) // remove the warning
                     .build()
                     .awaitReady();
@@ -125,46 +125,46 @@ public class DiscordUtilsBot {
                         .onError(error -> Main.getInstance().getLogger().severe("Failed to load members of the guild " + guild.getName() + "!")).get();
             }
 
-            secondFactorType = BotSettings.SECOND_FACTOR_TYPE;
+            secondFactorType = Main.getInstance().getBotSettings().SECOND_FACTOR_TYPE;
             Main.getInstance().getLogger().info("The second factor type is: " + secondFactorType.name() + ".");
 
-            if(BotSettings.VERIFIED_ROLE_ENABLED) {
-                verifiedRole = jda.getRoleById(BotSettings.VERIFIED_ROLE_ID);
+            if(Main.getInstance().getBotSettings().VERIFIED_ROLE_ENABLED) {
+                verifiedRole = jda.getRoleById(Main.getInstance().getBotSettings().VERIFIED_ROLE_ID);
                 if(verifiedRole == null) Main.getInstance().getLogger().severe("Couldn't setup the verified role, check your settings!");
                 else Main.getInstance().getLogger().info("Verified Role module has been successfully enabled.");
             } else {
                 Main.getInstance().getLogger().info("The Verified Role module is disabled by the user.");
             }
 
-            groupRoles.putAll(BotSettings.GROUP_ROLES);
+            groupRoles.putAll(Main.getInstance().getBotSettings().GROUP_ROLES);
             Main.getInstance().getLogger().info("Successfully loaded respective roles for the " + groupRoles.size() + " groups.");
 
-            if(BotSettings.ROLES_SYNCHRONIZATION_ENABLED && BotSettings.DELAYED_ROLES_CHECK_ENABLED) {
+            if(Main.getInstance().getBotSettings().ROLES_SYNCHRONIZATION_ENABLED && Main.getInstance().getBotSettings().DELAYED_ROLES_CHECK_ENABLED) {
                 Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), () -> {
                     for(Guild guild : jda.getGuilds())
                         for(DiscordUtilsUser discordUtilsUser : DiscordUtilsUsersCacheManager.getCachedUsers())
                             discordUtilsUser.synchronizeRoles(guild);
-                }, 0L, BotSettings.DELAYED_ROLES_CHECK_DELAY*20L);
+                }, 0L, Main.getInstance().getBotSettings().DELAYED_ROLES_CHECK_DELAY*20L);
                 Main.getInstance().getLogger().info("Successfully enabled the Roles Synchronization module.");
             } else {
                 Main.getInstance().getLogger().info("The Roles Synchronization module is disabled by the user.");
             }
 
-            if(BotSettings.NAMES_SYNCHRONIZATION_ENABLED && BotSettings.DELAYED_NAMES_CHECK_ENABLED) {
+            if(Main.getInstance().getBotSettings().NAMES_SYNCHRONIZATION_ENABLED && Main.getInstance().getBotSettings().DELAYED_NAMES_CHECK_ENABLED) {
                 Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), () -> {
                     for(Guild guild : jda.getGuilds())
                         for(DiscordUtilsUser discordUtilsUser : DiscordUtilsUsersCacheManager.getCachedUsers())
                             discordUtilsUser.synchronizeNickname(guild);
-                }, 0L, BotSettings.DELAYED_NAMES_CHECK_DELAY*20L);
+                }, 0L, Main.getInstance().getBotSettings().DELAYED_NAMES_CHECK_DELAY*20L);
                 Main.getInstance().getLogger().info("Successfully enabled the Names Synchronization module.");
             } else {
                 Main.getInstance().getLogger().info("The Names Synchronization module is disabled by the user.");
             }
 
-            adminRoles.addAll(BotSettings.ADMIN_ROLES);
+            adminRoles.addAll(Main.getInstance().getBotSettings().ADMIN_ROLES);
             Main.getInstance().getLogger().info("Successfully loaded " + adminRoles.size() + " admin roles.");
 
-            if(BotSettings.ACTIVITIES_ENABLED) {
+            if(Main.getInstance().getBotSettings().ACTIVITIES_ENABLED) {
 
                 activities = new Activities();
                 if(activities.getBotActivities().size() == 1) {
@@ -177,7 +177,7 @@ public class DiscordUtilsBot {
                     Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), () -> {
                         Activity activity = activities.nextActivity();
                         jda.getPresence().setActivity(Activity.of(activity.getType(), Main.getInstance().getPapiManager().setPlaceholders(null, activity.getName())));
-                    }, 0L, BotSettings.ACTIVITIES_UPDATE_DELAY*20L);
+                    }, 0L, Main.getInstance().getBotSettings().ACTIVITIES_UPDATE_DELAY*20L);
 
                 }
                 Main.getInstance().getLogger().info("Successfully loaded " + activities.getBotActivities().size() + " activities for the activities module and enabled the module itself.");
@@ -188,15 +188,15 @@ public class DiscordUtilsBot {
 
             }
 
-            if(BotSettings.CONSOLE_ENABLED) {
-                consoleLoggingTextChannel = jda.getTextChannelById(BotSettings.CONSOLE_CHANNEL_ID);
+            if(Main.getInstance().getBotSettings().CONSOLE_ENABLED) {
+                consoleLoggingTextChannel = jda.getTextChannelById(Main.getInstance().getBotSettings().CONSOLE_CHANNEL_ID);
 
                 if(consoleLoggingTextChannel != null) {
 
                     ConsoleLoggingManager consoleLoggingManager = new ConsoleLoggingManager();
                     consoleLoggingManager.initialize();
 
-                    if(BotSettings.CONSOLE_CLEAR_ON_EVERY_INIT) {
+                    if(Main.getInstance().getBotSettings().CONSOLE_CLEAR_ON_EVERY_INIT) {
                         TextChannel textChannel = consoleLoggingTextChannel.createCopy().complete();
                         consoleLoggingTextChannel.delete().queue();
                         consoleLoggingTextChannel = textChannel;
@@ -205,7 +205,7 @@ public class DiscordUtilsBot {
                         botSettings.saveConfigFile();
                     }
 
-                    virtualConsoleBlacklistedCommands = BotSettings.CONSOLE_BLACKLISTED_COMMANDS;
+                    virtualConsoleBlacklistedCommands = Main.getInstance().getBotSettings().CONSOLE_BLACKLISTED_COMMANDS;
 
                     Main.getInstance().getLogger().info("The Console module has been successfully enabled.");
 
@@ -221,8 +221,8 @@ public class DiscordUtilsBot {
 
             }
 
-            if(BotSettings.SERVER_ACTIVITY_LOGGING_ENABLED) {
-                serverActivityLoggingTextChannel = jda.getTextChannelById(BotSettings.SERVER_ACTIVITY_LOGGING_CHANNEL_ID);
+            if(Main.getInstance().getBotSettings().SERVER_ACTIVITY_LOGGING_ENABLED) {
+                serverActivityLoggingTextChannel = jda.getTextChannelById(Main.getInstance().getBotSettings().SERVER_ACTIVITY_LOGGING_CHANNEL_ID);
                 if(serverActivityLoggingTextChannel != null) {
                     Bukkit.getPluginManager().registerEvents(new ServerActivityListener(), Main.getInstance());
                     Main.getInstance().getLogger().info("The Server Activity Logging module has been successfully enabled.");
@@ -233,30 +233,30 @@ public class DiscordUtilsBot {
                 Main.getInstance().getLogger().info("The Server Activity Logging module is disabled by the user.");
             }
 
-            if(BotSettings.MESSAGES_CHANNEL_ENABLED) {
-                messagesTextChannel = jda.getTextChannelById(BotSettings.MESSAGES_CHANNEL_ID);
+            if(Main.getInstance().getBotSettings().MESSAGES_CHANNEL_ENABLED) {
+                messagesTextChannel = jda.getTextChannelById(Main.getInstance().getBotSettings().MESSAGES_CHANNEL_ID);
                 if(messagesTextChannel == null) Main.getInstance().getLogger().severe("You have set an invalid id for the MessagesChannel. Check your config.yml.");
             } else {
                 Main.getInstance().getLogger().info("The Messages Channel module is disabled by the user.");
             }
 
-            if(BotSettings.GUILD_VOICE_REWARDS_ENABLED) {
-                voiceRewardsBlacklistedChannels = BotSettings.GUILD_VOICE_REWARDS_BLACKLISTED_CHANNELS;
+            if(Main.getInstance().getBotSettings().GUILD_VOICE_REWARDS_ENABLED) {
+                voiceRewardsBlacklistedChannels = Main.getInstance().getBotSettings().GUILD_VOICE_REWARDS_BLACKLISTED_CHANNELS;
                 Main.getInstance().getLogger().info("Successfully loaded " + voiceRewardsBlacklistedChannels.size() + " blacklisted voice channels for the voice rewards system.");
             } else {
                 Main.getInstance().getLogger().info("The Voice Rewards module is disabled by the user.");
             }
 
-            if(BotSettings.NOTIFY_ABOUT_MENTIONS_ENABLED) {
-                notifyAboutMentionsBlacklistedChannels = BotSettings.NOTIFY_ABOUT_MENTIONS_BLACKLISTED_CHANNELS;
+            if(Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_ENABLED) {
+                notifyAboutMentionsBlacklistedChannels = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_BLACKLISTED_CHANNELS;
                 Main.getInstance().getLogger().info("Successfully loaded " + notifyAboutMentionsBlacklistedChannels.size() + " blacklisted channels for the notifying about mentions system.");
             } else {
                 Main.getInstance().getLogger().info("The Notifying About Mentions module is disabled by the user.");
             }
 
-            if(BotSettings.CHAT_ENABLED) {
-                Bukkit.getPluginManager().registerEvents(new ChatToDiscordListener(BotSettings.CHAT_WEBHOOK_URL), Main.getInstance());
-                chatTextChannel = jda.getTextChannelById(BotSettings.CHAT_CHANNEL_ID);
+            if(Main.getInstance().getBotSettings().CHAT_ENABLED) {
+                Bukkit.getPluginManager().registerEvents(new ChatToDiscordListener(Main.getInstance().getBotSettings().CHAT_WEBHOOK_URL), Main.getInstance());
+                chatTextChannel = jda.getTextChannelById(Main.getInstance().getBotSettings().CHAT_CHANNEL_ID);
                 if(chatTextChannel == null) Main.getInstance().getLogger().severe("You have set an invalid id for the chat channel. Check your config.yml.");
                 Main.getInstance().getLogger().info("The Chat module has been successfully loaded.");
             } else {
@@ -311,7 +311,7 @@ public class DiscordUtilsBot {
     }
 
     public void assignVerifiedRole(long userId) {
-        if(BotSettings.VERIFIED_ROLE_ENABLED) {
+        if(Main.getInstance().getBotSettings().VERIFIED_ROLE_ENABLED) {
             Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
                 Role verifiedRole = Main.getInstance().getBot().getVerifiedRole();
                 Member member = guild.getMemberById(userId);
@@ -344,7 +344,7 @@ public class DiscordUtilsBot {
         if (linkCodes.containsValue(user.getIdLong())) return;
 
         AtomicReference<String> code = new AtomicReference<>("");
-        byte[] secureRandomSeed = new SecureRandom().generateSeed(BotSettings.SECOND_FACTOR_CODE_LENGTH);
+        byte[] secureRandomSeed = new SecureRandom().generateSeed(Main.getInstance().getBotSettings().SECOND_FACTOR_CODE_LENGTH);
         for (byte b : secureRandomSeed) code.set(code.get() + b);
         code.set(code.get().replace("-", "").trim());
 
@@ -374,11 +374,11 @@ public class DiscordUtilsBot {
     }
 
     public boolean checkForcedSecondFactor(DiscordUtilsUser discordUtilsUser) {
-        for(String group : BotSettings.SECOND_FACTOR_FORCED_GROUPS)
+        for(String group : Main.getInstance().getBotSettings().SECOND_FACTOR_FORCED_GROUPS)
             for(String userGroup : Main.getInstance().getPermissionsIntegration().getUserGroups(discordUtilsUser.getOfflinePlayer()))
                 if(userGroup.equals(group)) return false;
 
-        for(long roleId : BotSettings.SECOND_FACTOR_FORCED_ROLES)
+        for(long roleId : Main.getInstance().getBotSettings().SECOND_FACTOR_FORCED_ROLES)
             for(Guild guild : Main.getInstance().getBot().getJda().getGuilds())
                 for(Role role : guild.getMemberById(discordUtilsUser.getUser().getIdLong()).getRoles())
                     if(role.getIdLong() == roleId) return false;
@@ -390,9 +390,9 @@ public class DiscordUtilsBot {
         if(discordUtilsUser.isSecondFactorEnabled() || !checkForcedSecondFactor(discordUtilsUser)) {
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
-            if(BotSettings.SECOND_FACTOR_SESSIONS_ENABLED)
+            if(Main.getInstance().getBotSettings().SECOND_FACTOR_SESSIONS_ENABLED)
                 if(Main.getInstance().getBot().getSecondFactorSessions().containsKey(player.getUniqueId())) {
-                    if(BotSettings.SECOND_FACTOR_SESSION_TIME > 0) {
+                    if(Main.getInstance().getBotSettings().SECOND_FACTOR_SESSION_TIME > 0) {
 
                         if(Main.getInstance().getBot().getSecondFactorSessions().get(player.getUniqueId()).getEnd().isAfter(LocalDateTime.now()))
                             if(Main.getInstance().getBot().getSecondFactorSessions().get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
@@ -417,7 +417,7 @@ public class DiscordUtilsBot {
             }
             if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.CODE) {
                 AtomicReference<String> code = new AtomicReference<>("");
-                byte[] secureRandomSeed = new SecureRandom().generateSeed(BotSettings.SECOND_FACTOR_CODE_LENGTH);
+                byte[] secureRandomSeed = new SecureRandom().generateSeed(Main.getInstance().getBotSettings().SECOND_FACTOR_CODE_LENGTH);
                 for(byte b : secureRandomSeed) code.set(code.get() + b);
                 code.set(code.get().replace("-", ""));
 
@@ -432,7 +432,7 @@ public class DiscordUtilsBot {
                         });
             }
 
-            long timeToAuthorize = BotSettings.SECOND_FACTOR_TIME_TO_AUTHORIZE;
+            long timeToAuthorize = Main.getInstance().getBotSettings().SECOND_FACTOR_TIME_TO_AUTHORIZE;
 
             if(timeToAuthorize > 0) Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                 if(player != null) {

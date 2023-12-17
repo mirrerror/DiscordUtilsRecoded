@@ -1,11 +1,10 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.discord.SecondFactorSession;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -40,16 +39,16 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Message.SECONDFACTOR_AUTHORIZED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
                     Main.getInstance().getBot().getSecondFactorSessions().put(uuid, new SecondFactorSession(StringUtils.remove(player.getAddress().getAddress().toString(), '/'),
-                            LocalDateTime.now().plusSeconds(BotSettings.SECOND_FACTOR_SESSION_TIME)));
+                            LocalDateTime.now().plusSeconds(Main.getInstance().getBotSettings().SECOND_FACTOR_SESSION_TIME)));
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                        BotSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                        Main.getInstance().getBotSettings().COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }
                 if(event.getReaction().getEmoji().getName().equals("❎")) {
                     Main.getInstance().getBot().getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
                         player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
-                        BotSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                        Main.getInstance().getBotSettings().COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }
 

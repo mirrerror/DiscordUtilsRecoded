@@ -67,7 +67,7 @@ public class DiscordValidator {
     }
 
     public static boolean validateCommandChannel(MessageChannelUnion messageChannelUnion) {
-        List<Long> botCommandTextChannels = BotSettings.BOT_COMMAND_TEXT_CHANNELS;
+        List<Long> botCommandTextChannels = Main.getInstance().getBotSettings().BOT_COMMAND_TEXT_CHANNELS;
         if(!botCommandTextChannels.isEmpty()) {
             if(!botCommandTextChannels.contains(messageChannelUnion.getIdLong())) {
                 messageChannelUnion.sendMessageEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();
@@ -78,7 +78,7 @@ public class DiscordValidator {
     }
 
     public static boolean validateCommandChannel(SlashCommandInteractionEvent event) {
-        List<Long> botCommandTextChannels = BotSettings.BOT_COMMAND_TEXT_CHANNELS;
+        List<Long> botCommandTextChannels = Main.getInstance().getBotSettings().BOT_COMMAND_TEXT_CHANNELS;
         if(!botCommandTextChannels.isEmpty()) {
             if(!botCommandTextChannels.contains(event.getChannel().getIdLong())) {
                 event.replyEmbeds(embedManager.errorEmbed(Message.COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL.getText())).queue();

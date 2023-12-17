@@ -1,11 +1,10 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,13 +18,13 @@ public class VirtualConsoleCommandsListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if(!BotSettings.CONSOLE_ENABLED) return;
+        if(!Main.getInstance().getBotSettings().CONSOLE_ENABLED) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
         if(event.getChannelType() != ChannelType.TEXT) return;
 
         TextChannel textChannel = event.getChannel().asTextChannel();
-        int deleteDelay = BotSettings.CONSOLE_DELETE_MESSAGES_DELAY;
+        int deleteDelay = Main.getInstance().getBotSettings().CONSOLE_DELETE_MESSAGES_DELAY;
 
         if(!textChannel.getId().equals(Main.getInstance().getBot().getConsoleLoggingTextChannel().getId())) return;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());

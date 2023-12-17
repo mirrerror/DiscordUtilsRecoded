@@ -17,7 +17,7 @@ public class SendToDiscord implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!Validator.validateCommandToggleness(sender, BotSettings.MESSAGES_CHANNEL_ENABLED))
+        if(!Validator.validateCommandToggleness(sender, Main.getInstance().getBotSettings().MESSAGES_CHANNEL_ENABLED))
             return;
 
         Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {

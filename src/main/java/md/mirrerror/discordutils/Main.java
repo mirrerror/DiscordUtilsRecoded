@@ -49,13 +49,21 @@ public final class Main extends JavaPlugin {
     @Setter
     private boolean isBotReady;
 
+    @Setter
+    private BotSettings botSettings;
+    @Setter
+    private MainSettings mainSettings;
+
     @Override
     public void onEnable() {
         instance = this;
         configManager = new ConfigManager();
         papiManager = new PAPIManager();
 
-        String permissionsPlugin = MainSettings.PERMISSIONS_PLUGIN.toLowerCase();
+        mainSettings = new MainSettings();
+        botSettings = new BotSettings();
+
+        String permissionsPlugin = mainSettings.PERMISSIONS_PLUGIN.toLowerCase();
         switch (permissionsPlugin) {
             case "vault": {
                 permissionsIntegration = new VaultIntegration();
@@ -67,7 +75,7 @@ public final class Main extends JavaPlugin {
             }
         }
 
-        String dataType = MainSettings.DATABASE_TYPE.toLowerCase();
+        String dataType = mainSettings.DATABASE_TYPE.toLowerCase();
         switch (dataType) {
             case "mysql": {
                 dataManager = new MySQLDataManager();
@@ -87,13 +95,13 @@ public final class Main extends JavaPlugin {
             }
         });
 
-        if(BotSettings.ASYNC_BOT_LOADING) {
+        if(botSettings.ASYNC_BOT_LOADING) {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                bot = new DiscordUtilsBot(BotSettings.BOT_TOKEN);
+                bot = new DiscordUtilsBot(botSettings.BOT_TOKEN);
                 bot.setupBot();
             });
         } else {
-            bot = new DiscordUtilsBot(BotSettings.BOT_TOKEN);
+            bot = new DiscordUtilsBot(botSettings.BOT_TOKEN);
             bot.setupBot();
         }
 
@@ -106,7 +114,7 @@ public final class Main extends JavaPlugin {
         registerCommands();
         getLogger().info("The commands have been successfully loaded.");
 
-        String chosenTranslation = MainSettings.LANGUAGE;
+        String chosenTranslation = mainSettings.LANGUAGE;
         if(!chosenTranslation.isEmpty()) {
             TranslationsManager.downloadTranslation(chosenTranslation);
         } else {
@@ -116,7 +124,7 @@ public final class Main extends JavaPlugin {
         isMainReady = true;
 
         setupMetrics();
-        if(MainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
+        if(mainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
     }
 
     @Override

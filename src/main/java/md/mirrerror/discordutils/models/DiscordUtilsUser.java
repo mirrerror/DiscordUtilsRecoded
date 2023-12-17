@@ -61,7 +61,7 @@ public class DiscordUtilsUser {
         Set<Long> assignedRoles = new HashSet<>();
         Member member = guild.getMemberById(user.getIdLong());
 
-        if(BotSettings.ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP) {
+        if(Main.getInstance().getBotSettings().ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP) {
             String primaryGroup = Main.getInstance().getPermissionsIntegration().getHighestUserGroup(offlinePlayer);
 
             for(long roleId : Main.getInstance().getBot().getGroupRoles().keySet()) {
@@ -98,7 +98,7 @@ public class DiscordUtilsUser {
 
     public void synchronizeNickname(Guild guild) {
         if(!isLinked()) return;
-        String format = Main.getInstance().getPapiManager().setPlaceholders(offlinePlayer, BotSettings.NAMES_SYNCHRONIZATION_FORMAT
+        String format = Main.getInstance().getPapiManager().setPlaceholders(offlinePlayer, Main.getInstance().getBotSettings().NAMES_SYNCHRONIZATION_FORMAT
                         .replace("%player%", offlinePlayer.getName()));
         try {
             guild.modifyNickname(guild.getMemberById(user.getIdLong()), format).queue();

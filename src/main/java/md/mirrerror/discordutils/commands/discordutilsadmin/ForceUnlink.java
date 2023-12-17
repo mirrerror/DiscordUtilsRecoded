@@ -35,7 +35,7 @@ public class ForceUnlink implements SubCommand {
         }
 
         Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-            BotSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+            Main.getInstance().getBotSettings().COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
         });
         discordUtilsUser.unregister();
 

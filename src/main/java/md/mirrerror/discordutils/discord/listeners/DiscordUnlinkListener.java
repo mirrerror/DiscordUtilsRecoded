@@ -36,7 +36,7 @@ public class DiscordUnlinkListener extends ListenerAdapter {
                     Main.getInstance().getBot().getUnlinkPlayers().remove(uuid);
                     if(discordUtilsUser.getOfflinePlayer().isOnline()) Message.ACCOUNT_SUCCESSFULLY_UNLINKED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                        BotSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                        Main.getInstance().getBotSettings().COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
 
                     discordUtilsUser.unregister();
