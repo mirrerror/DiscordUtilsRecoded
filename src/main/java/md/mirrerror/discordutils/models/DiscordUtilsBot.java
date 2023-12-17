@@ -108,7 +108,7 @@ public class DiscordUtilsBot {
                     .addEventListeners(new DiscordUnlinkListener())
                     .addEventListeners(new DiscordSecondFactorListener())
                     .addEventListeners(new DiscordToChatListener())
-                    .addEventListeners(new DiscordSecondFactorListener())
+                    .addEventListeners(new DiscordSecondFactorDisableListener())
                     .setAutoReconnect(true)
                     .setToken(token)
                     .setContextEnabled(false)

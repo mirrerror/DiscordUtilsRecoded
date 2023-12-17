@@ -38,6 +38,7 @@ public class SecondFactor implements SubCommand {
                             Main.getInstance().getBot().getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
                             msg.addReaction(Emoji.fromUnicode("✅")).queue();
                             msg.addReaction(Emoji.fromUnicode("❎")).queue();
+                            Message.SECONDFACTOR_DISABLE_REQUEST_SENT.send(sender, true);
                             return;
                         }
                         Message.CAN_NOT_SEND_MESSAGE.send(sender, true);

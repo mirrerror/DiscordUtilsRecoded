@@ -1,11 +1,14 @@
 package md.mirrerror.discordutils.commands;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class CommandsManager implements CommandExecutor, TabCompleter {
 
     private static final Map<String, List<SubCommand>> commands = new HashMap<>();
@@ -70,18 +74,32 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
         commands.put(command, subCommands);
     }
 
-    public static Map<String, List<SubCommand>> getCommands() {
-        return commands;
-    }
-
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> results = new ArrayList<>();
 
-        if(args.length == 1)
+        if(args.length == 1) {
+
             for(SubCommand subCommand : commands.get(command.getName()))
                 if(sender.hasPermission(subCommand.getPermission()))
                     results.add(subCommand.getName());
+
+        } else {
+
+            String lastWord = args[args.length - 1];
+
+            Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+
+            for (Player player : sender.getServer().getOnlinePlayers()) {
+                String name = player.getName();
+                if ((senderPlayer == null || senderPlayer.canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
+                    results.add(name);
+                }
+            }
+
+            results.sort(String.CASE_INSENSITIVE_ORDER);
+
+        }
 
         return results;
     }
