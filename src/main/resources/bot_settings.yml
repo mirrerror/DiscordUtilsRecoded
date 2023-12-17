@@ -1,9 +1,6 @@
 # BotToken
 # Token that is required for the bot to work. You can get it here: https://discord.com/developers/applications
 # ------------------------------------------------------------------
-# BotPrefix
-# Prefix that is used in the bot's commands
-# ------------------------------------------------------------------
 # BotCommandTextChannels
 # The text channels, in which the bot handles the commands (if it is empty, the bot will handle the commands in all the text channels)
 # ------------------------------------------------------------------
@@ -179,7 +176,6 @@
 # Pitch - sound pitch
 
 BotToken: ''
-BotPrefix: '!'
 BotCommandTextChannels: []
 AsyncBotLoading: true
 OnlineStatus: 'online'

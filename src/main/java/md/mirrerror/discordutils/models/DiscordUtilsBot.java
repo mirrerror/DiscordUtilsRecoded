@@ -102,7 +102,6 @@ public class DiscordUtilsBot {
 
             jda = JDABuilder.create(gatewayIntents)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
-                    .addEventListeners(new CommandListener())
                     .addEventListeners(new MentionsListener())
                     .addEventListeners(new VoiceRewardsListener())
                     .addEventListeners(new VirtualConsoleCommandsListener())

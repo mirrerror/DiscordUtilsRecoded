@@ -11,8 +11,6 @@ public class BotSettingsConfig extends CustomConfig {
     @Override
     public void initializeFields() {
         getFileConfiguration().addDefault("BotToken", "");
-        getFileConfiguration().addDefault("BotPrefix", "!");
-        //getFileConfiguration().addDefault("EnableSlashCommands", true);
         getFileConfiguration().addDefault("BotCommandTextChannels", Collections.emptyList());
         getFileConfiguration().addDefault("AsyncBotLoading", true);
         getFileConfiguration().addDefault("OnlineStatus", "online");
