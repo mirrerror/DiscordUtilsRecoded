@@ -84,6 +84,7 @@ DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: Tvému Discord účtu bylo z
   propojení administrátorem &b%sender%&f.
 COMMAND_DISABLED: Tento příkaz je na serveru zakázán.
 INVALID_COLOR_VALUE: Invalidní barva.
+PLUGIN_IS_NOT_READY_YET: '&c&cServer se stále načítá, prosím, počkejte chvíli a zkuste se připojit znovu.'
 ONLINE: 'Aktivní hráči: **%online%**'
 COMMAND_EXECUTED: Příkaz byl úspěšně odeslán.
 DISCORD_SUDO_USAGE: 'Použití: !sudo [command]'
