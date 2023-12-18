@@ -3,7 +3,6 @@ package md.mirrerror.discordutils.models;
 import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
-import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
 import md.mirrerror.discordutils.discord.Activities;
 import md.mirrerror.discordutils.discord.ConsoleLoggingManager;

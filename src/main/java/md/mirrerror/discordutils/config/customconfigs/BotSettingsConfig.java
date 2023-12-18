@@ -86,6 +86,7 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("NotifyAboutMentions.Sound.Type", "ENTITY_EXPERIENCE_ORB_PICKUP");
         getFileConfiguration().addDefault("NotifyAboutMentions.Sound.Volume", 1);
         getFileConfiguration().addDefault("NotifyAboutMentions.Sound.Pitch", 1);
+        getFileConfiguration().addDefault("CustomTriggers.InGameEvents", new HashMap<>());
         getFileConfiguration().options().copyDefaults(true);
         getFileConfiguration().options().copyHeader(true);
         saveConfigFile();

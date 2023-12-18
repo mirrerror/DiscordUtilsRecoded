@@ -48,34 +48,31 @@
 # CodeLength
 # The amount of characters used in the link and the 2FA codes
 # ------------------------------------------------------------------
-# 2FAType
+# Type
 # Type of the 2FA. Available: code - enter the code, reaction - click on a reaction in Discord
 # ------------------------------------------------------------------
-# 2FASessions
+# SessionsEnabled
 # Whether to enable or not 2FA sessions (uselessness of passing 2FA if the player's IP address is the same)
 # ------------------------------------------------------------------
-# 2FASessionTime
+# SessionTime
 # Time during which is valid 2FA session (in seconds) (if it is less or equal to 0, it will be valid till the plugin restart)
 # ------------------------------------------------------------------
-# 2FATimeToAuthorize
+# TimeToAuthorize
 # Time during which the player has to pass 2FA, otherwise he will be kicked (in seconds) (if less or equal to 0, he will not be limited by time)
 # ------------------------------------------------------------------
 # Default2FAValue
 # Whether to enable or not 2FA for the player when he verify his account
 # ------------------------------------------------------------------
-# Forced2FARoles
+# ForcedRoles
 # Members with these roles must pass the 2FA, the plugin will ignore if they disable 2FA in their settings
 # For example: Forced2FARoles: [905508941230915684, 123123123131231233]
 # ------------------------------------------------------------------
-# Forced2FAGroups
+# ForcedGroups
 # Players with these permission groups must pass the 2FA, the plugin will ignore if they disable 2FA in their settings
 # For example: Forced2FARoles: [moderator, admin]
 # ------------------------------------------------------------------
 # NotifyAboutDisabled2FA
 # Whether to send for the player or not information about disabled 2FA (if it is disabled)
-# ------------------------------------------------------------------
-# ForceVerification
-# Whether to force players to verify their accounts or not
 # ------------------------------------------------------------------
 # AllowedCommandsBeforePassing2FA
 # List of the allowed commands before passing 2FA
@@ -91,10 +88,13 @@
 # CommandsAfter2FAPassing
 # Commands that are performed after the player passes the 2FA (%player% - placeholder for the player's nickname)
 # ------------------------------------------------------------------
-# CommandsAfterVerification
-# Commands that are performed after the player verify his account (%player% - placeholder for the player nickname)
+# ForceLinking
+# Whether to force players to link their accounts or not
 # ------------------------------------------------------------------
-# CommandsAfterUnlink
+# CommandsAfterLinking
+# Commands that are performed after the player link his account (%player% - placeholder for the player nickname)
+# ------------------------------------------------------------------
+# CommandsAfterUnlinking
 # Commands that are performed after the player unlink his Discord account (%player% - placeholder for the player nickname)
 # ------------------------------------------------------------------
 # CommandsAfterServerBoosting
@@ -130,12 +130,12 @@
 # MessagesChannel
 # Whether to enable or not the possibility to send messages to Discord from the game (/du sendtodiscord)
 # Enabled - true - enable, false - disable
-# Id - text channel ID, in which will appear the messages
+# ID - text channel ID, in which will appear the messages
 # ------------------------------------------------------------------
 # ServerActivityLogging
 # Whether to enable or not the logging of some server events to an Discord channel
 # Enabled - true - enable, false - disable
-# ChannelId - text channel ID, in which will appear the logging messages
+# ChannelID - text channel ID, in which will appear the logging messages
 # JoinEmbedColor - join embed messages' type color
 # QuitEmbedColor - quit embed messages' type color
 # DeathEmbedColor - death embed messages' type color
@@ -145,7 +145,7 @@
 # Whether to enable or not the virtual console in the specified Discord channel
 # Enabled - true - enable, false - disable
 # ClearOnEveryInit - whether to clear the virtual console channel on every initialization or not
-# ChannelId - text channel ID, in which will appear the console messages
+# ChannelID - text channel ID, in which will appear the console messages
 # DeleteMessagesDelay - the amount of seconds, after which bot's messages will get deleted (set this to 0, if you don't want the bot's messages to be deleted)
 # BlacklistedCommands - commands that can't be executed from the virtual console
 # ------------------------------------------------------------------
@@ -153,7 +153,7 @@
 # Whether to enable or not the chat between the Minecraft players and the linked Discord users
 # Enabled - true - enable, false - disable
 # WebhookUrl - the webhook URL that will be used to display the Minecraft players' messages
-# ChannelId - the text channel ID, in which the linked Discord users can type their messages for the Minecraft players
+# ChannelID - the text channel ID, in which the linked Discord users can type their messages for the Minecraft players
 # ------------------------------------------------------------------
 # NotifyAboutMentions
 # Whether to notify the verified players about the mentions in Discord or not
@@ -174,6 +174,28 @@
 # Type - sound type
 # Volume - sound volume
 # Pitch - sound pitch
+# ------------------------------------------------------------------
+# CustomTriggers
+# This option allows you to create your custom triggers to some events
+# You can use here %player% placeholder for getting player's name involved in the event and any PlaceholderAPI placeholders
+# You can read about the available events on any documentation of your server API (CraftBukkit, Spigot, Paper, Purpur, etc.)
+# You can read about the conditions here: https://docs.spring.io/spring-framework/reference/core/expressions.html
+# Available variables to use in conditions are (they may be null, depending on the event you are using): #bot, #jda, #server, #command, #args, #event, #player, #sender
+# InGameEvents - this section is responsible for triggers that are executed when an in-game event happens
+# Example:
+# CustomTriggers:
+#   InGameEvents:
+#     test:
+#       TriggerOn: PlayerJoinEvent # Trigger will be executed when this event happens
+#       Conditions: # Commands and other actions will be performed only if ALL the conditions are met
+#       - '#player.isOp() == true'
+#       InGameCommands: # Commands that will be executed by a console sender
+#       - say Hello, %player%!
+#       DiscordMessageEmbed: # Embed message that will be sent to Discord
+#         ChannelID: 906118177962999820
+#         Color: '#880ED4'
+#         Title: Welcome
+#         Description: Hello, %player%!
 
 MainSettings:
   BotToken: ''
@@ -287,3 +309,5 @@ NotifyAboutMentions:
     Type: 'ENTITY_EXPERIENCE_ORB_PICKUP'
     Volume: 1
     Pitch: 1
+CustomTriggers:
+  InGameEvents: {}

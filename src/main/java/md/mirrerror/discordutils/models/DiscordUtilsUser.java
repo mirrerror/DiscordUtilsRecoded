@@ -2,9 +2,8 @@ package md.mirrerror.discordutils.models;
 
 import lombok.Getter;
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.data.DataManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
