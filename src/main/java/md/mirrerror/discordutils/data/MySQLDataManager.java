@@ -1,46 +1,53 @@
 package md.mirrerror.discordutils.data;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class MySQLDataManager implements DataManager {
-    private Connection connection;
+
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource dataSource;
+
+    static {
+        String host = Main.getInstance().getMainSettings().DATABASE_HOST;
+        int port = Main.getInstance().getMainSettings().DATABASE_PORT;
+        String database = Main.getInstance().getMainSettings().DATABASE_DATABASE;
+        String username = Main.getInstance().getMainSettings().DATABASE_USERNAME;
+        String password = Main.getInstance().getMainSettings().DATABASE_PASSWORD;
+
+        try {
+            if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
+            else Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException exception) {
+            exception.printStackTrace();
+        }
+
+        config.setJdbcUrl(Main.getInstance().getMainSettings().DATABASE_CONNECTION_URL
+                .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database));
+        config.setUsername(username);
+        config.setPassword(password);
+        config.addDataSourceProperty("cachePrepStmts" , "true");
+        config.addDataSourceProperty("prepStmtCacheSize" , "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit" , "2048");
+        dataSource = new HikariDataSource(config);
+    }
 
     @Override
     public CompletableFuture<Void> setup() {
-        return CompletableFuture.runAsync(() -> {
-
-            String host = Main.getInstance().getMainSettings().DATABASE_HOST;
-            int port = Main.getInstance().getMainSettings().DATABASE_PORT;
-            String database = Main.getInstance().getMainSettings().DATABASE_DATABASE;
-            String username = Main.getInstance().getMainSettings().DATABASE_USERNAME;
-            String password = Main.getInstance().getMainSettings().DATABASE_PASSWORD;
-
-            try {
-                if (getConnection() != null && !getConnection().isClosed()) {
-                    return;
-                }
-
-                if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
-                else Class.forName("com.mysql.jdbc.Driver");
-
-                connection = DriverManager.getConnection(Main.getInstance().getMainSettings().DATABASE_CONNECTION_URL
-                        .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database), username, password);
-                setupTable();
-            } catch (SQLException | ClassNotFoundException ignored) {
-                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database! Check your settings! Disabling the plugin...");
-                Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
-            }
-
-        });
+        return CompletableFuture.runAsync(this::setupTable);
     }
 
     private void setupTable() {
-        try {
+        try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS players (uuid varchar(255), user_id bigint, 2fa boolean);");
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -53,7 +60,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> registerUser(UUID uuid, long userId, boolean secondFactor) {
         return CompletableFuture.runAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO players (uuid, user_id, 2fa) VALUES (?,?,?)");
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.setLong(2, userId);
@@ -71,7 +78,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> unregisterUser(UUID uuid) {
         return CompletableFuture.runAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM players WHERE uuid=?");
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.executeUpdate();
@@ -87,7 +94,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Boolean> userExists(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -105,7 +112,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Boolean> userLinked(long userId) {
         return CompletableFuture.supplyAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE user_id=?");
                 preparedStatement.setLong(1, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -123,7 +130,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<UUID> getPlayerUniqueId(long userId) {
         return CompletableFuture.supplyAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE user_id=?");
                 preparedStatement.setLong(1, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -143,7 +150,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> setSecondFactor(UUID uuid, boolean secondFactor) {
         return CompletableFuture.runAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET 2fa=? WHERE uuid=?");
                 preparedStatement.setString(2, uuid.toString());
                 preparedStatement.setBoolean(1, secondFactor);
@@ -160,7 +167,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Boolean> hasSecondFactor(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -180,7 +187,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Void> setDiscordUserId(UUID uuid, long userId) {
         return CompletableFuture.runAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET user_id=? WHERE uuid=?");
                 preparedStatement.setString(2, uuid.toString());
                 preparedStatement.setLong(1, userId);
@@ -197,7 +204,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Long> getDiscordUserId(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -217,7 +224,7 @@ public class MySQLDataManager implements DataManager {
     public CompletableFuture<Long> countLinkedUsers() {
         return CompletableFuture.supplyAsync(() -> {
 
-            try {
+            try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE user_id>0");
                 ResultSet resultSet = preparedStatement.executeQuery();
                 long count = 0L;
@@ -234,7 +241,4 @@ public class MySQLDataManager implements DataManager {
         });
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
 }

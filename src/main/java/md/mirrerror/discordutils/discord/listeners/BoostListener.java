@@ -1,9 +1,8 @@
 package md.mirrerror.discordutils.discord.listeners;
 
 import md.mirrerror.discordutils.Main;
-import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

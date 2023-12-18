@@ -9,15 +9,16 @@ import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
-import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.config.ConfigManager;
-import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.config.messages.TranslationsManager;
+import md.mirrerror.discordutils.config.settings.BotSettings;
+import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.data.MySQLDataManager;
 import md.mirrerror.discordutils.events.BukkitSecondFactorListener;
 import md.mirrerror.discordutils.events.CacheListener;
+import md.mirrerror.discordutils.events.CustomTriggersListener;
 import md.mirrerror.discordutils.integrations.permissions.LuckPermsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.VaultIntegration;
@@ -109,6 +110,9 @@ public final class Main extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new CacheListener(),this);
         Bukkit.getPluginManager().registerEvents(new BukkitSecondFactorListener(), this);
+        CustomTriggersListener customTriggersListener = new CustomTriggersListener(this);
+        customTriggersListener.initialize();
+        Bukkit.getPluginManager().registerEvents(customTriggersListener, this);
         getLogger().info("The Bukkit listeners have been successfully loaded.");
 
         registerCommands();
