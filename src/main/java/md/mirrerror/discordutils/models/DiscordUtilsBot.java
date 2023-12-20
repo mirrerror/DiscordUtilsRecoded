@@ -14,7 +14,9 @@ import md.mirrerror.discordutils.events.ServerActivityListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
@@ -262,6 +264,39 @@ public class DiscordUtilsBot {
                 Main.getInstance().getLogger().info("The Chat module is disabled by the user.");
             }
 
+            for(String entry : botSettings.getFileConfiguration().getConfigurationSection("InfoChannels").getKeys(false)) {
+
+                long delay = botSettings.getFileConfiguration().getLong("InfoChannels." + entry + ".UpdateDelay");
+
+                if(delay < 600) {
+
+                    Main.getInstance().getLogger().severe("Couldn't enable the Info Channels module for the entry with name: " + entry + ", because the specified update delay is too low (min - 600 secs).");
+
+                } else {
+
+                    Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), () -> {
+                        GuildChannel channel = jda.getChannelById(GuildChannel.class, botSettings.getFileConfiguration().getLong("InfoChannels." + entry + ".ChannelID"));
+
+                        if(channel == null) {
+                            Main.getInstance().getLogger().severe("Couldn't enable the Info Channels module for the entry with name: " + entry + ", because the specified channel didn't exist.");
+                            return;
+                        }
+
+                        String channelName = botSettings.getFileConfiguration().getString("InfoChannels." + entry + ".NameFormat");
+
+                        if(channelName == null) {
+                            Main.getInstance().getLogger().severe("Couldn't enable the Info Channels module for the entry with name: " + entry + ", because you hadn't specified the name format.");
+                            return;
+                        }
+
+                        channel.getManager().setName(Main.getInstance().getPapiManager().setPlaceholders(null, channelName)).queue();
+                    }, 0L, delay * 20L);
+
+                }
+
+            }
+            Main.getInstance().getLogger().info("The Info Channels module has been successfully loaded.");
+
             Main.getInstance().getLogger().info("Bot has been successfully loaded.");
 
         } catch (InterruptedException e) {
@@ -438,6 +473,28 @@ public class DiscordUtilsBot {
                     if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
                 }
             }, timeToAuthorize*20L);
+        }
+    }
+
+    public void setOnDisableInfoChannelNames() {
+        for(String entry : botSettings.getFileConfiguration().getConfigurationSection("InfoChannels").getKeys(false)) {
+
+            GuildChannel channel = jda.getChannelById(GuildChannel.class, botSettings.getFileConfiguration().getLong("InfoChannels." + entry + ".ChannelID"));
+
+            if(channel == null) {
+                Main.getInstance().getLogger().severe("Couldn't disable the Info Channels module for the entry with name: " + entry + ", because the specified channel didn't exist.");
+                return;
+            }
+
+            String nameOnDisable = botSettings.getFileConfiguration().getString("InfoChannels." + entry + ".NameFormatOnDisable");
+
+            if(nameOnDisable == null) {
+                Main.getInstance().getLogger().severe("Couldn't disable the Info Channels module for the entry with name: " + entry + ", because you hadn't specified the on disable name format.");
+                return;
+            }
+
+            channel.getManager().setName(Main.getInstance().getPapiManager().setPlaceholders(null, nameOnDisable)).queue();
+
         }
     }
 

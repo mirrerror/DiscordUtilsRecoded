@@ -26,6 +26,7 @@ import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.utils.Metrics;
 import md.mirrerror.discordutils.utils.UpdateChecker;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -132,7 +133,9 @@ public final class Main extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+        bot.setOnDisableInfoChannelNames();
+    }
 
     private void setupMetrics() {
         Metrics metrics = new Metrics(this, 13243);
