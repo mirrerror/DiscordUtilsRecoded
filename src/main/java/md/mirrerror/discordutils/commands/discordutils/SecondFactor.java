@@ -8,6 +8,7 @@ import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.utils.Validator;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,12 +33,13 @@ public class SecondFactor implements SubCommand {
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
             discordUtilsUser.getUser().openPrivateChannel().submit()
-                    .thenCompose(channel -> channel.sendMessageEmbeds(new EmbedManager().infoEmbed(Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText().replace("%playerIp%", playerIp))).submit())
+                    .thenCompose(channel ->
+                            channel.sendMessageEmbeds(
+                                    new EmbedManager().infoEmbed(Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText().replace("%playerIp%", playerIp))
+                            ).addActionRow(Button.success("accept", Message.ACCEPT.getText())).addActionRow(Button.danger("decline", Message.DECLINE.getText())).submit())
                     .whenComplete((msg, error) -> {
                         if (error == null) {
                             Main.getInstance().getBot().getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
-                            msg.addReaction(Emoji.fromUnicode("✅")).queue();
-                            msg.addReaction(Emoji.fromUnicode("❎")).queue();
                             Message.SECONDFACTOR_DISABLE_REQUEST_SENT.send(sender, true);
                             return;
                         }

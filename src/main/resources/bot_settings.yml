@@ -196,6 +196,16 @@
 #         Color: '#880ED4'
 #         Title: Welcome
 #         Description: Hello, %player%!
+# ------------------------------------------------------------------
+# InfoChannels
+# This option allows you to set some Discord channels' names to be updated every N seconds (min - 600 secs), you can use any PlaceholderAPI placeholders there
+# Example:
+# InfoChannels:
+#   First:
+#     UpdateDelay: 600
+#     ChannelID: 1187036045380952115
+#     NameFormat: 'Online players: %server_online%'
+#     NameFormatOnDisable: 'The server is offline'
 
 MainSettings:
   BotToken: ''

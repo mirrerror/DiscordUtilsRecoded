@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -438,11 +439,12 @@ public class DiscordUtilsBot {
 
             if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.REACTION) {
                 discordUtilsUser.getUser().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText().replace("%playerIp%", playerIp))).submit())
+                        .thenCompose(channel ->
+                                channel.sendMessageEmbeds(
+                                        embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText().replace("%playerIp%", playerIp))
+                                ).addActionRow(Button.success("accept", md.mirrerror.discordutils.config.messages.Message.ACCEPT.getText())).addActionRow(Button.danger("decline", md.mirrerror.discordutils.config.messages.Message.DECLINE.getText())).submit())
                         .whenComplete((msg, error) -> {
                             if (error == null) {
-                                msg.addReaction(Emoji.fromUnicode("✅")).queue();
-                                msg.addReaction(Emoji.fromUnicode("❎")).queue();
                                 Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), msg.getId());
                                 return;
                             }

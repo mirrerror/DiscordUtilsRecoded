@@ -108,7 +108,10 @@ public enum Message {
     STATS_SLASH_COMMAND_DESCRIPTION(false),
     STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME(false),
     STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION(false),
-    HELP_SLASH_COMMAND_DESCRIPTION(false);
+    HELP_SLASH_COMMAND_DESCRIPTION(false),
+
+    ACCEPT(false),
+    DECLINE(false);
 
     private final boolean isList;
 

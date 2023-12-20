@@ -112,3 +112,5 @@ STATS_SLASH_COMMAND_DESCRIPTION: 'Provides your''s or other player''s stats (if 
 STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME: 'name'
 STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: 'Player''s name.'
 HELP_SLASH_COMMAND_DESCRIPTION: 'Sends you the list of the commands.'
+ACCEPT: 'Accept'
+DECLINE: 'Decline'

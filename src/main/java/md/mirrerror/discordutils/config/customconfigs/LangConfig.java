@@ -119,6 +119,8 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME", "name");
         getFileConfiguration().addDefault("STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION", "Player''s name.");
         getFileConfiguration().addDefault("HELP_SLASH_COMMAND_DESCRIPTION", "Sends you the list of the commands.");
+        getFileConfiguration().addDefault("ACCEPT", "Accept");
+        getFileConfiguration().addDefault("DECLINE", "Decline");
         getFileConfiguration().options().copyDefaults(true);
         getFileConfiguration().options().copyHeader(true);
         saveConfigFile();
