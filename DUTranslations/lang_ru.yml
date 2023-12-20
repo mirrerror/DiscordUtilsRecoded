@@ -145,3 +145,5 @@ DEATH_LOGGING_EMBED_TITLE: Смерть
 DEATH_LOGGING_EMBED_TEXT: '%player% умер'
 THIS_COMMAND_IS_BLACKLISTED: Данная команда заблокирована.
 INVALID_PLAYER_NAME_OR_UNVERIFIED: Данный игрок не верифицирован или не существует.
+ACCEPT: 'Принять'
+DECLINE: 'Отклонить'
