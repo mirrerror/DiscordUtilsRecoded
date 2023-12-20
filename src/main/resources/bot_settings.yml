@@ -321,9 +321,4 @@ NotifyAboutMentions:
     Pitch: 1
 CustomTriggers:
   InGameEvents: {}
-InfoChannels:
-  First:
-    ChannelID: -1
-    UpdateDelay: 600
-    NameFormat: 'Players online: %online%'
-    NameFormatOnDisable: 'Server is offline'
+InfoChannels: {}
