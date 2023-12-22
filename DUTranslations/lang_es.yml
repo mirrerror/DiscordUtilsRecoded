@@ -113,3 +113,5 @@ STATS_SLASH_COMMAND_DESCRIPTION: 'Proporciona tus estadísticas o las de otros j
 STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME: 'nombre'
 STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: 'Nombre del jugador.'
 HELP_SLASH_COMMAND_DESCRIPTION: 'Te envía la lista de los comandos.'
+ACCEPT: 'Aceptar'
+DECLINE: 'Rechazar'
