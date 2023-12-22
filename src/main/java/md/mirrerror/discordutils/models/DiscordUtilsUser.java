@@ -13,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -115,4 +116,16 @@ public class DiscordUtilsUser {
         return !Main.getInstance().getBot().getSecondFactorPlayers().containsKey(offlinePlayer.getUniqueId());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiscordUtilsUser that = (DiscordUtilsUser) o;
+        return Objects.equals(user, that.user) && Objects.equals(offlinePlayer, that.offlinePlayer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, offlinePlayer);
+    }
 }

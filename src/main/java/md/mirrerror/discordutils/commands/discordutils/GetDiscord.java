@@ -1,10 +1,10 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
 import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,8 +12,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class GetDiscord implements SubCommand {
@@ -61,7 +59,7 @@ public class GetDiscord implements SubCommand {
 
     @Override
     public List<String> getAliases() {
-        return Collections.unmodifiableList(Arrays.asList("gdis", "gdiscord", "gd"));
+        return List.of("gdis", "gdiscord", "gd");
     }
 
     @Override

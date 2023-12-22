@@ -14,11 +14,9 @@ import md.mirrerror.discordutils.events.ServerActivityListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -32,6 +30,7 @@ import org.bukkit.entity.Player;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -438,18 +437,13 @@ public class DiscordUtilsBot {
             EmbedManager embedManager = new EmbedManager();
 
             if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.REACTION) {
-                discordUtilsUser.getUser().openPrivateChannel().submit()
-                        .thenCompose(channel ->
-                                channel.sendMessageEmbeds(
-                                        embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText().replace("%playerIp%", playerIp))
-                                ).addActionRow(Button.success("accept", md.mirrerror.discordutils.config.messages.Message.ACCEPT.getText())).addActionRow(Button.danger("decline", md.mirrerror.discordutils.config.messages.Message.DECLINE.getText())).submit())
-                        .whenComplete((msg, error) -> {
-                            if (error == null) {
-                                Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), msg.getId());
-                                return;
-                            }
-                            md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
-                        });
+                sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+                    if (error == null) {
+                        Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), msg.getId());
+                        return;
+                    }
+                    md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
+                });
             }
             if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.CODE) {
                 AtomicReference<String> code = new AtomicReference<>("");
@@ -457,22 +451,21 @@ public class DiscordUtilsBot {
                 for(byte b : secureRandomSeed) code.set(code.get() + b);
                 code.set(code.get().replace("-", ""));
 
-                discordUtilsUser.getUser().openPrivateChannel().submit()
-                        .thenCompose(channel -> channel.sendMessageEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_CODE_MESSAGE.getText().replace("%code%", code.get()).replace("%playerIp%", playerIp))).submit())
-                        .whenComplete((msg, error) -> {
-                            if (error == null) {
-                                Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), code.get());
-                                return;
-                            }
-                            md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
-                        });
+                sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+                    if (error == null) {
+                        Main.getInstance().getBot().getSecondFactorPlayers().put(player.getUniqueId(), code.get());
+                        return;
+                    }
+                    md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
+                });
             }
 
             long timeToAuthorize = Main.getInstance().getBotSettings().SECOND_FACTOR_TIME_TO_AUTHORIZE;
 
             if(timeToAuthorize > 0) Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                if(player != null) {
-                    if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
+                if(player.isOnline()) {
+                    if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId()))
+                        player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
                 }
             }, timeToAuthorize*20L);
         }
@@ -498,6 +491,18 @@ public class DiscordUtilsBot {
             channel.getManager().setName(Main.getInstance().getPapiManager().setPlaceholders(null, nameOnDisable)).queue();
 
         }
+    }
+
+    public CompletableFuture<Message> sendActionChoosingMessage(User user, String playerIp) {
+        return user.openPrivateChannel().submit()
+                .thenCompose(channel ->
+                        channel.sendMessageEmbeds(
+                                new EmbedManager().infoEmbed(
+                                        md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText().replace("%playerIp%", playerIp))
+                        ).addActionRow(Button.success("accept", md.mirrerror.discordutils.config.messages.Message.ACCEPT.getText()))
+                                .addActionRow(Button.danger("decline", md.mirrerror.discordutils.config.messages.Message.DECLINE.getText()))
+                                .submit()
+                );
     }
 
 }

@@ -63,12 +63,22 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
     }
 
     public void registerCommand(String command, List<SubCommand> subCommands) {
+        if(commands.containsKey(command)) {
+            Main.getInstance().getLogger().severe("The plugin tried to register an already registered command: \"" + command + "\"!");
+            return;
+        }
+
         commands.put(command, subCommands);
         Main.getInstance().getCommand(command).setExecutor(this);
+        Main.getInstance().getCommand(command).setTabCompleter(this);
     }
 
     public void registerSubCommand(String command, SubCommand subCommand) {
-        if(commands.get(command) == null) return;
+        if(commands.get(command) == null) {
+            Main.getInstance().getLogger().severe("The plugin tried to register a subcommand for a non-existing command: " + command + "!");
+            return;
+        }
+
         List<SubCommand> subCommands = commands.get(command);
         subCommands.add(subCommand);
         commands.put(command, subCommands);

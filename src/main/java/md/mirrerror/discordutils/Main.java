@@ -26,7 +26,6 @@ import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.utils.Metrics;
 import md.mirrerror.discordutils.utils.UpdateChecker;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

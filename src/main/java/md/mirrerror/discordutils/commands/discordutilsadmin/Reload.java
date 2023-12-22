@@ -8,8 +8,6 @@ import md.mirrerror.discordutils.config.settings.MainSettings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Reload implements SubCommand {
@@ -34,7 +32,7 @@ public class Reload implements SubCommand {
 
     @Override
     public List<String> getAliases() {
-        return Collections.unmodifiableList(Arrays.asList("rl", "rel"));
+        return List.of("rl", "rel");
     }
 
     @Override

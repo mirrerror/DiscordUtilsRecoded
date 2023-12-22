@@ -130,16 +130,9 @@ public class DiscordUtilsUsersCacheManager {
     }
 
     public static void removeFromCache(DiscordUtilsUser discordUtilsUser) {
-        Iterator<DiscordUtilsUser> it = cachedUsers.iterator();
-        while (it.hasNext()) {
-            DiscordUtilsUser user = it.next();
-            try {
-                if(user.getOfflinePlayer().getUniqueId().equals(discordUtilsUser.getOfflinePlayer().getUniqueId())) {
-                    it.remove();
-                    break;
-                }
-            } catch (NullPointerException ignored) {}
-        }
+        System.out.println("before remove: " + cachedUsers.size());
+        cachedUsers.remove(discordUtilsUser);
+        System.out.println("after remove: " + cachedUsers.size());
     }
 
     public static void removeFromCacheByUuid(UUID uuid) {

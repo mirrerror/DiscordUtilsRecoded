@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ConfigDataManager implements DataManager {
-    private DataConfig dataConfig = Main.getInstance().getConfigManager().getData();
+    private final DataConfig dataConfig = Main.getInstance().getConfigManager().getData();
 
     @Override
     public CompletableFuture<Void> setup() {
