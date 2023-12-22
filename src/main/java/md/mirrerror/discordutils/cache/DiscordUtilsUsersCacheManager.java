@@ -20,48 +20,6 @@ public class DiscordUtilsUsersCacheManager {
     }
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUuid(UUID uuid) {
-        /*AtomicReference<DiscordUtilsUser> discordUtilsUser = new AtomicReference<>();
-
-        Main.getInstance().getDataManager().userExists(uuid).whenComplete((exists, throwable2) -> {
-            if(throwable2 != null) {
-                Main.getInstance().getLogger().severe("Something went wrong while checking the existence of the user for the UUID: " + uuid + ".");
-                return;
-            }
-
-            if(!exists) {
-                try {
-                    Main.getInstance().getDataManager().registerUser(uuid, -1, false).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            Main.getInstance().getDataManager().getDiscordUserId(uuid).whenComplete((id, throwable) -> {
-                if(throwable != null) {
-                    Main.getInstance().getLogger().severe("Something went wrong while retrieving the user ID for the UUID: " + uuid + ".");
-                    return;
-                }
-
-                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-                User user = Main.getInstance().getBot().getJda().getUserById(id);
-
-                Main.getInstance().getDataManager().hasSecondFactor(offlinePlayer.getUniqueId()).whenComplete((result, throwable1) -> {
-                    if(throwable1 != null) {
-                        Main.getInstance().getLogger().severe("Something went wrong while retrieving the player's 2FA status for the user: " + user.getIdLong() + ".");
-                        return;
-                    }
-
-                    discordUtilsUser.set(new DiscordUtilsUser(offlinePlayer, user, result));
-                    Main.getInstance().getLogger().info("discordutilsuser1: " + discordUtilsUser.get());
-                });
-            });
-        });
-
-        Main.getInstance().getLogger().info("discordutilsuser2: " + discordUtilsUser.get());
-
-        addToCache(discordUtilsUser.get());
-        return discordUtilsUser.get();*/
-
         try {
             boolean exists = Main.getInstance().getDataManager().userExists(uuid).get();
             if(!exists) {
@@ -83,34 +41,6 @@ public class DiscordUtilsUsersCacheManager {
     }
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUserId(long userId) {
-        /*AtomicReference<DiscordUtilsUser> discordUtilsUser = new AtomicReference<>();
-
-        Main.getInstance().getDataManager().getPlayerUniqueId(userId).whenComplete((uuid, throwable) -> {
-            if(throwable != null) {
-                Main.getInstance().getLogger().severe("Something went wrong while retrieving the player's UUID for the user: " + userId + ".");
-                return;
-            }
-
-            if(uuid == null) {
-                //Main.getInstance().getLogger().severe("The plugin is trying to retrieve a plugin user that doesn't exist from the database (user ID: " + userId + ")!");
-                return;
-            }
-
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-            User user = Main.getInstance().getBot().getJda().getUserById(userId);
-
-            Main.getInstance().getDataManager().hasSecondFactor(uuid).whenComplete((result, throwable1) -> {
-                if(throwable1 != null) {
-                    Main.getInstance().getLogger().severe("Something went wrong while retrieving the player's 2FA status for the user: " + userId + ".");
-                    return;
-                }
-                discordUtilsUser.set(new DiscordUtilsUser(offlinePlayer, user, result));
-            });
-        });
-
-        addToCache(discordUtilsUser.get());
-        return discordUtilsUser.get();*/
-
         try {
             UUID uuid = Main.getInstance().getDataManager().getPlayerUniqueId(userId).get();
             if(uuid == null) return new DiscordUtilsUser(null, null, false);
