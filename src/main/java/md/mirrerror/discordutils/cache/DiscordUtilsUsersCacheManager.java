@@ -60,9 +60,7 @@ public class DiscordUtilsUsersCacheManager {
     }
 
     public static void removeFromCache(DiscordUtilsUser discordUtilsUser) {
-        System.out.println("before remove: " + cachedUsers.size());
         cachedUsers.remove(discordUtilsUser);
-        System.out.println("after remove: " + cachedUsers.size());
     }
 
     public static void removeFromCacheByUuid(UUID uuid) {
