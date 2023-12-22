@@ -136,3 +136,5 @@ DEATH_LOGGING_EMBED_TITLE: Smrt
 DEATH_LOGGING_EMBED_TEXT: '%player% zemřel'
 THIS_COMMAND_IS_BLACKLISTED: Tento příkaz je zakázaný.
 INVALID_PLAYER_NAME_OR_UNVERIFIED: Zvolený hráč není ověřený nebo neexistuje.
+ACCEPT: 'Přijmout'
+DECLINE: 'Odmítnout'
