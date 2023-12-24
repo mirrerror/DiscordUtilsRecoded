@@ -46,8 +46,6 @@ public class CustomTriggersListener implements Listener {
                         .anyMatch(field -> field.getType().getName().endsWith("HandlerList")))
                 .collect(Collectors.toSet());
         plugin.getLogger().info("Found " + eventClasses.size() + " available events.");
-        plugin.getLogger()
-                .info(eventClasses.stream().map(Class::getName).collect(Collectors.joining(", ")));
 
         // register events
         EventExecutor eventExecutor = (listener, event) -> onEvent(event);
