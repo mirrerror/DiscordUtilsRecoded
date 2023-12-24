@@ -17,7 +17,7 @@ public class DiscordToChatListener extends ListenerAdapter {
         if(Main.getInstance().getBot().getChatTextChannel() == null) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
-        if(event.getChannel().asTextChannel().getIdLong() != Main.getInstance().getBot().getChatTextChannel().getIdLong()) return;
+        if(event.getChannel().getIdLong() != Main.getInstance().getBot().getChatTextChannel().getIdLong()) return;
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
         EmbedManager embedManager = new EmbedManager();
