@@ -59,10 +59,10 @@ public class SlashCommandsListener extends ListenerAdapter {
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUser().getIdLong());
 
-        event.deferReply().queue();
-
         switch(event.getName()) {
             case "link": {
+                event.deferReply().queue();
+
                 if(!DiscordValidator.validateNotLinkedUser(event.getHook(), discordUtilsUser)) return;
                 if(!DiscordValidator.validateLinkAvailability(event.getHook(), event.getUser())) return;
 
@@ -75,6 +75,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "sudo": {
+                event.deferReply().queue();
+
                 if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
                 if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
 
@@ -85,6 +87,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "embed": {
+                event.deferReply().queue();
+
                 if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
                 if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
 
@@ -105,6 +109,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "stats": {
+                event.deferReply().queue();
+
                 OfflinePlayer player;
                 OptionMapping firstArg = event.getOption(Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText());
                 if(firstArg == null) {
@@ -126,6 +132,8 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "help": {
+                event.deferReply().queue();
+
                 StringBuilder messageToSend = new StringBuilder();
                 for (String s : Message.DISCORD_HELP.getTextList()) {
                     messageToSend.append(s).append("\n");
