@@ -1,6 +1,6 @@
 package md.mirrerror.discordutils.discord;
 
-import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
@@ -13,8 +13,11 @@ import java.util.concurrent.RejectedExecutionException;
 
 public class ConsoleLoggingManager extends AbstractAppender {
 
-    public ConsoleLoggingManager() {
+    private final DiscordUtilsBot bot;
+
+    public ConsoleLoggingManager(DiscordUtilsBot bot) {
         super("ConsoleLoggingManager", null, PatternLayout.newBuilder().withPattern("[%d{HH:mm:ss} %level]: %msg").build(), false, Property.EMPTY_ARRAY);
+        this.bot = bot;
     }
 
     public void initialize() {
@@ -36,7 +39,7 @@ public class ConsoleLoggingManager extends AbstractAppender {
         if(message.length() > 2000) message = message.substring(0, 1990) + "...";
 
         try {
-            Main.getInstance().getBot().getConsoleLoggingTextChannel().sendMessage(message).queue();
+            bot.getConsoleLoggingTextChannel().sendMessage(message).queue();
         } catch (RejectedExecutionException ignored) {}
     }
 }

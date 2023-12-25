@@ -1,7 +1,9 @@
 package md.mirrerror.discordutils.discord.listeners;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.settings.BotSettings;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -12,14 +14,18 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+@RequiredArgsConstructor
 public class MentionsListener extends ListenerAdapter {
+
+    private final DiscordUtilsBot bot;
+    private final BotSettings botSettings;
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if(!Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_ENABLED) return;
+        if(!botSettings.NOTIFY_ABOUT_MENTIONS_ENABLED) return;
         if(event.getAuthor().isBot() || event.isWebhookMessage()) return;
         if(!event.isFromGuild()) return;
-        if(Main.getInstance().getBot().getNotifyAboutMentionsBlacklistedChannels().contains(event.getChannel().getIdLong())) return;
+        if(bot.getNotifyAboutMentionsBlacklistedChannels().contains(event.getChannel().getIdLong())) return;
 
         for(Member member : event.getMessage().getMentions().getMembers()) {
             User user = member.getUser();
@@ -30,24 +36,24 @@ public class MentionsListener extends ListenerAdapter {
 
             Player player = discordUtilsUser.getOfflinePlayer().getPlayer();
 
-            if(Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_TITLE_ENABLED) {
-                int fadeIn = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_TITLE_FADE_IN;
-                int stay = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_TITLE_STAY;
-                int fadeOut = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_TITLE_FADE_OUT;
-                String title = ChatColor.translateAlternateColorCodes('&', Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_TITLE_TITLE);
-                String subtitle = ChatColor.translateAlternateColorCodes('&', Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_TITLE_SUBTITLE);
+            if(botSettings.NOTIFY_ABOUT_MENTIONS_TITLE_ENABLED) {
+                int fadeIn = botSettings.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_IN;
+                int stay = botSettings.NOTIFY_ABOUT_MENTIONS_TITLE_STAY;
+                int fadeOut = botSettings.NOTIFY_ABOUT_MENTIONS_TITLE_FADE_OUT;
+                String title = ChatColor.translateAlternateColorCodes('&', botSettings.NOTIFY_ABOUT_MENTIONS_TITLE_TITLE);
+                String subtitle = ChatColor.translateAlternateColorCodes('&', botSettings.NOTIFY_ABOUT_MENTIONS_TITLE_SUBTITLE);
 
                 player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             }
 
-            if(Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_MESSAGE_ENABLED) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_MESSAGE_TEXT));
+            if(botSettings.NOTIFY_ABOUT_MENTIONS_MESSAGE_ENABLED) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', botSettings.NOTIFY_ABOUT_MENTIONS_MESSAGE_TEXT));
             }
 
-            if(Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_SOUND_ENABLED) {
-                String soundType = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_SOUND_TYPE;
-                float volume = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_SOUND_VOLUME;
-                float pitch = Main.getInstance().getBotSettings().NOTIFY_ABOUT_MENTIONS_SOUND_PITCH;
+            if(botSettings.NOTIFY_ABOUT_MENTIONS_SOUND_ENABLED) {
+                String soundType = botSettings.NOTIFY_ABOUT_MENTIONS_SOUND_TYPE;
+                float volume = botSettings.NOTIFY_ABOUT_MENTIONS_SOUND_VOLUME;
+                float pitch = botSettings.NOTIFY_ABOUT_MENTIONS_SOUND_PITCH;
                 player.playSound(player.getLocation(), Sound.valueOf(soundType.toUpperCase()), volume, pitch);
             }
 

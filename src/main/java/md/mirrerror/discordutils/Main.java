@@ -1,7 +1,6 @@
 package md.mirrerror.discordutils;
 
 import lombok.Getter;
-import lombok.Setter;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
@@ -46,20 +45,19 @@ public final class Main extends JavaPlugin {
 
     private DiscordUtilsBot bot;
 
-    private boolean isMainReady;
-    @Setter
-    private boolean isBotReady;
+    @Getter
+    private static boolean isMainReady;
+    @Getter
+    private static boolean isBotReady;
 
-    @Setter
     private BotSettings botSettings;
-    @Setter
     private MainSettings mainSettings;
 
     @Override
     public void onEnable() {
         instance = this;
-        configManager = new ConfigManager();
-        papiManager = new PAPIManager();
+        configManager = new ConfigManager(this);
+        papiManager = new PAPIManager(this);
 
         mainSettings = new MainSettings();
         botSettings = new BotSettings();
@@ -67,11 +65,11 @@ public final class Main extends JavaPlugin {
         String permissionsPlugin = mainSettings.PERMISSIONS_PLUGIN.toLowerCase();
         switch (permissionsPlugin) {
             case "vault": {
-                permissionsIntegration = new VaultIntegration();
+                permissionsIntegration = new VaultIntegration(this);
                 break;
             }
             default: {
-                permissionsIntegration = new LuckPermsIntegration();
+                permissionsIntegration = new LuckPermsIntegration(this);
                 break;
             }
         }
@@ -79,11 +77,11 @@ public final class Main extends JavaPlugin {
         String dataType = mainSettings.DATABASE_TYPE.toLowerCase();
         switch (dataType) {
             case "mysql": {
-                dataManager = new MySQLDataManager();
+                dataManager = new MySQLDataManager(this, mainSettings);
                 break;
             }
             default: {
-                dataManager = new ConfigDataManager();
+                dataManager = new ConfigDataManager(configManager.getData());
                 break;
             }
         }
@@ -98,19 +96,20 @@ public final class Main extends JavaPlugin {
 
         if(botSettings.ASYNC_BOT_LOADING) {
             Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                bot = new DiscordUtilsBot(botSettings.BOT_TOKEN);
+                bot = new DiscordUtilsBot(this, configManager.getBotSettings(), botSettings, papiManager, dataManager, permissionsIntegration);
                 bot.setupBot();
             });
         } else {
-            bot = new DiscordUtilsBot(botSettings.BOT_TOKEN);
+            bot = new DiscordUtilsBot(this, configManager.getBotSettings(), botSettings, papiManager, dataManager, permissionsIntegration);
             bot.setupBot();
         }
 
         DiscordUtilsUsersCacheManager.initialize();
 
         Bukkit.getPluginManager().registerEvents(new CacheListener(),this);
-        Bukkit.getPluginManager().registerEvents(new BukkitSecondFactorListener(), this);
-        CustomTriggersListener customTriggersListener = new CustomTriggersListener(this);
+        Bukkit.getPluginManager().registerEvents(new BukkitSecondFactorListener(configManager, this, bot, botSettings), this);
+        CustomTriggersListener customTriggersListener = new CustomTriggersListener(this, bot, configManager.getBotSettings().getFileConfiguration(),
+                botSettings, papiManager);
         customTriggersListener.initialize();
         Bukkit.getPluginManager().registerEvents(customTriggersListener, this);
         getLogger().info("The Bukkit listeners have been successfully loaded.");
@@ -120,7 +119,7 @@ public final class Main extends JavaPlugin {
 
         String chosenTranslation = mainSettings.LANGUAGE;
         if(!chosenTranslation.isEmpty()) {
-            TranslationsManager.downloadTranslation(chosenTranslation);
+            new TranslationsManager(this, configManager).downloadTranslation(chosenTranslation);
         } else {
             getLogger().info("The chosen translation doesn't exist or you disabled this option.");
         }
@@ -147,23 +146,27 @@ public final class Main extends JavaPlugin {
     }
 
     private void registerCommands() {
-        CommandsManager commandManager = new CommandsManager();
+        CommandsManager commandManager = new CommandsManager(this);
 
         List<SubCommand> discordUtilsSubCommands = new ArrayList<>();
-        discordUtilsSubCommands.add(new Link());
-        discordUtilsSubCommands.add(new SecondFactor());
+        discordUtilsSubCommands.add(new Link(botSettings, bot));
+        discordUtilsSubCommands.add(new SecondFactor(bot));
         discordUtilsSubCommands.add(new Help());
-        discordUtilsSubCommands.add(new SendToDiscord());
-        discordUtilsSubCommands.add(new VoiceInvite());
-        discordUtilsSubCommands.add(new Unlink());
-        discordUtilsSubCommands.add(new GetDiscord());
+        discordUtilsSubCommands.add(new SendToDiscord(bot, botSettings));
+        discordUtilsSubCommands.add(new VoiceInvite(bot, this));
+        discordUtilsSubCommands.add(new Unlink(bot));
+        discordUtilsSubCommands.add(new GetDiscord(dataManager, this, bot));
         commandManager.registerCommand("discordutils", discordUtilsSubCommands);
 
         List<SubCommand> discordUtilsAdminSubCommands = new ArrayList<>();
-        discordUtilsAdminSubCommands.add(new Reload());
-        discordUtilsAdminSubCommands.add(new ForceUnlink());
-        discordUtilsAdminSubCommands.add(new Stats());
+        discordUtilsAdminSubCommands.add(new Reload(configManager));
+        discordUtilsAdminSubCommands.add(new ForceUnlink(bot, botSettings, this));
+        discordUtilsAdminSubCommands.add(new Stats(bot));
         commandManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
+    }
+
+    public static void setBotReady(boolean isBotReady) {
+        Main.isBotReady = isBotReady;
     }
 
 }

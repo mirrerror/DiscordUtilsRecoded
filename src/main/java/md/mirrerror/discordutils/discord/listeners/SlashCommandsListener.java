@@ -1,9 +1,10 @@
 package md.mirrerror.discordutils.discord.listeners;
 
-import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.DiscordValidator;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -24,10 +26,17 @@ import java.util.List;
 
 public class SlashCommandsListener extends ListenerAdapter {
 
-    private final DiscordUtilsBot bot = Main.getInstance().getBot();
-    private final EmbedManager embedManager = new EmbedManager();
+    private final DiscordUtilsBot bot;
+    private final Plugin plugin;
+    private final PAPIManager papiManager;
+    private final EmbedManager embedManager;
 
-    public SlashCommandsListener(List<Guild> guilds) {
+    public SlashCommandsListener(DiscordUtilsBot bot, Plugin plugin, PAPIManager papiManager, BotSettings botSettings, List<Guild> guilds) {
+        this.bot = bot;
+        this.plugin = plugin;
+        this.papiManager = papiManager;
+        this.embedManager = new EmbedManager(botSettings);
+
         List<CommandData> commandData = new ArrayList<>();
 
         commandData.add(Commands.slash("link", Message.LINK_SLASH_COMMAND_DESCRIPTION.getText()));
@@ -82,7 +91,7 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 String command = event.getOption(Message.SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
 
-                Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
                 event.getHook().sendMessageEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText())).queue();
                 break;
             }
@@ -125,7 +134,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                     messageToSend.append(s).append("\n");
                 }
 
-                messageToSend = new StringBuilder(Main.getInstance().getPapiManager().setPlaceholders(player, messageToSend.toString()));
+                messageToSend = new StringBuilder(papiManager.setPlaceholders(player, messageToSend.toString()));
 
                 event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
 

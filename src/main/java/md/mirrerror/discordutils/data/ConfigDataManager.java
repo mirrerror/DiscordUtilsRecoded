@@ -1,13 +1,15 @@
 package md.mirrerror.discordutils.data;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.customconfigs.DataConfig;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+@RequiredArgsConstructor
 public class ConfigDataManager implements DataManager {
-    private final DataConfig dataConfig = Main.getInstance().getConfigManager().getData();
+
+    private final DataConfig dataConfig;
 
     @Override
     public CompletableFuture<Void> setup() {

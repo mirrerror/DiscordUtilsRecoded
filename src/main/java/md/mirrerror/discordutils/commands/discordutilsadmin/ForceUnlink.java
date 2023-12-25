@@ -1,9 +1,11 @@
 package md.mirrerror.discordutils.commands.discordutilsadmin;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.config.settings.BotSettings;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.Bukkit;
@@ -11,10 +13,16 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class ForceUnlink implements SubCommand {
+
+    private final DiscordUtilsBot bot;
+    private final BotSettings botSettings;
+    private final Plugin plugin;
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -23,16 +31,16 @@ public class ForceUnlink implements SubCommand {
 
         if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
-        Main.getInstance().getBot().unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
+        bot.unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 
         if(player.isOnline()) {
             Player onlinePlayer = player.getPlayer();
-            Main.getInstance().getBot().getUnlinkPlayers().remove(onlinePlayer.getUniqueId());
+            bot.getUnlinkPlayers().remove(onlinePlayer.getUniqueId());
             onlinePlayer.sendMessage(Message.DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET.getText(true).replace("%sender%", sender.getName()).replace("%target%", player.getName()));
         }
 
-        Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-            Main.getInstance().getBotSettings().COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            botSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
         });
         discordUtilsUser.unregister();
 

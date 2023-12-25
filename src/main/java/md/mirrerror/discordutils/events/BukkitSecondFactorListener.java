@@ -2,7 +2,9 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
@@ -20,6 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.plugin.Plugin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,10 +31,20 @@ import java.util.List;
 
 public class BukkitSecondFactorListener implements Listener {
 
+    private final ConfigManager configManager;
+    private final Plugin plugin;
+    private final DiscordUtilsBot bot;
+    private final BotSettings botSettings;
+
     private final List<String> allowedCommands = new ArrayList<>();
 
-    public BukkitSecondFactorListener() {
-        allowedCommands.addAll(Main.getInstance().getBotSettings().ALLOWED_COMMANDS_BEFORE_PASSING_SECOND_FACTOR);
+    public BukkitSecondFactorListener(ConfigManager configManager, Plugin plugin, DiscordUtilsBot bot, BotSettings botSettings) {
+        this.configManager = configManager;
+        this.plugin = plugin;
+        this.bot = bot;
+        this.botSettings = botSettings;
+
+        allowedCommands.addAll(botSettings.ALLOWED_COMMANDS_BEFORE_PASSING_SECOND_FACTOR);
         Iterator<String> stringIterator = allowedCommands.iterator();
         int index = 0;
         while(stringIterator.hasNext()) {
@@ -47,16 +60,16 @@ public class BukkitSecondFactorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
-        if(!Main.getInstance().isMainReady() || !Main.getInstance().isBotReady()) return;
+        if(!Main.isMainReady() || !Main.isBotReady()) return;
 
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
         if(!discordUtilsUser.isLinked()) return;
 
-        Main.getInstance().getBot().applySecondFactor(player, discordUtilsUser);
+        bot.applySecondFactor(player, discordUtilsUser);
 
-        if(Main.getInstance().getBotSettings().NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
+        if(botSettings.NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
             if(!discordUtilsUser.isSecondFactorEnabled()) Message.SECONDFACTOR_DISABLED_REMINDER.send(player, true);
         }
     }
@@ -64,7 +77,7 @@ public class BukkitSecondFactorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDisconnect(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Main.getInstance().getBot().getSecondFactorPlayers().remove(player.getUniqueId());
+        bot.getSecondFactorPlayers().remove(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -87,8 +100,8 @@ public class BukkitSecondFactorListener implements Listener {
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId()) ||
-                Main.getInstance().getBotSettings().FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
+        if(bot.getSecondFactorPlayers().containsKey(player.getUniqueId()) ||
+                botSettings.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
 
             if(!isAllowedCommand(event.getMessage().substring(1))) {
                 performChecks(event.getPlayer(), event);
@@ -100,34 +113,34 @@ public class BukkitSecondFactorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        if(Main.getInstance().getBot().getSecondFactorType() == DiscordUtilsBot.SecondFactorType.CODE && Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) {
+        if(bot.getSecondFactorType() == DiscordUtilsBot.SecondFactorType.CODE && bot.getSecondFactorPlayers().containsKey(player.getUniqueId())) {
             event.setCancelled(true);
             String message = event.getMessage();
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
-            if(message.replace(" ", "").equals(Main.getInstance().getBot().getSecondFactorPlayers().get(player.getUniqueId()))) {
-                Main.getInstance().getBot().getSecondFactorPlayers().remove(player.getUniqueId());
+            if(message.replace(" ", "").equals(bot.getSecondFactorPlayers().get(player.getUniqueId()))) {
+                bot.getSecondFactorPlayers().remove(player.getUniqueId());
                 Message.SECONDFACTOR_AUTHORIZED.send(player, true);
-                Main.getInstance().getBot().getSecondFactorSessions().put(player.getUniqueId(), new SecondFactorSession(playerIp,
-                        LocalDateTime.now().plusSeconds(Main.getInstance().getBotSettings().SECOND_FACTOR_SESSION_TIME)));
-                Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                    Main.getInstance().getBotSettings().COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+                bot.getSecondFactorSessions().put(player.getUniqueId(), new SecondFactorSession(playerIp,
+                        LocalDateTime.now().plusSeconds(botSettings.SECOND_FACTOR_SESSION_TIME)));
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
                 });
             } else {
                 int attempts = 1;
-                if(Main.getInstance().getBot().getSecondFactorAttempts().containsKey(playerIp)) {
-                    attempts = Main.getInstance().getBot().getSecondFactorAttempts().get(playerIp)+1;
-                    Main.getInstance().getBot().getSecondFactorAttempts().put(playerIp, attempts);
+                if(bot.getSecondFactorAttempts().containsKey(playerIp)) {
+                    attempts = bot.getSecondFactorAttempts().get(playerIp)+1;
+                    bot.getSecondFactorAttempts().put(playerIp, attempts);
                 } else {
-                    Main.getInstance().getBot().getSecondFactorAttempts().put(playerIp, attempts);
+                    bot.getSecondFactorAttempts().put(playerIp, attempts);
                 }
-                if(Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getConfigurationSection("ActionsAfterFailing2FA." + attempts) != null) {
-                    List<String> messages = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Messages");
-                    List<String> commands = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Commands");
+                if(configManager.getBotSettings().getFileConfiguration().getConfigurationSection("ActionsAfterFailing2FA." + attempts) != null) {
+                    List<String> messages = configManager.getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Messages");
+                    List<String> commands = configManager.getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Commands");
                     if(messages != null) {
                         messages.forEach(msg -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%player%", player.getName()))));
                     }
                     if(commands != null) {
-                        Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
+                        Bukkit.getScheduler().runTask(plugin, () -> {
                             commands.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
                         });
                     }
@@ -162,7 +175,7 @@ public class BukkitSecondFactorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBreakItem(PlayerItemBreakEvent event) {
         Player player = event.getPlayer();
-        if(Main.getInstance().getBot().getSecondFactorPlayers().containsKey(player.getUniqueId())) {
+        if(bot.getSecondFactorPlayers().containsKey(player.getUniqueId())) {
             player.getInventory().addItem(event.getBrokenItem());
             Message.SECONDFACTOR_NEEDED.send(player, true);
             return;
@@ -170,7 +183,7 @@ public class BukkitSecondFactorListener implements Listener {
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(Main.getInstance().getBotSettings().FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
+        if(botSettings.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
             player.getInventory().addItem(event.getBrokenItem());
             Message.VERIFICATION_NEEDED.send(player, true);
         }
@@ -213,7 +226,7 @@ public class BukkitSecondFactorListener implements Listener {
 
     private boolean checkVerification(Player player, Cancellable event) {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if(Main.getInstance().getBotSettings().FORCE_LINKING_ENABLED) {
+        if(botSettings.FORCE_LINKING_ENABLED) {
             if(!discordUtilsUser.isLinked()) {
                 event.setCancelled(true);
                 Message.VERIFICATION_NEEDED.send(player, true);

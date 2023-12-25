@@ -1,10 +1,12 @@
 package md.mirrerror.discordutils.config.customconfigs;
 
+import org.bukkit.plugin.Plugin;
+
 import java.util.HashMap;
 
 public class DataConfig extends CustomConfig {
-    public DataConfig(String fileName) {
-        super(fileName);
+    public DataConfig(Plugin plugin, String fileName) {
+        super(plugin, fileName);
     }
 
     @Override

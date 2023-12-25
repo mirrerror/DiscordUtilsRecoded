@@ -17,7 +17,7 @@ public class CacheListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if(!Main.getInstance().isMainReady() || !Main.getInstance().isBotReady()) {
+        if(!Main.isMainReady() || !Main.isBotReady()) {
             player.kickPlayer(Message.PLUGIN_IS_NOT_READY_YET.getText());
             return;
         }

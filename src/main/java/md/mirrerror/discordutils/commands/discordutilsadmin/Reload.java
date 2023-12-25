@@ -1,22 +1,22 @@
 package md.mirrerror.discordutils.commands.discordutilsadmin;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.commands.SubCommand;
+import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.config.settings.MainSettings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class Reload implements SubCommand {
+
+    private final ConfigManager configManager;
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Main.getInstance().getConfigManager().reloadConfigFiles();
-        Main.getInstance().setMainSettings(new MainSettings());
-        Main.getInstance().setBotSettings(new BotSettings());
+        configManager.reloadConfigFiles();
         Message.CONFIG_FILES_RELOADED.send(sender, true);
     }
 

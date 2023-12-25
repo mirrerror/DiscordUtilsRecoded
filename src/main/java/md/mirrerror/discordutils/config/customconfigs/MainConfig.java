@@ -1,8 +1,10 @@
 package md.mirrerror.discordutils.config.customconfigs;
 
+import org.bukkit.plugin.Plugin;
+
 public class MainConfig extends CustomConfig {
-    public MainConfig(String fileName) {
-        super(fileName);
+    public MainConfig(Plugin plugin, String fileName) {
+        super(plugin, fileName);
     }
 
     @Override

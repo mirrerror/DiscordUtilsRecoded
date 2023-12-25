@@ -30,7 +30,7 @@ public class DiscordUtilsUsersCacheManager {
                 }
             }
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-            DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(offlinePlayer,
+            DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(), offlinePlayer,
                     Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getDataManager().getDiscordUserId(uuid).get()),
                     Main.getInstance().getDataManager().hasSecondFactor(offlinePlayer.getUniqueId()).get());
             addToCache(discordUtilsUser);
@@ -43,9 +43,10 @@ public class DiscordUtilsUsersCacheManager {
     public static DiscordUtilsUser retrieveUserFromDatabaseByUserId(long userId) {
         try {
             UUID uuid = Main.getInstance().getDataManager().getPlayerUniqueId(userId).get();
-            if(uuid == null) return new DiscordUtilsUser(null, null, false);
+            if(uuid == null) return new DiscordUtilsUser(null, null, null, null, false);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-            DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(offlinePlayer, Main.getInstance().getBot().getJda().getUserById(userId),
+            DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(),
+                    offlinePlayer, Main.getInstance().getBot().getJda().getUserById(userId),
                     Main.getInstance().getDataManager().hasSecondFactor(uuid).get());
             addToCache(discordUtilsUser);
             return discordUtilsUser;

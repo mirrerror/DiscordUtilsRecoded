@@ -1,9 +1,11 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +16,10 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class SecondFactor implements SubCommand {
+
+    private final DiscordUtilsBot bot;
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -29,9 +34,9 @@ public class SecondFactor implements SubCommand {
 
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
-            Main.getInstance().getBot().sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+            bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
                 if (error == null) {
-                    Main.getInstance().getBot().getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
+                    bot.getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
                     Message.SECONDFACTOR_DISABLE_REQUEST_SENT.send(sender, true);
                     return;
                 }

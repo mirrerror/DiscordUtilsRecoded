@@ -1,9 +1,11 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.data.DataManager;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
 import org.bukkit.Bukkit;
@@ -11,10 +13,16 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class GetDiscord implements SubCommand {
+
+    private final DataManager dataManager;
+    private final Plugin plugin;
+    private final DiscordUtilsBot bot;
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -24,15 +32,15 @@ public class GetDiscord implements SubCommand {
         if(player == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
             if(offlinePlayer != null) {
-                Main.getInstance().getDataManager().getDiscordUserId(offlinePlayer.getUniqueId()).whenComplete((userId, throwable) -> {
+                dataManager.getDiscordUserId(offlinePlayer.getUniqueId()).whenComplete((userId, throwable) -> {
                     if(throwable != null) {
                         Message.UNKNOWN_ERROR.send(sender, true);
-                        Main.getInstance().getLogger().severe("Something went wrong while getting Discord user ID for the player: " + offlinePlayer.getUniqueId() + "!");
+                        plugin.getLogger().severe("Something went wrong while getting Discord user ID for the player: " + offlinePlayer.getUniqueId() + "!");
                         return;
                     }
 
                     try {
-                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", Main.getInstance().getBot().getJda().getUserById(userId).getName()));
+                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", bot.getJda().getUserById(userId).getName()));
                     } catch (NullPointerException ignored) {
                         Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.send(sender, true);
                     }

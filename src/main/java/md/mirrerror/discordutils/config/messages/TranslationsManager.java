@@ -1,9 +1,11 @@
 package md.mirrerror.discordutils.config.messages;
 
 import lombok.Getter;
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
+import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.config.customconfigs.LangConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,30 +14,34 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 @Getter
+@RequiredArgsConstructor
 public class TranslationsManager {
+
+    private final Plugin plugin;
+    private final ConfigManager configManager;
 
     private static final String TRANSLATION_URL = "https://github.com/mirrerror/DiscordUtilsRecoded/raw/main/DUTranslations/lang_";
 
-    public static void downloadTranslation(String key) {
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+    public void downloadTranslation(String key) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             String fileName = "lang_" + key.toLowerCase() + ".yml";
-            File file = Main.getInstance().getDataFolder().toPath().resolve(fileName).toFile();
+            File file = plugin.getDataFolder().toPath().resolve(fileName).toFile();
             if(!file.exists())
                 try {
-                    Main.getInstance().getLogger().info("Started downloading translation with the key: " + key + ".");
+                    plugin.getLogger().info("Started downloading translation with the key: " + key + ".");
                     URL url = new URL(TRANSLATION_URL + key.toLowerCase() + ".yml");
                     Files.copy(url.openStream(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    Main.getInstance().getLogger().info("Finished downloading translation with the key: " + key + ".");
-                    Main.getInstance().getConfigManager().setLang(new LangConfig(fileName));
-                    Main.getInstance().getLogger().info("Switched to the new lang file.");
+                    plugin.getLogger().info("Finished downloading translation with the key: " + key + ".");
+                    configManager.setLang(new LangConfig(plugin, fileName));
+                    plugin.getLogger().info("Switched to the new lang file.");
                 } catch (IOException e) {
-                    Main.getInstance().getLogger().severe("Something went wrong while downloading a translation file (key: \"" + key + "\")!");
-                    Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                    plugin.getLogger().severe("Something went wrong while downloading a translation file (key: \"" + key + "\")!");
+                    plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
                 }
             else {
-                Main.getInstance().getLogger().info("The translation file already exists.");
-                Main.getInstance().getConfigManager().setLang(new LangConfig(fileName));
-                Main.getInstance().getLogger().info("Switched to the translation lang file.");
+                plugin.getLogger().info("The translation file already exists.");
+                configManager.setLang(new LangConfig(plugin, fileName));
+                plugin.getLogger().info("Switched to the translation lang file.");
             }
         });
     }

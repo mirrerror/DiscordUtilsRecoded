@@ -2,8 +2,9 @@ package md.mirrerror.discordutils.data;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import md.mirrerror.discordutils.Main;
+import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
+import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,15 +15,17 @@ import java.util.concurrent.CompletableFuture;
 
 public class MySQLDataManager implements DataManager {
 
-    private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource dataSource;
+    private final Plugin plugin;
+    private final HikariDataSource dataSource;
 
-    static {
-        String host = Main.getInstance().getMainSettings().DATABASE_HOST;
-        int port = Main.getInstance().getMainSettings().DATABASE_PORT;
-        String database = Main.getInstance().getMainSettings().DATABASE_DATABASE;
-        String username = Main.getInstance().getMainSettings().DATABASE_USERNAME;
-        String password = Main.getInstance().getMainSettings().DATABASE_PASSWORD;
+    public MySQLDataManager(Plugin plugin, MainSettings mainSettings) {
+        this.plugin = plugin;
+
+        String host = mainSettings.DATABASE_HOST;
+        int port = mainSettings.DATABASE_PORT;
+        String database = mainSettings.DATABASE_DATABASE;
+        String username = mainSettings.DATABASE_USERNAME;
+        String password = mainSettings.DATABASE_PASSWORD;
 
         try {
             if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
@@ -31,7 +34,8 @@ public class MySQLDataManager implements DataManager {
             exception.printStackTrace();
         }
 
-        config.setJdbcUrl(Main.getInstance().getMainSettings().DATABASE_CONNECTION_URL
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(mainSettings.DATABASE_CONNECTION_URL
                 .replace("%host%", host).replace("%port%", String.valueOf(port)).replace("%database%", database));
         config.setUsername(username);
         config.setPassword(password);
@@ -51,8 +55,8 @@ public class MySQLDataManager implements DataManager {
             PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS players (uuid varchar(255), user_id bigint, 2fa boolean);");
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            Main.getInstance().getLogger().severe("Something went wrong while setting up the database table!");
-            Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            plugin.getLogger().severe("Something went wrong while setting up the database table!");
+            plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
         }
     }
 
@@ -67,8 +71,8 @@ public class MySQLDataManager implements DataManager {
                 preparedStatement.setBoolean(3, secondFactor);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while registering a player in the database!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while registering a player in the database!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
 
         });
@@ -83,8 +87,8 @@ public class MySQLDataManager implements DataManager {
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while unregistering a player from the database!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while unregistering a player from the database!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
 
         });
@@ -100,8 +104,8 @@ public class MySQLDataManager implements DataManager {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 return resultSet.next();
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while checking if a player is registered in the database!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while checking if a player is registered in the database!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return false;
 
@@ -118,8 +122,8 @@ public class MySQLDataManager implements DataManager {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 return resultSet.next();
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while checking if a player is verified (database)!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while checking if a player is verified (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return false;
 
@@ -138,8 +142,8 @@ public class MySQLDataManager implements DataManager {
                     return UUID.fromString(resultSet.getString("uuid"));
                 }
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while getting a player from the database!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while getting a player from the database!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return null;
 
@@ -156,8 +160,8 @@ public class MySQLDataManager implements DataManager {
                 preparedStatement.setBoolean(1, secondFactor);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while changing a player's 2FA settings!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while changing a player's 2FA settings!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
 
         });
@@ -175,8 +179,8 @@ public class MySQLDataManager implements DataManager {
                     return resultSet.getBoolean("2fa");
                 }
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while checking if a player has 2FA enabled (database)!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while checking if a player has 2FA enabled (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return false;
 
@@ -193,8 +197,8 @@ public class MySQLDataManager implements DataManager {
                 preparedStatement.setLong(1, userId);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while setting a player's Discord user ID (database)!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while setting a player's Discord user ID (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
 
         });
@@ -212,8 +216,8 @@ public class MySQLDataManager implements DataManager {
                     return resultSet.getLong("user_id");
                 }
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while getting a player's Discord user ID (database)!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while getting a player's Discord user ID (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return -1L;
 
@@ -233,8 +237,8 @@ public class MySQLDataManager implements DataManager {
                 }
                 return count;
             } catch (SQLException e) {
-                Main.getInstance().getLogger().severe("Something went wrong while getting a player's Discord user ID (database)!");
-                Main.getInstance().getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+                plugin.getLogger().severe("Something went wrong while getting a player's Discord user ID (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return -1L;
 
