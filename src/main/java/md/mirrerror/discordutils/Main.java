@@ -1,7 +1,6 @@
 package md.mirrerror.discordutils;
 
 import lombok.Getter;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
@@ -103,8 +102,6 @@ public final class Main extends JavaPlugin {
             bot = new DiscordUtilsBot(this, configManager.getBotSettings(), botSettings, papiManager, dataManager, permissionsIntegration);
             bot.setupBot();
         }
-
-        DiscordUtilsUsersCacheManager.initialize();
 
         Bukkit.getPluginManager().registerEvents(new CacheListener(),this);
         Bukkit.getPluginManager().registerEvents(new BukkitSecondFactorListener(configManager, this, bot, botSettings), this);
