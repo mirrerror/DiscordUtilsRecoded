@@ -13,11 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 public class DiscordUtilsUsersCacheManager {
 
-    private static Set<DiscordUtilsUser> cachedUsers;
-
-    public static void initialize() {
-        cachedUsers = new HashSet<>();
-    }
+    private static final Set<DiscordUtilsUser> cachedUsers = new HashSet<>();
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUuid(UUID uuid) {
         try {
