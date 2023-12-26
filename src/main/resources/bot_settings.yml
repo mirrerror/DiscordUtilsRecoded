@@ -127,11 +127,6 @@
 # BlacklistedChannels - ignored channel IDs. For example: BlacklistedChannels: [905508941230915684, 123123123131231233]
 # MinMembers - the minimum amount of members that has to be in a voice channel to get the rewards
 # ------------------------------------------------------------------
-# MessagesChannel
-# Whether to enable or not the possibility to send messages to Discord from the game (/du sendtodiscord)
-# Enabled - true - enable, false - disable
-# ID - text channel ID, in which will appear the messages
-# ------------------------------------------------------------------
 # ServerActivityLogging
 # Whether to enable or not the logging of some server events to an Discord channel
 # Enabled - true - enable, false - disable
@@ -281,9 +276,6 @@ GuildVoiceRewards:
   Reward: 'eco give %player% 100'
   BlacklistedChannels: []
   MinMembers: 1
-MessagesChannel:
-  Enabled: false
-  ID: -1
 ServerActivityLogging:
   Enabled: false
   ChannelID: -1

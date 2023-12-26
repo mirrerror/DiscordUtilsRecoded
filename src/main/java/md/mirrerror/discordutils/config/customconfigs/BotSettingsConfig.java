@@ -58,8 +58,6 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("GuildVoiceRewards.Reward", "eco give %player% 100");
         getFileConfiguration().addDefault("GuildVoiceRewards.BlacklistedChannels", Collections.emptyList());
         getFileConfiguration().addDefault("GuildVoiceRewards.MinMembers", 1);
-        getFileConfiguration().addDefault("MessagesChannel.Enabled", false);
-        getFileConfiguration().addDefault("MessagesChannel.ID", -1);
         getFileConfiguration().addDefault("ServerActivityLogging.Enabled", false);
         getFileConfiguration().addDefault("ServerActivityLogging.ChannelID", -1);
         getFileConfiguration().addDefault("ServerActivityLogging.JoinEmbedColor", "#8de113");

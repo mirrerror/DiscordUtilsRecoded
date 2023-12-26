@@ -75,8 +75,6 @@ public class BotSettings {
     public final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");
     public final List<Long> GUILD_VOICE_REWARDS_BLACKLISTED_CHANNELS = config.getLongList("GuildVoiceRewards.BlacklistedChannels");
     public final int GUILD_VOICE_REWARDS_MIN_MEMBERS = config.getInt("GuildVoiceRewards.MinMembers");
-    public final boolean MESSAGES_CHANNEL_ENABLED = config.getBoolean("MessagesChannel.Enabled");
-    public final long MESSAGES_CHANNEL_ID = config.getLong("MessagesChannel.ID");
     public final boolean SERVER_ACTIVITY_LOGGING_ENABLED = config.getBoolean("ServerActivityLogging.Enabled");
     public final long SERVER_ACTIVITY_LOGGING_CHANNEL_ID = config.getLong("ServerActivityLogging.ChannelID");
     public final Color SERVER_ACTIVITY_LOGGING_JOIN_EMBED_COLOR = Color.decode(config.getString("ServerActivityLogging.JoinEmbedColor"));

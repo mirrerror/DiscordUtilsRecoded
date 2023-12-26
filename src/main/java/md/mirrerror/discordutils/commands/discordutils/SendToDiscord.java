@@ -7,6 +7,8 @@ import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.utils.Validator;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -20,26 +22,25 @@ public class SendToDiscord implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!Validator.validateCommandToggleness(sender, botSettings.MESSAGES_CHANNEL_ENABLED))
-            return;
+        TextChannel textChannel = bot.getJda().getTextChannelById(args[0]);
 
-        bot.getJda().getGuilds().forEach(guild -> {
-            StringBuilder text = new StringBuilder();
-            for(int i = 2; i < args.length; i++) text.append(args[i]).append(" ");
+        if(!Validator.validateTextChannel(sender, textChannel)) return;
 
-            Color color;
-            try {
-                color = Color.decode(args[1]);
-            } catch (Exception e) {
-                color = null;
-            }
+        StringBuilder text = new StringBuilder();
+        for(int i = 2; i < args.length; i++) text.append(args[i]).append(" ");
 
-            if(!Validator.validateColor(sender, color)) return;
+        Color color;
+        try {
+            color = Color.decode(args[1]);
+        } catch (Exception e) {
+            color = null;
+        }
 
-            bot.sendMessageEmbed(bot.getMessagesTextChannel(),
-                    new EmbedManager(botSettings).embed(args[0], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));
-            Message.DISCORDUTILS_SENDTODISCORD_SUCCESSFUL.send(sender, true);
-        });
+        if(!Validator.validateColor(sender, color)) return;
+
+        bot.sendMessageEmbed(textChannel,
+                new EmbedManager(botSettings).embed(args[0], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));
+        Message.DISCORDUTILS_SENDTODISCORD_SUCCESSFUL.send(sender, true);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class SendToDiscord implements SubCommand {
 
     @Override
     public int getMinArgsNeeded() {
-        return 3;
+        return 4;
     }
 
     @Override
