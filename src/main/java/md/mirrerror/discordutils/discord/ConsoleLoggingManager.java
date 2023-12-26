@@ -22,7 +22,7 @@ public class ConsoleLoggingManager extends AbstractAppender {
     }
 
     public void initialize() {
-        org.apache.logging.log4j.core.Logger log = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        Logger log = (Logger) LogManager.getRootLogger();
         log.addAppender(this);
     }
 
