@@ -1,24 +1,27 @@
 package md.mirrerror.discordutils.integrations.placeholders;
 
 import lombok.Getter;
-import md.mirrerror.discordutils.Main;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 @Getter
 public class PAPIManager {
 
+    private final Plugin plugin;
+
     private final boolean isEnabled;
 
-    public PAPIManager() {
+    public PAPIManager(Plugin plugin) {
+        this.plugin = plugin;
         this.isEnabled = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
         if(!isEnabled) {
-            Main.getInstance().getLogger().warning("It seems like you don't have PlaceholderAPI installed on your server. Disabling PAPIManager...");
+            plugin.getLogger().warning("It seems like you don't have PlaceholderAPI installed on your server. Disabling PAPIManager...");
         } else {
-            new PAPIExpansion().register();
-            Main.getInstance().getLogger().info("PAPIManager has been successfully enabled.");
+            new PAPIExpansion(plugin).register();
+            plugin.getLogger().info("PAPIManager has been successfully enabled.");
         }
     }
 

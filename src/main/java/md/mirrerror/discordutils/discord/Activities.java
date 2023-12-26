@@ -1,7 +1,6 @@
 package md.mirrerror.discordutils.discord;
 
 import lombok.Getter;
-import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.customconfigs.BotSettingsConfig;
 import net.dv8tion.jda.api.entities.Activity;
 
@@ -14,9 +13,10 @@ public class Activities {
     @Getter
     private final List<Activity> botActivities;
     private Iterator<Activity> botActivitiesIterator;
-    private static BotSettingsConfig botSettings = Main.getInstance().getConfigManager().getBotSettings();
+    private final BotSettingsConfig botSettings;
 
-    public Activities() {
+    public Activities(BotSettingsConfig botSettingsConfig) {
+        this.botSettings = botSettingsConfig;
         this.botActivities = getActivitiesFromConfig();
         this.botActivitiesIterator = botActivities.iterator();
     }
@@ -28,7 +28,7 @@ public class Activities {
         return botActivitiesIterator.next();
     }
 
-    private static List<Activity> getActivitiesFromConfig() {
+    private List<Activity> getActivitiesFromConfig() {
         final List<Activity> botActivities = new LinkedList<>();
         botSettings.getFileConfiguration().getConfigurationSection("Activities").getKeys(false).forEach(activity -> {
             if(!activity.equals("UpdateDelay") && !activity.equals("Enabled")) {

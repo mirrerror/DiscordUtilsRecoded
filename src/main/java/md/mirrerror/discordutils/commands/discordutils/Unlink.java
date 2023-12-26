@@ -1,14 +1,12 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
+import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
-import md.mirrerror.discordutils.discord.EmbedManager;
-import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.utils.Validator;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,7 +15,10 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class Unlink implements SubCommand {
+
+    private final DiscordUtilsBot bot;
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,18 +33,13 @@ public class Unlink implements SubCommand {
 
         String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
-        discordUtilsUser.getUser().openPrivateChannel().submit()
-                .thenCompose(channel ->
-                        channel.sendMessageEmbeds(
-                                new EmbedManager().infoEmbed(Message.ACCOUNT_UNLINK_CONFIRMATION.getText().replace("%playerIp%", playerIp))
-                        ).addActionRow(Button.success("accept", Message.ACCEPT.getText())).addActionRow(Button.danger("decline", Message.DECLINE.getText())).submit())
-                .whenComplete((msg, error) -> {
-                    if (error == null) {
-                        Main.getInstance().getBot().getUnlinkPlayers().put(player.getUniqueId(), msg);
-                        return;
-                    }
-                    Message.CAN_NOT_SEND_MESSAGE.send(sender, true);
-                });
+        bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+            if (error == null) {
+                bot.getUnlinkPlayers().put(player.getUniqueId(), msg);
+                return;
+            }
+            Message.CAN_NOT_SEND_MESSAGE.send(sender, true);
+        });
 
         Message.ACCOUNT_UNLINK_REQUEST_SENT.send(sender, true);
     }

@@ -1,16 +1,20 @@
 package md.mirrerror.discordutils.integrations.permissions;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
+@RequiredArgsConstructor
 public class LuckPermsIntegration implements PermissionsIntegration {
+
+    private final Plugin plugin;
 
     @Override
     public List<String> getUserGroups(Player player) {
@@ -27,7 +31,7 @@ public class LuckPermsIntegration implements PermissionsIntegration {
                 }
             }
         } catch (IllegalStateException ignored) {
-            Main.getInstance().getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
+            plugin.getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
         }
         return groups;
     }
@@ -41,7 +45,7 @@ public class LuckPermsIntegration implements PermissionsIntegration {
 
             if(user != null) return user.getPrimaryGroup();
         } catch (IllegalStateException ignored) {
-            Main.getInstance().getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
+            plugin.getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
         }
 
         return null;
@@ -62,7 +66,7 @@ public class LuckPermsIntegration implements PermissionsIntegration {
                 }
             }
         } catch (IllegalStateException ignored) {
-            Main.getInstance().getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
+            plugin.getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
         }
         return groups;
     }
@@ -76,7 +80,7 @@ public class LuckPermsIntegration implements PermissionsIntegration {
 
             if(user != null) return user.getPrimaryGroup();
         } catch (IllegalStateException ignored) {
-            Main.getInstance().getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
+            plugin.getLogger().severe("Something went wrong while using the LuckPerms integration. Probably, there is not the LuckPerms plugin installed on your server.");
         }
 
         return null;

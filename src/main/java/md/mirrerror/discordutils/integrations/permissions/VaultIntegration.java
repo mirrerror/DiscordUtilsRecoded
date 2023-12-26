@@ -1,9 +1,9 @@
 package md.mirrerror.discordutils.integrations.permissions;
 
-import md.mirrerror.discordutils.Main;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ public class VaultIntegration implements PermissionsIntegration {
 
     private static Permission perms = null;
 
-    public VaultIntegration() {
+    public VaultIntegration(Plugin plugin) {
         if(!setupPermissions()) {
-            Main.getInstance().getLogger().severe("Vault plugin or any permissions plugin not found.");
+            plugin.getLogger().severe("Vault plugin or any permissions plugin not found.");
         }
     }
 

@@ -1,13 +1,14 @@
 package md.mirrerror.discordutils.commands;
 
 import lombok.Getter;
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
+@RequiredArgsConstructor
 public class CommandsManager implements CommandExecutor, TabCompleter {
+
+    private final JavaPlugin plugin;
 
     private static final Map<String, List<SubCommand>> commands = new HashMap<>();
 
@@ -63,12 +67,22 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
     }
 
     public void registerCommand(String command, List<SubCommand> subCommands) {
+        if(commands.containsKey(command)) {
+            plugin.getLogger().severe("The plugin tried to register an already registered command: \"" + command + "\"!");
+            return;
+        }
+
         commands.put(command, subCommands);
-        Main.getInstance().getCommand(command).setExecutor(this);
+        plugin.getCommand(command).setExecutor(this);
+        plugin.getCommand(command).setTabCompleter(this);
     }
 
     public void registerSubCommand(String command, SubCommand subCommand) {
-        if(commands.get(command) == null) return;
+        if(commands.get(command) == null) {
+            plugin.getLogger().severe("The plugin tried to register a subcommand for a non-existing command: " + command + "!");
+            return;
+        }
+
         List<SubCommand> subCommands = commands.get(command);
         subCommands.add(subCommand);
         commands.put(command, subCommands);

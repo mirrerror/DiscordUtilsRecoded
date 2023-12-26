@@ -1,9 +1,10 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
 import net.dv8tion.jda.api.entities.Member;
@@ -15,13 +16,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@RequiredArgsConstructor
 public class VoiceInvite implements SubCommand {
+
+    private final DiscordUtilsBot bot;
+    private final Plugin plugin;
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,13 +36,13 @@ public class VoiceInvite implements SubCommand {
 
         if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            Main.getInstance().getBot().getJda().getGuilds().forEach(guild -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            bot.getJda().getGuilds().forEach(guild -> {
                 Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
                 if(member != null) {
                     if(!Validator.validateVoiceChannelPresence(sender, member)) return;
 
-                    String url = Main.getInstance().getBot().createVoiceInviteUrl(member, 15L, TimeUnit.MINUTES);
+                    String url = bot.createVoiceInviteUrl(member, 15L, TimeUnit.MINUTES);
 
                     TextComponent textComponent = new TextComponent(Message.VOICE_INVITE.getText(true).replace("%sender%", player.getName()));
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
@@ -63,7 +67,7 @@ public class VoiceInvite implements SubCommand {
 
     @Override
     public List<String> getAliases() {
-        return Collections.unmodifiableList(Arrays.asList("vinvite", "vcinvite", "vinv", "vcinv"));
+        return List.of("vinvite", "vcinvite", "vinv", "vcinv");
     }
 
     @Override

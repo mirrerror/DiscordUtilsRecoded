@@ -1,14 +1,19 @@
 package md.mirrerror.discordutils.integrations.placeholders;
 
-import md.mirrerror.discordutils.Main;
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+@RequiredArgsConstructor
 public class PAPIExpansion extends PlaceholderExpansion {
+
+    private final Plugin plugin;
+
     @Override
     public @NotNull String getAuthor() {
         return "mirrerror";
@@ -21,7 +26,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return Main.getInstance().getDescription().getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     @Override

@@ -1,10 +1,12 @@
 package md.mirrerror.discordutils.config.customconfigs;
 
+import org.bukkit.plugin.Plugin;
+
 import java.util.Arrays;
 
 public class LangConfig extends CustomConfig {
-    public LangConfig(String fileName) {
-        super(fileName);
+    public LangConfig(Plugin plugin, String fileName) {
+        super(plugin, fileName);
     }
 
     @Override

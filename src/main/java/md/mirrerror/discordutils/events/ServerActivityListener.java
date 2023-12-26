@@ -2,6 +2,7 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +14,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ServerActivityListener implements Listener {
 
-    private final EmbedManager embedManager = new EmbedManager();
+    private final EmbedManager embedManager;
+
+    public ServerActivityListener(BotSettings botSettings) {
+        this.embedManager = new EmbedManager(botSettings);
+    }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {

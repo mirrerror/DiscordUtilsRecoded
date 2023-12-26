@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DiscordValidator {
 
-    private static final EmbedManager embedManager = new EmbedManager();
+    private static final EmbedManager embedManager = new EmbedManager(Main.getInstance().getBotSettings());
 
     public static boolean validateLinkedUser(MessageChannelUnion messageChannelUnion, DiscordUtilsUser discordUtilsUser) {
         if(!discordUtilsUser.isLinked()) {

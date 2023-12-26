@@ -5,26 +5,24 @@ import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.data.DataManager;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
 import org.bukkit.OfflinePlayer;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 @Getter
 public class DiscordUtilsUser {
 
-    private DataManager dataManager = Main.getInstance().getDataManager();
+    private final DataManager dataManager;
+    private final DiscordUtilsBot bot;
 
     private User user;
-    private OfflinePlayer offlinePlayer;
+    private final OfflinePlayer offlinePlayer;
     private boolean secondFactorEnabled;
 
-    public DiscordUtilsUser(OfflinePlayer offlinePlayer, User user, boolean hasSecondFactor) {
+    public DiscordUtilsUser(DiscordUtilsBot discordUtilsBot, DataManager dataManager, OfflinePlayer offlinePlayer, User user, boolean hasSecondFactor) {
+        this.bot = discordUtilsBot;
+        this.dataManager = dataManager;
         this.offlinePlayer = offlinePlayer;
         this.user = user;
         this.secondFactorEnabled = hasSecondFactor;
@@ -47,61 +45,15 @@ public class DiscordUtilsUser {
     }
 
     public boolean isAdmin(Guild guild) {
-        for(long roleId : Main.getInstance().getBot().getAdminRoles()) {
-            for(Role role : guild.getMemberById(user.getIdLong()).getRoles()) {
-                if(role.getIdLong() == roleId) return true;
-            }
-        }
-        return false;
+        return bot.isAdmin(guild, user);
     }
 
     public void synchronizeRoles(Guild guild) {
-        if(!isLinked()) return;
-        Set<Long> assignedRoles = new HashSet<>();
-        Member member = guild.getMemberById(user.getIdLong());
-
-        if(Main.getInstance().getBotSettings().ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP) {
-            String primaryGroup = Main.getInstance().getPermissionsIntegration().getHighestUserGroup(offlinePlayer);
-
-            for(long roleId : Main.getInstance().getBot().getGroupRoles().keySet()) {
-                if(Main.getInstance().getBot().getGroupRoles().get(roleId).contains(primaryGroup)) {
-                    try {
-                        Role role = guild.getRoleById(roleId);
-                        guild.addRoleToMember(member, role).queue();
-                        assignedRoles.add(roleId);
-                    } catch (IllegalArgumentException ignored) {}
-                }
-            }
-        } else {
-            List<String> playerGroups = Main.getInstance().getPermissionsIntegration().getUserGroups(offlinePlayer);
-
-            for(long roleId : Main.getInstance().getBot().getGroupRoles().keySet()) {
-                if(Main.getInstance().getBot().getGroupRoles().get(roleId).stream().distinct().anyMatch(playerGroups::contains)) {
-                    try {
-                        Role role = guild.getRoleById(roleId);
-                        guild.addRoleToMember(member, role).queue();
-                        assignedRoles.add(roleId);
-                    } catch (IllegalArgumentException ignored) {}
-                }
-            }
-        }
-
-        for(long roleId : Main.getInstance().getBot().getGroupRoles().keySet()) {
-            if(!assignedRoles.contains(roleId)) {
-                try {
-                    guild.removeRoleFromMember(member, guild.getRoleById(roleId)).queue();
-                } catch (IllegalArgumentException ignored) {}
-            }
-        }
+        bot.synchronizeRoles(guild, this);
     }
 
     public void synchronizeNickname(Guild guild) {
-        if(!isLinked()) return;
-        String format = Main.getInstance().getPapiManager().setPlaceholders(offlinePlayer, Main.getInstance().getBotSettings().NAMES_SYNCHRONIZATION_FORMAT
-                        .replace("%player%", offlinePlayer.getName()));
-        try {
-            guild.modifyNickname(guild.getMemberById(user.getIdLong()), format).queue();
-        } catch (IllegalArgumentException | HierarchyException ignored) {}
+        bot.synchronizeNickname(guild, this);
     }
 
     public void unregister() {
@@ -112,7 +64,19 @@ public class DiscordUtilsUser {
     }
 
     public boolean isSecondFactorAuthorized() {
-        return !Main.getInstance().getBot().getSecondFactorPlayers().containsKey(offlinePlayer.getUniqueId());
+        return bot.isSecondFactorAuthorized(offlinePlayer);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiscordUtilsUser that = (DiscordUtilsUser) o;
+        return Objects.equals(user, that.user) && Objects.equals(offlinePlayer, that.offlinePlayer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, offlinePlayer);
+    }
 }

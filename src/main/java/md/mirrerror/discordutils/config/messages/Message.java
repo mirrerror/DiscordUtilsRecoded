@@ -113,7 +113,7 @@ public enum Message {
     ACCEPT(false),
     DECLINE(false);
 
-    private final boolean isList;
+    private final boolean isList; // TODO
 
     public String getText() {
         return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
