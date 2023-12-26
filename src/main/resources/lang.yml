@@ -77,7 +77,7 @@ HELP:
   - '&7-&b /du link [code]&f - link your Discord account with your server account'
   - '&7-&b /du unlink&f - unlink your Discord account from your server account'
   - '&7-&b /du 2fa&f - enable/disable 2FA'
-  - '&7-&b /du sendtodiscord [title] [color] [text]&f - send an embed message to the Discord server'
+  - '&7-&b /du sendtodiscord [channel] [title] [color] [text]&f - send an embed message to the Discord server'
   - '&7-&b /du voiceinvite&f - invite all online players for conversation in the voice channel'
   - '&7-&b /du getdiscord [player]&f - check the player''s linked Discord account'
   - '&7-&b /dua reload&f - reload the configuration files'

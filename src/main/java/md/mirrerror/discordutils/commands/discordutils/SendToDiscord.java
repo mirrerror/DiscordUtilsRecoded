@@ -27,11 +27,11 @@ public class SendToDiscord implements SubCommand {
         if(!Validator.validateTextChannel(sender, textChannel)) return;
 
         StringBuilder text = new StringBuilder();
-        for(int i = 2; i < args.length; i++) text.append(args[i]).append(" ");
+        for(int i = 3; i < args.length; i++) text.append(args[i]).append(" ");
 
         Color color;
         try {
-            color = Color.decode(args[1]);
+            color = Color.decode(args[2]);
         } catch (Exception e) {
             color = null;
         }
@@ -39,7 +39,7 @@ public class SendToDiscord implements SubCommand {
         if(!Validator.validateColor(sender, color)) return;
 
         bot.sendMessageEmbed(textChannel,
-                new EmbedManager(botSettings).embed(args[0], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));
+                new EmbedManager(botSettings).embed(args[1], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));
         Message.DISCORDUTILS_SENDTODISCORD_SUCCESSFUL.send(sender, true);
     }
 
