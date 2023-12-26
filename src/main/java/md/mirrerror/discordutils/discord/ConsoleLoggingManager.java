@@ -14,14 +14,15 @@ import java.util.concurrent.RejectedExecutionException;
 public class ConsoleLoggingManager extends AbstractAppender {
 
     private final DiscordUtilsBot bot;
+    private static final PatternLayout PATTERN_LAYOUT = PatternLayout.newBuilder().withPattern("[%d{HH:mm:ss} %p]: %m%n").build();
 
     public ConsoleLoggingManager(DiscordUtilsBot bot) {
-        super("ConsoleLoggingManager", null, PatternLayout.newBuilder().withPattern("[%d{HH:mm:ss} %level]: %msg").build(), false, Property.EMPTY_ARRAY);
+        super("ConsoleLoggingManager", null, PATTERN_LAYOUT, false, Property.EMPTY_ARRAY);
         this.bot = bot;
     }
 
     public void initialize() {
-        Logger log = (Logger) LogManager.getRootLogger();
+        org.apache.logging.log4j.core.Logger log = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
         log.addAppender(this);
     }
 
@@ -33,7 +34,7 @@ public class ConsoleLoggingManager extends AbstractAppender {
     @Override
     public void append(LogEvent e) {
         StringBuilder stringBuilder = new StringBuilder();
-        PatternLayout.newBuilder().withPattern("[%d{HH:mm:ss} %level]: %msg").build().serialize(e, stringBuilder);
+        PATTERN_LAYOUT.serialize(e, stringBuilder);
 
         String message = ChatColor.stripColor(stringBuilder.toString());
         if(message.length() > 2000) message = message.substring(0, 1990) + "...";
