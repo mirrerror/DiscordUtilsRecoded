@@ -93,13 +93,11 @@ public final class Main extends JavaPlugin {
             }
         });
 
+        bot = new DiscordUtilsBot(this, configManager.getBotSettings(), botSettings, papiManager, dataManager, permissionsIntegration);
+
         if(botSettings.ASYNC_BOT_LOADING) {
-            Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                bot = new DiscordUtilsBot(this, configManager.getBotSettings(), botSettings, papiManager, dataManager, permissionsIntegration);
-                bot.setupBot();
-            });
+            Bukkit.getScheduler().runTaskAsynchronously(this, () -> bot.setupBot());
         } else {
-            bot = new DiscordUtilsBot(this, configManager.getBotSettings(), botSettings, papiManager, dataManager, permissionsIntegration);
             bot.setupBot();
         }
 
