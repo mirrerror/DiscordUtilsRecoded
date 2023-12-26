@@ -47,6 +47,7 @@ public class BotSettings {
     public final long VERIFIED_ROLE_ID = config.getLong("Roles.VerifiedRole.ID");
     public final int SECOND_FACTOR_CODE_LENGTH = config.getInt("2FA.CodeLength");
     public final DiscordUtilsBot.SecondFactorType SECOND_FACTOR_TYPE = DiscordUtilsBot.SecondFactorType.fromString(config.getString("2FA.Type"));
+    public final boolean SECOND_FACTOR_BLOCK_PLAYER_JOIN = config.getBoolean("2FA.BlockPlayerJoin");
     public final boolean SECOND_FACTOR_SESSIONS_ENABLED = config.getBoolean("2FA.SessionsEnabled");
     public final long SECOND_FACTOR_SESSION_TIME = config.getLong("2FA.SessionTime");
     public final long SECOND_FACTOR_TIME_TO_AUTHORIZE = config.getLong("2FA.TimeToAuthorize");

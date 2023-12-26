@@ -440,7 +440,8 @@ public class DiscordUtilsBot {
                     } else if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
                 }
 
-            EmbedManager embedManager = new EmbedManager(botSettings);
+            if(botSettings.SECOND_FACTOR_BLOCK_PLAYER_JOIN)
+                player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_NEEDED_KICK.getText());
 
             if(secondFactorType == DiscordUtilsBot.SecondFactorType.REACTION) {
                 sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {

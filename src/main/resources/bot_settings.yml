@@ -51,6 +51,9 @@
 # Type
 # Type of the 2FA. Available: code - enter the code, reaction - click on a reaction in Discord
 # ------------------------------------------------------------------
+# BlockPlayerJoin
+# Set it to true, if you want linked players not to be able to join the server while they have not passed the 2FA, set it false otherwise
+# ------------------------------------------------------------------
 # SessionsEnabled
 # Whether to enable or not 2FA sessions (uselessness of passing 2FA if the player's IP address is the same)
 # ------------------------------------------------------------------
@@ -232,6 +235,7 @@ Roles:
 2FA:
   CodeLength: 10
   Type: 'reaction'
+  BlockPlayerJoin: false
   SessionsEnabled: true
   SessionTime: 900
   TimeToAuthorize: 30

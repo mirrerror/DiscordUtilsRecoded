@@ -35,6 +35,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("DISABLED", "&cdisabled");
         getFileConfiguration().addDefault("DISCORDUTILS_SECONDFACTOR_SUCCESSFUL", "2FA: %status%");
         getFileConfiguration().addDefault("SECONDFACTOR_NEEDED", "You have to authorize. Check your DMs in Discord.");
+        getFileConfiguration().addDefault("SECONDFACTOR_NEEDED_KICK", "You have to authorize. Check your DMs in Discord.");
         getFileConfiguration().addDefault("VERIFICATION_NEEDED", "You have to verify your account. In our to do it, you have to use the '&b!link&f' in our Discord server.");
         getFileConfiguration().addDefault("SECONDFACTOR_AUTHORIZED", "You have successfully authorized. Have fun! :)");
         getFileConfiguration().addDefault("SECONDFACTOR_CODE_MESSAGE", "Your authorization code is: || %code% ||. Don't show it for anybody! IP: %playerIp%.");

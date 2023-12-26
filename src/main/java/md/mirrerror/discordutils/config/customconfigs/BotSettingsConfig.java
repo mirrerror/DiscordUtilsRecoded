@@ -29,6 +29,7 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("Roles.VerifiedRole.ID", -1);
         getFileConfiguration().addDefault("2FA.CodeLength", 10);
         getFileConfiguration().addDefault("2FA.Type", "reaction");
+        getFileConfiguration().addDefault("2FA.BlockPlayerJoin", false);
         getFileConfiguration().addDefault("2FA.SessionsEnabled", true);
         getFileConfiguration().addDefault("2FA.SessionTime", 900);
         getFileConfiguration().addDefault("2FA.TimeToAuthorize", 30);
