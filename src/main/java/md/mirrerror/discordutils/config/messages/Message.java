@@ -37,6 +37,7 @@ public enum Message {
     DISABLED(false),
     DISCORDUTILS_SECONDFACTOR_SUCCESSFUL(false),
     SECONDFACTOR_NEEDED(false),
+    SECONDFACTOR_NEEDED_KICK(false),
     VERIFICATION_NEEDED(false),
     SECONDFACTOR_AUTHORIZED(false),
     SECONDFACTOR_CODE_MESSAGE(false),
@@ -69,6 +70,7 @@ public enum Message {
     UNKNOWN_ERROR(false),
     COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL(false),
     THIS_COMMAND_IS_BLACKLISTED(false),
+    CHANNEL_DOES_NOT_EXIST(false),
     EMBED_SENT_BY(false),
     ERROR(false),
     INFORMATION(false),
@@ -113,7 +115,7 @@ public enum Message {
     ACCEPT(false),
     DECLINE(false);
 
-    private final boolean isList; // TODO
+    private final boolean isList;
 
     public String getText() {
         return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));

@@ -51,6 +51,9 @@
 # Type
 # Type of the 2FA. Available: code - enter the code, reaction - click on a reaction in Discord
 # ------------------------------------------------------------------
+# BlockPlayerJoin
+# Set it to true, if you want linked players not to be able to join the server while they have not passed the 2FA, set it false otherwise
+# ------------------------------------------------------------------
 # SessionsEnabled
 # Whether to enable or not 2FA sessions (uselessness of passing 2FA if the player's IP address is the same)
 # ------------------------------------------------------------------
@@ -126,11 +129,6 @@
 # Reward - command that is executed if the player reach the minimum time (executes multiple times if the minimum time is played by player more than one time)
 # BlacklistedChannels - ignored channel IDs. For example: BlacklistedChannels: [905508941230915684, 123123123131231233]
 # MinMembers - the minimum amount of members that has to be in a voice channel to get the rewards
-# ------------------------------------------------------------------
-# MessagesChannel
-# Whether to enable or not the possibility to send messages to Discord from the game (/du sendtodiscord)
-# Enabled - true - enable, false - disable
-# ID - text channel ID, in which will appear the messages
 # ------------------------------------------------------------------
 # ServerActivityLogging
 # Whether to enable or not the logging of some server events to an Discord channel
@@ -237,6 +235,7 @@ Roles:
 2FA:
   CodeLength: 10
   Type: 'reaction'
+  BlockPlayerJoin: false
   SessionsEnabled: true
   SessionTime: 900
   TimeToAuthorize: 30
@@ -281,9 +280,6 @@ GuildVoiceRewards:
   Reward: 'eco give %player% 100'
   BlacklistedChannels: []
   MinMembers: 1
-MessagesChannel:
-  Enabled: false
-  ID: -1
 ServerActivityLogging:
   Enabled: false
   ChannelID: -1

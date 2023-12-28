@@ -66,7 +66,6 @@ public class DiscordUtilsBot {
     private final Map<String, Integer> secondFactorAttempts = new HashMap<>();
     private final Map<UUID, SecondFactorSession> secondFactorSessions = new HashMap<>();
 
-    private TextChannel messagesTextChannel;
     private TextChannel serverActivityLoggingTextChannel;
     private TextChannel consoleLoggingTextChannel;
     private TextChannel chatTextChannel;
@@ -248,13 +247,6 @@ public class DiscordUtilsBot {
                 }
             } else {
                 plugin.getLogger().info("The Server Activity Logging module is disabled by the user.");
-            }
-
-            if(botSettings.MESSAGES_CHANNEL_ENABLED) {
-                messagesTextChannel = jda.getTextChannelById(botSettings.MESSAGES_CHANNEL_ID);
-                if(messagesTextChannel == null) plugin.getLogger().severe("You have set an invalid id for the MessagesChannel. Check your config.yml.");
-            } else {
-                plugin.getLogger().info("The Messages Channel module is disabled by the user.");
             }
 
             if(botSettings.GUILD_VOICE_REWARDS_ENABLED) {
@@ -448,7 +440,8 @@ public class DiscordUtilsBot {
                     } else if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
                 }
 
-            EmbedManager embedManager = new EmbedManager(botSettings);
+            if(botSettings.SECOND_FACTOR_BLOCK_PLAYER_JOIN)
+                player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_NEEDED_KICK.getText());
 
             if(secondFactorType == DiscordUtilsBot.SecondFactorType.REACTION) {
                 sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {

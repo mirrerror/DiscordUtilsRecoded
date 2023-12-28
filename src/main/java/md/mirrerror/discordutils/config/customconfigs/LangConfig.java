@@ -35,6 +35,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("DISABLED", "&cdisabled");
         getFileConfiguration().addDefault("DISCORDUTILS_SECONDFACTOR_SUCCESSFUL", "2FA: %status%");
         getFileConfiguration().addDefault("SECONDFACTOR_NEEDED", "You have to authorize. Check your DMs in Discord.");
+        getFileConfiguration().addDefault("SECONDFACTOR_NEEDED_KICK", "You have to authorize. Check your DMs in Discord.");
         getFileConfiguration().addDefault("VERIFICATION_NEEDED", "You have to verify your account. In our to do it, you have to use the '&b!link&f' in our Discord server.");
         getFileConfiguration().addDefault("SECONDFACTOR_AUTHORIZED", "You have successfully authorized. Have fun! :)");
         getFileConfiguration().addDefault("SECONDFACTOR_CODE_MESSAGE", "Your authorization code is: || %code% ||. Don't show it for anybody! IP: %playerIp%.");
@@ -46,7 +47,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("UNKNOWN_SUBCOMMAND", "Unknown subcommand.");
         getFileConfiguration().addDefault("LINK_ALREADY_INITIATED", "You have already requested a verification code.");
         getFileConfiguration().addDefault("UNLINK_ALREADY_INITIATED", "You have already started the unlink process. Check your DMs in Discord.");
-        getFileConfiguration().addDefault("DISCORDUTILS_SENDTODISCORD_USAGE", "Usage: &b/discordutils sendtodiscord [title] [color] [text]");
+        getFileConfiguration().addDefault("DISCORDUTILS_SENDTODISCORD_USAGE", "Usage: &b/discordutils sendtodiscord [channel] [title] [color] [text]");
         getFileConfiguration().addDefault("SENDTODISCORD_SENT_BY", "Sent by: %sender%");
         getFileConfiguration().addDefault("DISCORDUTILS_SENDTODISCORD_SUCCESSFUL", "You have successfully sent the message to Discord.");
         getFileConfiguration().addDefault("DISCORDUTILSADMIN_FORCEUNLINK_USAGE", "Usage: &b/discordutilsadmin forceunlink [player]");
@@ -67,6 +68,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("UNKNOWN_ERROR", "Unknown error.");
         getFileConfiguration().addDefault("COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL", "You can't use any commands in this channel.");
         getFileConfiguration().addDefault("THIS_COMMAND_IS_BLACKLISTED", "This command is blacklisted.");
+        getFileConfiguration().addDefault("CHANNEL_DOES_NOT_EXIST", "Channel with this ID does not exist.");
         getFileConfiguration().addDefault("EMBED_SENT_BY", "Sent by: %sender%");
         getFileConfiguration().addDefault("ERROR", "Error");
         getFileConfiguration().addDefault("INFORMATION", "Information");
@@ -86,7 +88,7 @@ public class LangConfig extends CustomConfig {
                 "&7-&b /du link [code]&f - link your Discord account with your server account",
                 "&7-&b /du unlink&f - unlink your Discord account from your server account",
                 "&7-&b /du 2fa&f - enable/disable 2FA",
-                "&7-&b /du sendtodiscord [title] [color] [text]&f - send an embed message to the Discord server",
+                "&7-&b /du sendtodiscord [channel] [title] [color] [text]&f - send an embed message to the Discord server",
                 "&7-&b /du voiceinvite&f - invite all online players for conversation in the voice channel",
                 "&7-&b /du getdiscord [player]&f - check the player's linked Discord account",
                 "&7-&b /dua reload&f - reload the configuration files",

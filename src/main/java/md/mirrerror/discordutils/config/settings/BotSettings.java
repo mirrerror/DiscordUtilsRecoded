@@ -47,6 +47,7 @@ public class BotSettings {
     public final long VERIFIED_ROLE_ID = config.getLong("Roles.VerifiedRole.ID");
     public final int SECOND_FACTOR_CODE_LENGTH = config.getInt("2FA.CodeLength");
     public final DiscordUtilsBot.SecondFactorType SECOND_FACTOR_TYPE = DiscordUtilsBot.SecondFactorType.fromString(config.getString("2FA.Type"));
+    public final boolean SECOND_FACTOR_BLOCK_PLAYER_JOIN = config.getBoolean("2FA.BlockPlayerJoin");
     public final boolean SECOND_FACTOR_SESSIONS_ENABLED = config.getBoolean("2FA.SessionsEnabled");
     public final long SECOND_FACTOR_SESSION_TIME = config.getLong("2FA.SessionTime");
     public final long SECOND_FACTOR_TIME_TO_AUTHORIZE = config.getLong("2FA.TimeToAuthorize");
@@ -75,8 +76,6 @@ public class BotSettings {
     public final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");
     public final List<Long> GUILD_VOICE_REWARDS_BLACKLISTED_CHANNELS = config.getLongList("GuildVoiceRewards.BlacklistedChannels");
     public final int GUILD_VOICE_REWARDS_MIN_MEMBERS = config.getInt("GuildVoiceRewards.MinMembers");
-    public final boolean MESSAGES_CHANNEL_ENABLED = config.getBoolean("MessagesChannel.Enabled");
-    public final long MESSAGES_CHANNEL_ID = config.getLong("MessagesChannel.ID");
     public final boolean SERVER_ACTIVITY_LOGGING_ENABLED = config.getBoolean("ServerActivityLogging.Enabled");
     public final long SERVER_ACTIVITY_LOGGING_CHANNEL_ID = config.getLong("ServerActivityLogging.ChannelID");
     public final Color SERVER_ACTIVITY_LOGGING_JOIN_EMBED_COLOR = Color.decode(config.getString("ServerActivityLogging.JoinEmbedColor"));

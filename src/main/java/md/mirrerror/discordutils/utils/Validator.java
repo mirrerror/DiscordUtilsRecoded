@@ -4,6 +4,7 @@ import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -69,6 +70,14 @@ public class Validator {
     public static boolean validateVoiceChannelPresence(CommandSender sender, Member member) {
         if(member.getVoiceState().getChannel() == null) {
             Message.SENDER_IS_NOT_IN_A_VOICE_CHANNEL.send(sender, true);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateTextChannel(CommandSender sender, TextChannel textChannel) {
+        if(textChannel == null) {
+            Message.CHANNEL_DOES_NOT_EXIST.send(sender, true);
             return false;
         }
         return true;

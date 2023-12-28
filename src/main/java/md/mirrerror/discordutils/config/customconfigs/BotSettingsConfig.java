@@ -29,6 +29,7 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("Roles.VerifiedRole.ID", -1);
         getFileConfiguration().addDefault("2FA.CodeLength", 10);
         getFileConfiguration().addDefault("2FA.Type", "reaction");
+        getFileConfiguration().addDefault("2FA.BlockPlayerJoin", false);
         getFileConfiguration().addDefault("2FA.SessionsEnabled", true);
         getFileConfiguration().addDefault("2FA.SessionTime", 900);
         getFileConfiguration().addDefault("2FA.TimeToAuthorize", 30);
@@ -58,8 +59,6 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("GuildVoiceRewards.Reward", "eco give %player% 100");
         getFileConfiguration().addDefault("GuildVoiceRewards.BlacklistedChannels", Collections.emptyList());
         getFileConfiguration().addDefault("GuildVoiceRewards.MinMembers", 1);
-        getFileConfiguration().addDefault("MessagesChannel.Enabled", false);
-        getFileConfiguration().addDefault("MessagesChannel.ID", -1);
         getFileConfiguration().addDefault("ServerActivityLogging.Enabled", false);
         getFileConfiguration().addDefault("ServerActivityLogging.ChannelID", -1);
         getFileConfiguration().addDefault("ServerActivityLogging.JoinEmbedColor", "#8de113");
