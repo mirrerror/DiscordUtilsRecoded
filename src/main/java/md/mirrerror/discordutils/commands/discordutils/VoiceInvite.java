@@ -54,12 +54,12 @@ public class VoiceInvite implements SubCommand {
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
                     textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Message.VOICE_INVITE_HOVER.getText(false)).create()));
 
-                    Message.VOICE_INVITE_SENT.send(sender, true);
-
-                    if(players.isEmpty())
+                    if(players.isEmpty() && args.length == 0)
                         Bukkit.getOnlinePlayers().forEach(online -> online.spigot().sendMessage(textComponent));
                     else
                         for(Player entry : players) entry.spigot().sendMessage(textComponent);
+
+                    Message.VOICE_INVITE_SENT.send(sender, true);
                 }
             });
         });
