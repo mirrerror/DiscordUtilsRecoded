@@ -71,6 +71,7 @@ public enum Message {
     COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL(false),
     THIS_COMMAND_IS_BLACKLISTED(false),
     CHANNEL_DOES_NOT_EXIST(false),
+    TARGET_IS_OFFLINE(false),
     EMBED_SENT_BY(false),
     ERROR(false),
     INFORMATION(false),

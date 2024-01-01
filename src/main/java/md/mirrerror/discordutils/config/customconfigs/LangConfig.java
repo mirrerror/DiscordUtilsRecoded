@@ -69,6 +69,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL", "You can't use any commands in this channel.");
         getFileConfiguration().addDefault("THIS_COMMAND_IS_BLACKLISTED", "This command is blacklisted.");
         getFileConfiguration().addDefault("CHANNEL_DOES_NOT_EXIST", "Channel with this ID does not exist.");
+        getFileConfiguration().addDefault("TARGET_IS_OFFLINE", "The specified player is offline.");
         getFileConfiguration().addDefault("EMBED_SENT_BY", "Sent by: %sender%");
         getFileConfiguration().addDefault("ERROR", "Error");
         getFileConfiguration().addDefault("INFORMATION", "Information");

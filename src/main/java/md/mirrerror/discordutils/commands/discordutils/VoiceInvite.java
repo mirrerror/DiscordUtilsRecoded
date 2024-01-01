@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +37,11 @@ public class VoiceInvite implements SubCommand {
 
         if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
+        List<Player> players = new LinkedList<>();
+        for(String playerName : args)
+            if(Validator.validateOnlinePlayer(sender, playerName))
+                players.add(Bukkit.getPlayer(playerName));
+
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             bot.getJda().getGuilds().forEach(guild -> {
                 Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
@@ -49,7 +55,11 @@ public class VoiceInvite implements SubCommand {
                     textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Message.VOICE_INVITE_HOVER.getText(false)).create()));
 
                     Message.VOICE_INVITE_SENT.send(sender, true);
-                    Bukkit.getOnlinePlayers().forEach(online -> online.spigot().sendMessage(textComponent));
+
+                    if(players.isEmpty())
+                        Bukkit.getOnlinePlayers().forEach(online -> online.spigot().sendMessage(textComponent));
+                    else
+                        for(Player entry : players) entry.spigot().sendMessage(textComponent);
                 }
             });
         });
