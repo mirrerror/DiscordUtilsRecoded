@@ -3,6 +3,7 @@ package md.mirrerror.discordutils.data;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import md.mirrerror.discordutils.config.settings.MainSettings;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 import org.bukkit.plugin.Plugin;
 
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -241,6 +243,33 @@ public class MySQLDataManager implements DataManager {
                 plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return -1L;
+
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> performUserBatchUpdate(List<UserBatchUpdateEntry> newUsers) {
+        return CompletableFuture.runAsync(() -> {
+
+            try (Connection connection = dataSource.getConnection()) {
+
+                PreparedStatement registerStatement = connection.prepareStatement("INSERT INTO players (uuid, user_id, 2fa) VALUES (?,?,?)");
+                PreparedStatement unregisterStatement = connection.prepareStatement("DELETE FROM players WHERE uuid=?");
+
+                for(UserBatchUpdateEntry entry : newUsers) {
+                    unregisterStatement.setString(1, entry.getUuid().toString());
+                    unregisterStatement.executeUpdate();
+
+                    registerStatement.setString(1, entry.getUuid().toString());
+                    registerStatement.setLong(2, entry.getUserId());
+                    registerStatement.setBoolean(3, entry.isSecondFactorEnabled());
+                    registerStatement.executeUpdate();
+                }
+
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Something went wrong while performing a batch update to the database!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            }
 
         });
     }
