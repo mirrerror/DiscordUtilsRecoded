@@ -109,6 +109,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("NO", "&cno");
         getFileConfiguration().addDefault("NOT_AVAILABLE", "&cn/a");
         getFileConfiguration().addDefault("LINK_SLASH_COMMAND_DESCRIPTION", "Links your in-game account with your server account.");
+        getFileConfiguration().addDefault("UNLINK_SLASH_COMMAND_DESCRIPTION", "Unlinks your in-game account from your server account.");
         getFileConfiguration().addDefault("ONLINE_SLASH_COMMAND_DESCRIPTION", "Sends you the current online players on the server count.");
         getFileConfiguration().addDefault("SUDO_SLASH_COMMAND_DESCRIPTION", "Allows you to execute console commands from Discord.");
         getFileConfiguration().addDefault("SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME", "command");
