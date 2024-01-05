@@ -1,7 +1,5 @@
 package md.mirrerror.discordutils.data;
 
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -25,5 +23,6 @@ public interface DataManager {
 
     CompletableFuture<Long> countLinkedUsers();
     CompletableFuture<Void> performUserBatchUpdate(List<UserBatchUpdateEntry> newUsers);
+    CompletableFuture<List<UserBatchUpdateEntry>> getAllUserBatchEntries();
 
 }

@@ -93,12 +93,4 @@ public class Validator {
         }
         return true;
     }
-
-    public static boolean validateDatabaseDataManager(CommandSender sender, DataManager dataManager) {
-        if(dataManager instanceof ConfigDataManager) {
-            Message.YOU_ARE_USING_CONFIG_DATA_MANAGER.send(sender, true);
-            return false;
-        }
-        return true;
-    }
 }

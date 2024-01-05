@@ -5,7 +5,7 @@ import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
-import md.mirrerror.discordutils.commands.discordutilsadmin.MigrateConfig;
+import md.mirrerror.discordutils.commands.discordutilsadmin.Migrate;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
 import md.mirrerror.discordutils.config.ConfigManager;
@@ -158,7 +158,7 @@ public final class Main extends JavaPlugin {
         discordUtilsAdminSubCommands.add(new Reload(configManager));
         discordUtilsAdminSubCommands.add(new ForceUnlink(bot, botSettings, this));
         discordUtilsAdminSubCommands.add(new Stats(bot));
-        discordUtilsAdminSubCommands.add(new MigrateConfig(configManager.getData(), dataManager, this));
+        discordUtilsAdminSubCommands.add(new Migrate(dataManager, this));
         commandManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
     }
 

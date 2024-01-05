@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -270,6 +271,39 @@ public class MySQLDataManager implements DataManager {
                 plugin.getLogger().severe("Something went wrong while performing a batch update to the database!");
                 plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
+
+        });
+    }
+
+    @Override
+    public CompletableFuture<List<UserBatchUpdateEntry>> getAllUserBatchEntries() {
+        return CompletableFuture.supplyAsync(() -> {
+
+            List<UserBatchUpdateEntry> entries = new LinkedList<>();
+
+            try (Connection connection = dataSource.getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players");
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    UUID uuid;
+
+                    try {
+                        uuid = UUID.fromString(resultSet.getString("uuid"));
+                    } catch (IllegalArgumentException ignored) {
+                        continue;
+                    }
+
+                    entries.add(new UserBatchUpdateEntry(
+                            uuid,
+                            resultSet.getLong("user_id"),
+                            resultSet.getBoolean("2fa")
+                    ));
+                }
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Something went wrong while getting all the user batch entries from the database!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            }
+            return entries;
 
         });
     }

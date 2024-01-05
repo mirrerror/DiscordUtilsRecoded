@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.customconfigs.DataConfig;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -103,6 +104,32 @@ public class ConfigDataManager implements DataManager {
             }
 
             dataConfig.saveConfigFile();
+        });
+    }
+
+    @Override
+    public CompletableFuture<List<UserBatchUpdateEntry>> getAllUserBatchEntries() {
+        return CompletableFuture.supplyAsync(() -> {
+
+            List<UserBatchUpdateEntry> batchUpdateEntries = new LinkedList<>();
+
+            for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false)) {
+                UUID uuid;
+
+                try {
+                    uuid = UUID.fromString(entry);
+                } catch (IllegalArgumentException ignored) {
+                    continue;
+                }
+
+                long userId = dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID");
+                boolean isSecondFactorEnabled = dataConfig.getFileConfiguration().getBoolean("DiscordLink." + entry + ".2FA");
+
+                batchUpdateEntries.add(new UserBatchUpdateEntry(uuid, userId, isSecondFactorEnabled));
+            }
+
+            return batchUpdateEntries;
+
         });
     }
 }
