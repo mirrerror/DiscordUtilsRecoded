@@ -170,6 +170,8 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 discordUtilsUser.unregister();
 
+                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText())).queue();
+
                 break;
             }
         }

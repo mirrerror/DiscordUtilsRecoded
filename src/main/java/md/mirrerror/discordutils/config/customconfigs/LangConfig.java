@@ -62,8 +62,6 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("SOMETHING_WENT_WRONG_WHILE_MIGRATING", "Something went wrong while migrating all of your data to your current database.");
         getFileConfiguration().addDefault("ONLINE", "Players online: **%online%**");
         getFileConfiguration().addDefault("COMMAND_EXECUTED", "The command has been successfully executed.");
-        getFileConfiguration().addDefault("DISCORD_SUDO_USAGE", "Usage: !sudo [command]");
-        getFileConfiguration().addDefault("DISCORD_EMBED_USAGE", "Usage: !embed [title] [color] [text]");
         getFileConfiguration().addDefault("VOICE_INVITE_SENT", "Invite has been successfully sent.");
         getFileConfiguration().addDefault("VOICE_INVITE", "Player &b%sender%&f invites all the online players for conversation in the voice channel. &bClick&f on this message to join the voice channel.");
         getFileConfiguration().addDefault("VOICE_INVITE_HOVER", "&bClick&f to join the voice channel.");
@@ -82,11 +80,11 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("STATS_FORMAT", Arrays.asList("Nickname: %player_name%",
                 "Last join date: %player_last_join_date%"));
         getFileConfiguration().addDefault("DISCORD_HELP", Arrays.asList("**Available commands:**",
-                "**!link** — link your Discord account with your in-game account",
-                "**!online** — check your current server online",
-                "**!stats [player]** — check your or other player's stats (if you don't specify a player, it will output your stats)",
-                "**!sudo [command]** — execute a server command as a console sender (admins only)",
-                "**!embed [title] [color] [text]** — send an embed message (admins only)"));
+                "**/link** — link your Discord account with your in-game account",
+                "**/online** — check your current server online",
+                "**/stats [player]** — check your or other player's stats (if you don't specify a player, it will output your stats)",
+                "**/sudo [command]** — execute a server command as a console sender (admins only)",
+                "**/embed [title] [color] [text]** — send an embed message (admins only)"));
         getFileConfiguration().addDefault("HELP", Arrays.asList("&9DiscordUtils&f plugin help:",
                 "&7-&b /du help&f - help command",
                 "&7-&b /du link [code]&f - link your Discord account with your server account",
@@ -97,7 +95,8 @@ public class LangConfig extends CustomConfig {
                 "&7-&b /du getdiscord [player]&f - check the player's linked Discord account",
                 "&7-&b /dua reload&f - reload the configuration files",
                 "&7-&b /dua forceunlink [player]&f - unlink some player's Discord account from his in-game account",
-                "&7-&b /dua stats&f - check the admin statistics"));
+                "&7-&b /dua stats&f - check the admin statistics",
+                "&7-&b /dua migrate&f - migrate from the config/database to your current data manager (this option overwrites the existing users)"));
         getFileConfiguration().addDefault("DISCORDUTILSADMIN_STATS_FORMAT", Arrays.asList("&9DiscordUtils&f plugin stats:",
                 "&7-&f Linked players: &b%linkedPlayers%"));
         getFileConfiguration().addDefault("CHAT_LOGGING_EMBED_TITLE", "Chat message from: %player%");
