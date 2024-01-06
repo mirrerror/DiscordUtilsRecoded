@@ -103,8 +103,6 @@ TARGET_IS_OFFLINE: 'Указанный вами игрок оффлайн.'
 SECONDFACTOR_NEEDED_KICK: 'Вам необходимо авторизоваться. Проверьте ЛС в Discord.'
 CHANNEL_DOES_NOT_EXIST: 'Канал с таким ID не существует.'
 COMMAND_EXECUTED: Команда успешно выполнена.
-DISCORD_SUDO_USAGE: 'Используйте: !sudo [команда]'
-DISCORD_EMBED_USAGE: 'Используйте: !embed [заголовок] [цвет] [текст]'
 VOICE_INVITE_SENT: Приглашение отправлено.
 VOICE_INVITE: Игрок &b%sender%&f приглашает всех игроков присоединиться к его голосовому
   каналу. &bКлините&f по этому сообщению для подключения.
