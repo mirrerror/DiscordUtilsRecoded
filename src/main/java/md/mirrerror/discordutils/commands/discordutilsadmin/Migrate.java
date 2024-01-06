@@ -52,7 +52,7 @@ public class Migrate implements SubCommand {
 
     @Override
     public List<String> getAliases() {
-        return List.of("migrate", "mig", "migr");
+        return List.of("mig", "migr");
     }
 
     @Override
