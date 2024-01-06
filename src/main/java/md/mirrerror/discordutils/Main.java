@@ -1,10 +1,12 @@
 package md.mirrerror.discordutils;
 
+import com.zaxxer.hikari.pool.HikariPool;
 import lombok.Getter;
 import md.mirrerror.discordutils.commands.CommandsManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.commands.discordutils.*;
 import md.mirrerror.discordutils.commands.discordutilsadmin.ForceUnlink;
+import md.mirrerror.discordutils.commands.discordutilsadmin.Migrate;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Reload;
 import md.mirrerror.discordutils.commands.discordutilsadmin.Stats;
 import md.mirrerror.discordutils.config.ConfigManager;
@@ -157,6 +159,27 @@ public final class Main extends JavaPlugin {
         discordUtilsAdminSubCommands.add(new Reload(configManager));
         discordUtilsAdminSubCommands.add(new ForceUnlink(bot, botSettings, this));
         discordUtilsAdminSubCommands.add(new Stats(bot));
+
+        String dataType = mainSettings.DATABASE_TYPE.toLowerCase();
+        DataManager migrateDataManager = null;
+
+        try {
+            switch (dataType) {
+                case "mysql": {
+                    migrateDataManager = new ConfigDataManager(configManager.getData());
+                    break;
+                }
+                default: {
+                    migrateDataManager = new MySQLDataManager(this, mainSettings);
+                    break;
+                }
+            }
+        } catch (HikariPool.PoolInitializationException ignored) {
+            getLogger().warning("The data manager to migrate from failed to initialize. The migrate command has been disabled.");
+        }
+
+        discordUtilsAdminSubCommands.add(new Migrate(migrateDataManager, dataManager, this));
+
         commandManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
     }
 

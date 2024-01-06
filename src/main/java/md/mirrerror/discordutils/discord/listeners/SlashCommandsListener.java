@@ -27,12 +27,14 @@ import java.util.List;
 public class SlashCommandsListener extends ListenerAdapter {
 
     private final DiscordUtilsBot bot;
+    private final BotSettings botSettings;
     private final Plugin plugin;
     private final PAPIManager papiManager;
     private final EmbedManager embedManager;
 
     public SlashCommandsListener(DiscordUtilsBot bot, Plugin plugin, PAPIManager papiManager, BotSettings botSettings, List<Guild> guilds) {
         this.bot = bot;
+        this.botSettings = botSettings;
         this.plugin = plugin;
         this.papiManager = papiManager;
         this.embedManager = new EmbedManager(botSettings);
@@ -55,6 +57,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                 .addOption(OptionType.STRING, Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText(),
                         Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION.getText(), false));
         commandData.add(Commands.slash("help", Message.HELP_SLASH_COMMAND_DESCRIPTION.getText()));
+        commandData.add(Commands.slash("unlink", Message.UNLINK_SLASH_COMMAND_DESCRIPTION.getText()));
 
         for(Guild guild : guilds) guild.updateCommands().addCommands(commandData).queue();
     }
@@ -149,6 +152,25 @@ public class SlashCommandsListener extends ListenerAdapter {
                 }
 
                 event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
+
+                break;
+            }
+            case "unlink": {
+                event.deferReply().queue();
+
+                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+
+                bot.unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
+
+                bot.getUnlinkPlayers().remove(discordUtilsUser.getOfflinePlayer().getUniqueId());
+                if(discordUtilsUser.getOfflinePlayer().isOnline()) Message.ACCOUNT_SUCCESSFULLY_UNLINKED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    botSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                });
+
+                discordUtilsUser.unregister();
+
+                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText())).queue();
 
                 break;
             }

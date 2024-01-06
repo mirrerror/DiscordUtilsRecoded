@@ -2,7 +2,10 @@ package md.mirrerror.discordutils.data;
 
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.customconfigs.DataConfig;
+import md.mirrerror.discordutils.models.DiscordUtilsUser;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -89,6 +92,44 @@ public class ConfigDataManager implements DataManager {
             for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false))
                 if(dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID") > 0) count += 1;
             return count;
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> performUserBatchUpdate(List<UserBatchUpdateEntry> newUsers) {
+        return CompletableFuture.runAsync(() -> {
+            for(UserBatchUpdateEntry entry : newUsers) {
+                dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".UserID", entry.getUserId());
+                dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".2FA", entry.isSecondFactorEnabled());
+            }
+
+            dataConfig.saveConfigFile();
+        });
+    }
+
+    @Override
+    public CompletableFuture<List<UserBatchUpdateEntry>> getAllUserBatchEntries() {
+        return CompletableFuture.supplyAsync(() -> {
+
+            List<UserBatchUpdateEntry> batchUpdateEntries = new LinkedList<>();
+
+            for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false)) {
+                UUID uuid;
+
+                try {
+                    uuid = UUID.fromString(entry);
+                } catch (IllegalArgumentException ignored) {
+                    continue;
+                }
+
+                long userId = dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID");
+                boolean isSecondFactorEnabled = dataConfig.getFileConfiguration().getBoolean("DiscordLink." + entry + ".2FA");
+
+                batchUpdateEntries.add(new UserBatchUpdateEntry(uuid, userId, isSecondFactorEnabled));
+            }
+
+            return batchUpdateEntries;
+
         });
     }
 }
