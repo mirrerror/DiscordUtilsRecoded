@@ -2,7 +2,6 @@ package md.mirrerror.discordutils.utils;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
-import md.mirrerror.discordutils.data.ConfigDataManager;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
@@ -89,6 +88,14 @@ public class Validator {
     public static boolean validateOnlinePlayer(CommandSender sender, String playerName) {
         if(Bukkit.getPlayer(playerName) == null) {
             Message.TARGET_IS_OFFLINE.send(sender, true);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateMigrateDataManager(CommandSender sender, DataManager dataManager) {
+        if(dataManager == null) {
+            Message.MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE.send(sender, true);
             return false;
         }
         return true;
