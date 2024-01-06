@@ -89,9 +89,14 @@ SECONDFACTOR_DISABLE_CONFIRMATION: 'Někdo se snaží vypnout dvoufázové ově�
 SECONDFACTOR_DISABLE_REQUEST_SENT: 'Žádost o vypnutí dvoufázového ověřování byla odeslána. Zkontrolujte svoje soukromé zprávy.'
 SECONDFACTOR_DISABLE_CANCELLED: 'Žádost o vypnutí dvoufázového ověřování byla zrušena.'
 ONLINE: 'Aktivní hráči: **%online%**'
+MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE: 'Manažer dat, ze kterého chcete migrovat, se nepodařilo zprovoznit. Zkontrolujte Vaše nastavení.'
+SUCCESSFULLY_MIGRATED: 'Úspěšně jste migroval Vaše všechna data na Vaší aktuální databázi.'
+SOMETHING_WENT_WRONG_WHILE_MIGRATING: 'Něco se pokazilo během migrace Vašich dat na Vaší aktuální databázi.'
+UNLINK_SLASH_COMMAND_DESCRIPTION: 'Odpojí Váš herní účet z Vašeho účtu na serveru.'
+TARGET_IS_OFFLINE: 'Specifikovaný hráč je offline.'
+SECONDFACTOR_NEEDED_KICK: 'Musíte se autorizovat. Zkontrolujte Vaše DM na Discordu.'
+CHANNEL_DOES_NOT_EXIST: 'Místnost s tímto ID neexistuje.'
 COMMAND_EXECUTED: Příkaz byl úspěšně odeslán.
-DISCORD_SUDO_USAGE: 'Použití: !sudo [command]'
-DISCORD_EMBED_USAGE: 'Použití: !embed [title] [color] [text]'
 VOICE_INVITE_SENT: Pozvánka byla úspěšně odeslána.
 VOICE_INVITE: Hráč &b%sender%&f zve všechny aktivní hráče do konverzace v hlasové
   místnosti. &bKlikni&f na tuto zprávu pro připojení.
@@ -108,24 +113,24 @@ STATS_FORMAT:
 - 'Naposled se připojil: %player_last_join_date%'
 DISCORD_HELP:
 - '**Dostupné příkazy:**'
-- '**!link** — propojíš svůj Discord účet s herním účtem'
-- '**!online** — zkontroluj počet hráčů na serveru'
-- '**!stats [hráč]** — zkontroluj svoje nebo jiného hráče staty (zobrazí tvoje, pokud
+- '**/link** — propojíš svůj Discord účet s herním účtem'
+- '**/online** — zkontroluj počet hráčů na serveru'
+- '**/stats [hráč]** — zkontroluj svoje nebo jiného hráče staty (zobrazí tvoje, pokud
   neurčíš hráče)'
-- '**!sudo [příkaz]** — odešli příkaz do konzole serveru (pouze administrátoři)'
-- '**!embed [titul] [barva] [text]** — pošli přiloženou zprávu (pouze administrátoři)'
+- '**/sudo [příkaz]** — odešli příkaz do konzole serveru (pouze administrátoři)'
+- '**/embed [titul] [barva] [text]** — pošli přiloženou zprávu (pouze administrátoři)'
 HELP:
 - '&9DiscordUtils&f nápověda:'
 - '&7-&b /du help&f - zobrazíš nápovědu'
 - '&7-&b /du link [code]&f - propojíš svůj Discord účet se serverem'
 - '&7-&b /du unlink&f - zrušíš propojení svého Discord účtu se serverem'
 - '&7-&b /du twofactor&f - zapneš/vypneš 2FA'
-- '&7-&b /du sendtodiscord [titul] [barva] [text]&f - pošleš přiloženou zprávu na
-  Discord'
+- '&7-&b /du sendtodiscord [místnost] [titulek] [barva] [text]&f - odešle vloženou zprávu na Discord'
 - '&7-&b /du voiceinvite&f - pozveš všechny online hráče do hlasové místnosti'
 - '&7-&b /du getdiscord [player]&f - zjistíš Discord účet hráče'
 - '&7-&b /dua reload&f - načteš konfigurační soubory'
 - '&7-&b /dua forceunlink [player]&f - zrušíš propojení hráčovo Discord účtu'
+- '&7-&b /dua migrate&f - migrace z konfigurace/databáze na Váš aktuální manažer dat (tato volba přepíše existující uživatele)'
 CHAT_LOGGING_EMBED_TITLE: 'Chatovací: %player%'
 CHAT_LOGGING_EMBED_TEXT: '%message%'
 JOIN_LOGGING_EMBED_TITLE: Připojení
