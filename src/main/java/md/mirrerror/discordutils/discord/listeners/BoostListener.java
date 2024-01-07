@@ -27,7 +27,6 @@ public class BoostListener extends ListenerAdapter {
         if(!discordUtilsUser.isLinked()) return;
 
         OffsetDateTime timeBoosted = event.getMember().getTimeBoosted();
-        if(timeBoosted == null) return;
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             if(!event.getMember().isBoosting() && discordUtilsUser.getLastBoostingTime() != null) {
@@ -35,7 +34,7 @@ public class BoostListener extends ListenerAdapter {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });
                 discordUtilsUser.setLastBoostingTime(null);
-            } else if(timeBoosted.isAfter(discordUtilsUser.getLastBoostingTime())) {
+            } else if(timeBoosted != null && timeBoosted.isAfter(discordUtilsUser.getLastBoostingTime())) {
                 botSettings.COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });

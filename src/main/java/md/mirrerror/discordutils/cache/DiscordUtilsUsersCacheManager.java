@@ -28,7 +28,8 @@ public class DiscordUtilsUsersCacheManager {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
             DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(), offlinePlayer,
                     Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getDataManager().getDiscordUserId(uuid).get()),
-                    Main.getInstance().getDataManager().hasSecondFactor(offlinePlayer.getUniqueId()).get());
+                    Main.getInstance().getDataManager().hasSecondFactor(offlinePlayer.getUniqueId()).get(),
+                    Main.getInstance().getDataManager().getLastBoostingTime(offlinePlayer.getUniqueId()).get());
             addToCache(discordUtilsUser);
             return discordUtilsUser;
         } catch (InterruptedException | ExecutionException e) {
@@ -39,11 +40,12 @@ public class DiscordUtilsUsersCacheManager {
     public static DiscordUtilsUser retrieveUserFromDatabaseByUserId(long userId) {
         try {
             UUID uuid = Main.getInstance().getDataManager().getPlayerUniqueId(userId).get();
-            if(uuid == null) return new DiscordUtilsUser(null, null, null, null, false);
+            if(uuid == null) return new DiscordUtilsUser(null, null, null, null, false, null);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
             DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(),
                     offlinePlayer, Main.getInstance().getBot().getJda().getUserById(userId),
-                    Main.getInstance().getDataManager().hasSecondFactor(uuid).get());
+                    Main.getInstance().getDataManager().hasSecondFactor(uuid).get(),
+                    Main.getInstance().getDataManager().getLastBoostingTime(offlinePlayer.getUniqueId()).get());
             addToCache(discordUtilsUser);
             return discordUtilsUser;
         } catch (InterruptedException | ExecutionException e) {
