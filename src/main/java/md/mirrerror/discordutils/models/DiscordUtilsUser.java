@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.OfflinePlayer;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Getter
@@ -19,13 +20,15 @@ public class DiscordUtilsUser {
     private User user;
     private final OfflinePlayer offlinePlayer;
     private boolean secondFactorEnabled;
+    private OffsetDateTime lastBoostingTime;
 
-    public DiscordUtilsUser(DiscordUtilsBot discordUtilsBot, DataManager dataManager, OfflinePlayer offlinePlayer, User user, boolean hasSecondFactor) {
+    public DiscordUtilsUser(DiscordUtilsBot discordUtilsBot, DataManager dataManager, OfflinePlayer offlinePlayer, User user, boolean hasSecondFactor, OffsetDateTime lastBoostingTime) {
         this.bot = discordUtilsBot;
         this.dataManager = dataManager;
         this.offlinePlayer = offlinePlayer;
         this.user = user;
         this.secondFactorEnabled = hasSecondFactor;
+        this.lastBoostingTime = lastBoostingTime;
     }
 
     public void setUser(User user) {
@@ -37,6 +40,12 @@ public class DiscordUtilsUser {
     public void setSecondFactor(boolean secondFactor) {
         this.secondFactorEnabled = secondFactor;
         dataManager.setSecondFactor(offlinePlayer.getUniqueId(), secondFactor);
+        DiscordUtilsUsersCacheManager.addToCache(this);
+    }
+
+    public void setLastBoostingTime(OffsetDateTime lastBoostingTime) {
+        this.lastBoostingTime = lastBoostingTime;
+        dataManager.setLastBoostingTime(offlinePlayer.getUniqueId(), lastBoostingTime);
         DiscordUtilsUsersCacheManager.addToCache(this);
     }
 

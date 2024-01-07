@@ -11,6 +11,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.OffsetDateTime;
+
 @RequiredArgsConstructor
 public class BoostListener extends ListenerAdapter {
 
@@ -24,15 +26,20 @@ public class BoostListener extends ListenerAdapter {
 
         if(!discordUtilsUser.isLinked()) return;
 
+        OffsetDateTime timeBoosted = event.getMember().getTimeBoosted();
+        if(timeBoosted == null) return;
+
         Bukkit.getScheduler().runTask(plugin, () -> {
-            if(event.getMember().isBoosting()) {
-                botSettings.COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
-                });
-            } else {
+            if(!event.getMember().isBoosting() && discordUtilsUser.getLastBoostingTime() != null) {
                 botSettings.COMMANDS_AFTER_STOPPING_SERVER_BOOSTING.forEach(command -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
                 });
+                discordUtilsUser.setLastBoostingTime(null);
+            } else if(timeBoosted.isAfter(discordUtilsUser.getLastBoostingTime())) {
+                botSettings.COMMANDS_AFTER_SERVER_BOOSTING.forEach(command -> {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName()));
+                });
+                discordUtilsUser.setLastBoostingTime(OffsetDateTime.now());
             }
         });
     }
