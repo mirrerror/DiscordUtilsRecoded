@@ -6,10 +6,7 @@ import md.mirrerror.discordutils.config.settings.MainSettings;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 import org.bukkit.plugin.Plugin;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
@@ -58,6 +55,38 @@ public class MySQLDataManager implements DataManager {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS players (uuid varchar(255), user_id bigint, 2fa boolean, last_boosting_time varchar(255));");
             preparedStatement.executeUpdate();
+
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet uuidColumn = metaData.getColumns(null, null, "players", "uuid");
+            ResultSet userIdColumn = metaData.getColumns(null, null, "players", "user_id");
+            ResultSet secondFactorColumn = metaData.getColumns(null, null, "players", "2fa");
+            ResultSet lastBoostingTimeColumn = metaData.getColumns(null, null, "players", "last_boosting_time");
+
+            if(!uuidColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN uuid varchar(255);");
+                alterStatement.executeUpdate();
+            }
+
+            if(!userIdColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN user_id bigint;");
+                alterStatement.executeUpdate();
+            }
+
+            if(!secondFactorColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN 2fa boolean;");
+                alterStatement.executeUpdate();
+            }
+
+            if (!lastBoostingTimeColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN last_boosting_time varchar(255);");
+                alterStatement.executeUpdate();
+            }
+
+            uuidColumn.close();
+            userIdColumn.close();
+            secondFactorColumn.close();
+            lastBoostingTimeColumn.close();
+
         } catch (SQLException e) {
             plugin.getLogger().severe("Something went wrong while setting up the database table!");
             plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");

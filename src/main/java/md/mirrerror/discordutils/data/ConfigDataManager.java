@@ -101,8 +101,15 @@ public class ConfigDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
             OffsetDateTime lastBoostingTime;
 
+            String rawBoostingTime = dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime");
+            if(rawBoostingTime == null) {
+                dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
+                dataConfig.saveConfigFile();
+                return null;
+            }
+
             try {
-                lastBoostingTime = OffsetDateTime.parse(dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime"));
+                lastBoostingTime = OffsetDateTime.parse(rawBoostingTime);
             } catch (DateTimeParseException ignored) {
                 return null;
             }
@@ -151,12 +158,20 @@ public class ConfigDataManager implements DataManager {
 
                 long userId = dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID");
                 boolean isSecondFactorEnabled = dataConfig.getFileConfiguration().getBoolean("DiscordLink." + entry + ".2FA");
+
                 OffsetDateTime lastBoostingTime;
 
+                String rawBoostingTime = dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime");
+                if(rawBoostingTime == null) {
+                    dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
+                    dataConfig.saveConfigFile();
+                    return null;
+                }
+
                 try {
-                    lastBoostingTime = OffsetDateTime.parse(dataConfig.getFileConfiguration().getString("DiscordLink." + entry + ".LastBoostingTime"));
+                    lastBoostingTime = OffsetDateTime.parse(rawBoostingTime);
                 } catch (DateTimeParseException ignored) {
-                    continue;
+                    return null;
                 }
 
                 batchUpdateEntries.add(new UserBatchUpdateEntry(uuid, userId, isSecondFactorEnabled, lastBoostingTime));
