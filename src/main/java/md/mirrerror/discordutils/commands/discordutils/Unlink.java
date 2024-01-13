@@ -33,7 +33,7 @@ public class Unlink implements SubCommand {
 
         String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
-        bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+        bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, Message.ACCOUNT_UNLINK_CONFIRMATION.getText()).whenComplete((msg, error) -> {
             if (error == null) {
                 bot.getUnlinkPlayers().put(player.getUniqueId(), msg);
                 return;

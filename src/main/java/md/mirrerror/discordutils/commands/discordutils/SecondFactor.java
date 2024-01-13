@@ -34,7 +34,7 @@ public class SecondFactor implements SubCommand {
 
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
-            bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+            bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText()).whenComplete((msg, error) -> {
                 if (error == null) {
                     bot.getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
                     Message.SECONDFACTOR_DISABLE_REQUEST_SENT.send(sender, true);
