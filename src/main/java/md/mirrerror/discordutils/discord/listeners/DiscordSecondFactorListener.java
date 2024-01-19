@@ -39,7 +39,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
         if(player == null) return;
 
         long messageId = event.getMessageIdLong();
-        UUID uuid = discordUtilsUser.getOfflinePlayer().getUniqueId();
+        UUID uuid = player.getUniqueId();
 
         if(bot.getSecondFactorPlayers().containsKey(uuid)) {
             if(messageId == Long.parseLong(bot.getSecondFactorPlayers().get(uuid))) {
@@ -52,12 +52,18 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
                 }
-                if(event.getComponentId().equals("decline")) {
-                    bot.getSecondFactorPlayers().remove(uuid);
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
-                        botSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
-                    });
+                try {
+                    if(event.getComponentId().equals("decline")) {
+                        System.out.println("decline");
+                        bot.getSecondFactorPlayers().remove(uuid);
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            System.out.println("kick");
+                            player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
+                            botSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 event.getChannel().deleteMessageById(event.getMessageId()).queue();
