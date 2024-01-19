@@ -6,7 +6,7 @@
 # Set it to true if you want plugin to check for available updates, otherwise set it to false
 # ------------------------------------------------------------------
 # Language
-# You can choose a translation of the plugin, and the plugin will download it automatically. Available ones: ru (Russian), cs (Czech), ua (Ukrainian), es (Spanish)
+# You can choose a translation of the plugin, and the plugin will download it automatically. Available ones: ru (Russian), cs (Czech), pt (Portuguese), es (Spanish)
 # Set it to '' of you don't need any official translations (the default plugin language is English)
 # ------------------------------------------------------------------
 # Database
