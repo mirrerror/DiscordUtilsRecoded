@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.data;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,9 @@ public interface DataManager {
 
     CompletableFuture<Void> setDiscordUserId(UUID uuid, long userId);
     CompletableFuture<Long> getDiscordUserId(UUID uuid);
+
+    CompletableFuture<Void> setLastBoostingTime(UUID uuid, OffsetDateTime lastBoostingTime);
+    CompletableFuture<OffsetDateTime> getLastBoostingTime(UUID uuid);
 
     CompletableFuture<Long> countLinkedUsers();
     CompletableFuture<Void> performUserBatchUpdate(List<UserBatchUpdateEntry> newUsers);

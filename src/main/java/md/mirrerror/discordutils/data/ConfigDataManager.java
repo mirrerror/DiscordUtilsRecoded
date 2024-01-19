@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.customconfigs.DataConfig;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +26,7 @@ public class ConfigDataManager implements DataManager {
         return CompletableFuture.runAsync(() -> {
             dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".UserID", userId);
             dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".2FA", secondFactor);
+            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
             dataConfig.saveConfigFile();
         });
     }
@@ -86,6 +89,36 @@ public class ConfigDataManager implements DataManager {
     }
 
     @Override
+    public CompletableFuture<Void> setLastBoostingTime(UUID uuid, OffsetDateTime lastBoostingTime) {
+        return CompletableFuture.runAsync(() -> {
+            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", lastBoostingTime.toString());
+            dataConfig.saveConfigFile();
+        });
+    }
+
+    @Override
+    public CompletableFuture<OffsetDateTime> getLastBoostingTime(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            OffsetDateTime lastBoostingTime;
+
+            String rawBoostingTime = dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime");
+            if(rawBoostingTime == null) {
+                dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
+                dataConfig.saveConfigFile();
+                return null;
+            }
+
+            try {
+                lastBoostingTime = OffsetDateTime.parse(rawBoostingTime);
+            } catch (DateTimeParseException ignored) {
+                return null;
+            }
+
+            return lastBoostingTime;
+        });
+    }
+
+    @Override
     public CompletableFuture<Long> countLinkedUsers() {
         return CompletableFuture.supplyAsync(() -> {
             long count = 0;
@@ -101,6 +134,7 @@ public class ConfigDataManager implements DataManager {
             for(UserBatchUpdateEntry entry : newUsers) {
                 dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".UserID", entry.getUserId());
                 dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".2FA", entry.isSecondFactorEnabled());
+                dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".LastBoostingTime", entry.getLastTimeBoosted());
             }
 
             dataConfig.saveConfigFile();
@@ -125,7 +159,22 @@ public class ConfigDataManager implements DataManager {
                 long userId = dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID");
                 boolean isSecondFactorEnabled = dataConfig.getFileConfiguration().getBoolean("DiscordLink." + entry + ".2FA");
 
-                batchUpdateEntries.add(new UserBatchUpdateEntry(uuid, userId, isSecondFactorEnabled));
+                OffsetDateTime lastBoostingTime;
+
+                String rawBoostingTime = dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime");
+                if(rawBoostingTime == null) {
+                    dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
+                    dataConfig.saveConfigFile();
+                    return null;
+                }
+
+                try {
+                    lastBoostingTime = OffsetDateTime.parse(rawBoostingTime);
+                } catch (DateTimeParseException ignored) {
+                    return null;
+                }
+
+                batchUpdateEntries.add(new UserBatchUpdateEntry(uuid, userId, isSecondFactorEnabled, lastBoostingTime));
             }
 
             return batchUpdateEntries;

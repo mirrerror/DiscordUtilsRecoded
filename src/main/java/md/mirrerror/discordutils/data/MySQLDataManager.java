@@ -3,14 +3,12 @@ package md.mirrerror.discordutils.data;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import md.mirrerror.discordutils.config.settings.MainSettings;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.MinecraftVersionUtils;
 import org.bukkit.plugin.Plugin;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -55,8 +53,40 @@ public class MySQLDataManager implements DataManager {
 
     private void setupTable() {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS players (uuid varchar(255), user_id bigint, 2fa boolean);");
+            PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS players (uuid varchar(255), user_id bigint, 2fa boolean, last_boosting_time varchar(255));");
             preparedStatement.executeUpdate();
+
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet uuidColumn = metaData.getColumns(null, null, "players", "uuid");
+            ResultSet userIdColumn = metaData.getColumns(null, null, "players", "user_id");
+            ResultSet secondFactorColumn = metaData.getColumns(null, null, "players", "2fa");
+            ResultSet lastBoostingTimeColumn = metaData.getColumns(null, null, "players", "last_boosting_time");
+
+            if(!uuidColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN uuid varchar(255);");
+                alterStatement.executeUpdate();
+            }
+
+            if(!userIdColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN user_id bigint;");
+                alterStatement.executeUpdate();
+            }
+
+            if(!secondFactorColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN 2fa boolean;");
+                alterStatement.executeUpdate();
+            }
+
+            if (!lastBoostingTimeColumn.next()) {
+                PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN last_boosting_time varchar(255);");
+                alterStatement.executeUpdate();
+            }
+
+            uuidColumn.close();
+            userIdColumn.close();
+            secondFactorColumn.close();
+            lastBoostingTimeColumn.close();
+
         } catch (SQLException e) {
             plugin.getLogger().severe("Something went wrong while setting up the database table!");
             plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
@@ -68,10 +98,11 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.runAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO players (uuid, user_id, 2fa) VALUES (?,?,?)");
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO players (uuid, user_id, 2fa, last_boosting_time) VALUES (?,?,?,?)");
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.setLong(2, userId);
                 preparedStatement.setBoolean(3, secondFactor);
+                preparedStatement.setBoolean(4, false);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 plugin.getLogger().severe("Something went wrong while registering a player in the database!");
@@ -228,6 +259,51 @@ public class MySQLDataManager implements DataManager {
     }
 
     @Override
+    public CompletableFuture<Void> setLastBoostingTime(UUID uuid, OffsetDateTime lastBoostingTime) {
+        return CompletableFuture.runAsync(() -> {
+
+            try (Connection connection = dataSource.getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET last_boosting_time=? WHERE uuid=?");
+                preparedStatement.setString(2, uuid.toString());
+                preparedStatement.setString(1, lastBoostingTime.toString());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Something went wrong while setting a player's last boosting time (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            }
+
+        });
+    }
+
+    @Override
+    public CompletableFuture<OffsetDateTime> getLastBoostingTime(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+
+            try (Connection connection = dataSource.getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
+                preparedStatement.setString(1, uuid.toString());
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if(resultSet.next()) {
+                    OffsetDateTime lastBoostingTime;
+                    try {
+                        lastBoostingTime = OffsetDateTime.parse(resultSet.getString("last_boosting_time"));
+                    } catch (DateTimeParseException ignored) {
+                        return null;
+                    }
+                    return lastBoostingTime;
+                }
+
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Something went wrong while getting a player's last boosting time (database)!");
+                plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+            }
+            return null;
+
+        });
+    }
+
+    @Override
     public CompletableFuture<Long> countLinkedUsers() {
         return CompletableFuture.supplyAsync(() -> {
 
@@ -240,7 +316,7 @@ public class MySQLDataManager implements DataManager {
                 }
                 return count;
             } catch (SQLException e) {
-                plugin.getLogger().severe("Something went wrong while getting a player's Discord user ID (database)!");
+                plugin.getLogger().severe("Something went wrong while counting linked users (database)!");
                 plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
             }
             return -1L;
@@ -254,7 +330,7 @@ public class MySQLDataManager implements DataManager {
 
             try (Connection connection = dataSource.getConnection()) {
 
-                PreparedStatement registerStatement = connection.prepareStatement("INSERT INTO players (uuid, user_id, 2fa) VALUES (?,?,?)");
+                PreparedStatement registerStatement = connection.prepareStatement("INSERT INTO players (uuid, user_id, 2fa, last_boosting_time) VALUES (?,?,?,?)");
                 PreparedStatement unregisterStatement = connection.prepareStatement("DELETE FROM players WHERE uuid=?");
 
                 for(UserBatchUpdateEntry entry : newUsers) {
@@ -264,6 +340,7 @@ public class MySQLDataManager implements DataManager {
                     registerStatement.setString(1, entry.getUuid().toString());
                     registerStatement.setLong(2, entry.getUserId());
                     registerStatement.setBoolean(3, entry.isSecondFactorEnabled());
+                    registerStatement.setString(4, entry.getLastTimeBoosted().toString());
                     registerStatement.executeUpdate();
                 }
 
@@ -293,10 +370,19 @@ public class MySQLDataManager implements DataManager {
                         continue;
                     }
 
+                    OffsetDateTime lastBoostingTime;
+
+                    try {
+                        lastBoostingTime = OffsetDateTime.parse(resultSet.getString("last_boosting_time"));
+                    } catch (DateTimeParseException ignored) {
+                        continue;
+                    }
+
                     entries.add(new UserBatchUpdateEntry(
                             uuid,
                             resultSet.getLong("user_id"),
-                            resultSet.getBoolean("2fa")
+                            resultSet.getBoolean("2fa"),
+                            lastBoostingTime
                     ));
                 }
             } catch (SQLException e) {

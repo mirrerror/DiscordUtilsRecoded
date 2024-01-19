@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class CacheListener implements Listener {
 
@@ -28,6 +29,14 @@ public class CacheListener implements Listener {
                 discordUtilsUser.synchronizeRoles(guild);
                 discordUtilsUser.synchronizeNickname(guild);
             }
+        });
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+            DiscordUtilsUsersCacheManager.removeFromCacheByUuid(player.getUniqueId());
         });
     }
 

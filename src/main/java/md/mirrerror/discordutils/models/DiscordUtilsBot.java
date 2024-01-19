@@ -440,11 +440,11 @@ public class DiscordUtilsBot {
                     } else if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
                 }
 
-            if(botSettings.SECOND_FACTOR_BLOCK_PLAYER_JOIN)
+            if(secondFactorType != SecondFactorType.CODE && botSettings.SECOND_FACTOR_BLOCK_PLAYER_JOIN)
                 player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_NEEDED_KICK.getText());
 
             if(secondFactorType == DiscordUtilsBot.SecondFactorType.REACTION) {
-                sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+                sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText()).whenComplete((msg, error) -> {
                     if (error == null) {
                         secondFactorPlayers.put(player.getUniqueId(), msg.getId());
                         return;
@@ -458,7 +458,7 @@ public class DiscordUtilsBot {
                 for(byte b : secureRandomSeed) code.set(code.get() + b);
                 code.set(code.get().replace("-", ""));
 
-                sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp).whenComplete((msg, error) -> {
+                sendCodeMessage(discordUtilsUser.getUser(), code.get(), playerIp, md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_CODE_MESSAGE.getText()).whenComplete((msg, error) -> {
                     if (error == null) {
                         secondFactorPlayers.put(player.getUniqueId(), code.get());
                         return;
@@ -500,15 +500,24 @@ public class DiscordUtilsBot {
         }
     }
 
-    public CompletableFuture<Message> sendActionChoosingMessage(User user, String playerIp) {
+    public CompletableFuture<Message> sendActionChoosingMessage(User user, String playerIp, String message) {
         return user.openPrivateChannel().submit()
                 .thenCompose(channel ->
                         channel.sendMessageEmbeds(
-                                new EmbedManager(botSettings).infoEmbed(
-                                        md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText().replace("%playerIp%", playerIp))
+                                embedManager.infoEmbed(
+                                        message.replace("%playerIp%", playerIp))
                         ).addActionRow(Button.success("accept", md.mirrerror.discordutils.config.messages.Message.ACCEPT.getText()))
                                 .addActionRow(Button.danger("decline", md.mirrerror.discordutils.config.messages.Message.DECLINE.getText()))
                                 .submit()
+                );
+    }
+
+    public CompletableFuture<Message> sendCodeMessage(User user, String code, String playerIp, String message) {
+        return user.openPrivateChannel().submit()
+                .thenCompose(channel ->
+                        channel.sendMessageEmbeds(
+                                        embedManager.infoEmbed(message.replace("%code%", code).replace("%playerIp%", playerIp))
+                                ).submit()
                 );
     }
 

@@ -39,7 +39,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
         if(player == null) return;
 
         long messageId = event.getMessageIdLong();
-        UUID uuid = discordUtilsUser.getOfflinePlayer().getUniqueId();
+        UUID uuid = player.getUniqueId();
 
         if(bot.getSecondFactorPlayers().containsKey(uuid)) {
             if(messageId == Long.parseLong(bot.getSecondFactorPlayers().get(uuid))) {
@@ -51,8 +51,7 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
-                }
-                if(event.getComponentId().equals("decline")) {
+                } else if(event.getComponentId().equals("decline")) {
                     bot.getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
