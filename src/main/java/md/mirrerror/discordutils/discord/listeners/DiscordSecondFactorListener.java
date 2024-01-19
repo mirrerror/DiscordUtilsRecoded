@@ -51,19 +51,12 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
-                }
-                try {
-                    if(event.getComponentId().equals("decline")) {
-                        System.out.println("decline");
-                        bot.getSecondFactorPlayers().remove(uuid);
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            System.out.println("kick");
-                            player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
-                            botSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else if(event.getComponentId().equals("decline")) {
+                    bot.getSecondFactorPlayers().remove(uuid);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
+                        botSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                    });
                 }
 
                 event.getChannel().deleteMessageById(event.getMessageId()).queue();
