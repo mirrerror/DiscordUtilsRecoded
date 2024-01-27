@@ -240,7 +240,7 @@ public class DiscordUtilsBot {
             if(botSettings.SERVER_ACTIVITY_LOGGING_ENABLED) {
                 serverActivityLoggingTextChannel = jda.getTextChannelById(botSettings.SERVER_ACTIVITY_LOGGING_CHANNEL_ID);
                 if(serverActivityLoggingTextChannel != null) {
-                    Bukkit.getPluginManager().registerEvents(new ServerActivityListener(botSettings), plugin);
+                    Bukkit.getPluginManager().registerEvents(new ServerActivityListener(this, botSettings), plugin);
                     plugin.getLogger().info("The Server Activity Logging module has been successfully enabled.");
                 } else {
                     plugin.getLogger().severe("The Server Activity Logging module couldn't start, because you have specified a wrong ID for its text channel. Check your settings!");

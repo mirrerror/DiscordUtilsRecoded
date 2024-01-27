@@ -61,10 +61,14 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("GuildVoiceRewards.MinMembers", 1);
         getFileConfiguration().addDefault("ServerActivityLogging.Enabled", false);
         getFileConfiguration().addDefault("ServerActivityLogging.ChannelID", -1);
-        getFileConfiguration().addDefault("ServerActivityLogging.JoinEmbedColor", "#8de113");
-        getFileConfiguration().addDefault("ServerActivityLogging.QuitEmbedColor", "#f34520");
-        getFileConfiguration().addDefault("ServerActivityLogging.DeathEmbedColor", "#f34520");
-        getFileConfiguration().addDefault("ServerActivityLogging.ChatEmbedColor", "#e8d725");
+        getFileConfiguration().addDefault("ServerActivityLogging.Join.EmbedColor", "#8de113");
+        getFileConfiguration().addDefault("ServerActivityLogging.Join.Enabled", true);
+        getFileConfiguration().addDefault("ServerActivityLogging.Quit.EmbedColor", "#f34520");
+        getFileConfiguration().addDefault("ServerActivityLogging.Quit.Enabled", true);
+        getFileConfiguration().addDefault("ServerActivityLogging.Death.EmbedColor", "#f34520");
+        getFileConfiguration().addDefault("ServerActivityLogging.Death.Enabled", true);
+        getFileConfiguration().addDefault("ServerActivityLogging.Chat.EmbedColor", "#e8d725");
+        getFileConfiguration().addDefault("ServerActivityLogging.Chat.Enabled", true);
         getFileConfiguration().addDefault("Console.Enabled", false);
         getFileConfiguration().addDefault("Console.ClearOnEveryInit", true);
         getFileConfiguration().addDefault("Console.ChannelID", -1);
