@@ -10,11 +10,15 @@ import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 @Getter
-public class UserStopServerBoostingEvent extends Event {
+public class UserStopBoostingDiscordServerEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final DiscordUtilsUser discordUtilsUser;
     private final DiscordUtilsBot bot;
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
     @Override
     public @NotNull HandlerList getHandlers() {

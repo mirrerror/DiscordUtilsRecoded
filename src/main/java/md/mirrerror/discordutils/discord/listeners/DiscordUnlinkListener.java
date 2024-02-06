@@ -47,8 +47,10 @@ public class DiscordUnlinkListener extends ListenerAdapter {
                         botSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
 
-                    AccountUnlinkEvent accountUnlinkEvent = new AccountUnlinkEvent(discordUtilsUser, bot);
-                    Bukkit.getPluginManager().callEvent(accountUnlinkEvent);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        AccountUnlinkEvent accountUnlinkEvent = new AccountUnlinkEvent(discordUtilsUser, bot);
+                        Bukkit.getPluginManager().callEvent(accountUnlinkEvent);
+                    });
 
                     discordUtilsUser.unregister();
                 }

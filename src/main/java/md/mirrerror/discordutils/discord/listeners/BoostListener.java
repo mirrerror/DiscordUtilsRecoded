@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.events.custom.UserBoostDiscordServerEvent;
-import md.mirrerror.discordutils.events.custom.UserStopServerBoostingEvent;
+import md.mirrerror.discordutils.events.custom.UserStopBoostingDiscordServerEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.User;
@@ -39,8 +39,8 @@ public class BoostListener extends ListenerAdapter {
                 botSettings.COMMANDS_AFTER_STOPPING_SERVER_BOOSTING.forEach(command ->
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", discordUtilsUser.getOfflinePlayer().getName()).replace("%user%", user.getName())));
 
-                UserStopServerBoostingEvent userStopServerBoostingEvent = new UserStopServerBoostingEvent(discordUtilsUser, bot);
-                Bukkit.getPluginManager().callEvent(userStopServerBoostingEvent);
+                UserStopBoostingDiscordServerEvent userStopBoostingDiscordServerEvent = new UserStopBoostingDiscordServerEvent(discordUtilsUser, bot);
+                Bukkit.getPluginManager().callEvent(userStopBoostingDiscordServerEvent);
 
             } else if(timeBoosted != null && lastBoostingTime != null && timeBoosted.isAfter(lastBoostingTime)) {
 

@@ -125,7 +125,7 @@ public class DiscordUtilsBot {
                     .addEventListeners(new DiscordUnlinkListener(plugin, this, botSettings))
                     .addEventListeners(new DiscordSecondFactorListener(plugin, this, botSettings))
                     .addEventListeners(new DiscordToChatListener(this, botSettings))
-                    .addEventListeners(new DiscordSecondFactorDisableListener(this))
+                    .addEventListeners(new DiscordSecondFactorDisableListener(plugin, this))
                     .setAutoReconnect(true)
                     .setToken(botSettings.BOT_TOKEN)
                     .setContextEnabled(false)
@@ -318,8 +318,10 @@ public class DiscordUtilsBot {
 
         Main.setBotReady(true);
 
-        BotGetReadyEvent botGetReadyEvent = new BotGetReadyEvent(this);
-        Bukkit.getPluginManager().callEvent(botGetReadyEvent);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            BotGetReadyEvent botGetReadyEvent = new BotGetReadyEvent(this);
+            Bukkit.getPluginManager().callEvent(botGetReadyEvent);
+        });
     }
 
     public void sendMessage(TextChannel textChannel, String message) {

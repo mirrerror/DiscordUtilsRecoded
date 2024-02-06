@@ -16,6 +16,10 @@ public class AccountUnlinkEvent extends Event {
     private final DiscordUtilsUser discordUtilsUser;
     private final DiscordUtilsBot bot;
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;

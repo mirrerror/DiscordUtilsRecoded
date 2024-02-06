@@ -55,10 +55,10 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
-                    });
 
-                    UserPassSecondFactorEvent userPassSecondFactorEvent = new UserPassSecondFactorEvent(discordUtilsUser, bot, secondFactorSession);
-                    Bukkit.getPluginManager().callEvent(userPassSecondFactorEvent);
+                        UserPassSecondFactorEvent userPassSecondFactorEvent = new UserPassSecondFactorEvent(discordUtilsUser, bot, secondFactorSession);
+                        Bukkit.getPluginManager().callEvent(userPassSecondFactorEvent);
+                    });
                 } else if(event.getComponentId().equals("decline")) {
                     bot.getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(plugin, () -> {
@@ -66,8 +66,10 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
 
-                    UserFailSecondFactorEvent userFailSecondFactorEvent = new UserFailSecondFactorEvent(discordUtilsUser, bot);
-                    Bukkit.getPluginManager().callEvent(userFailSecondFactorEvent);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        UserFailSecondFactorEvent userFailSecondFactorEvent = new UserFailSecondFactorEvent(discordUtilsUser, bot);
+                        Bukkit.getPluginManager().callEvent(userFailSecondFactorEvent);
+                    });
                 }
 
                 event.getChannel().deleteMessageById(event.getMessageId()).queue();

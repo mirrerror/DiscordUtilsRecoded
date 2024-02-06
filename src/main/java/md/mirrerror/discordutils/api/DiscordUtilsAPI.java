@@ -52,8 +52,12 @@ public class DiscordUtilsAPI {
      * Retrieves the DiscordUtilsBot instance, representing the Discord bot integrated with the plugin.
      *
      * @return The DiscordUtilsBot instance.
+     * @throws IllegalStateException if the bot is not ready. Use {@link #isBotReady()} to check the bot's readiness.
      */
     public static DiscordUtilsBot getBot() {
+        if (!isBotReady()) {
+            throw new IllegalStateException("Bot is not ready. Check bot readiness using isBotReady() method before calling getBot().");
+        }
         return Main.getInstance().getBot();
     }
 

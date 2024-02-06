@@ -18,6 +18,10 @@ public class UserSecondFactorStateChangeEvent extends Event {
     private final boolean oldState;
     private final boolean newState;
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;

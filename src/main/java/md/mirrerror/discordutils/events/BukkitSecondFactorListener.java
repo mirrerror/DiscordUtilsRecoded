@@ -131,10 +131,10 @@ public class BukkitSecondFactorListener implements Listener {
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
-                });
 
-                UserPassSecondFactorEvent userPassSecondFactorEvent = new UserPassSecondFactorEvent(discordUtilsUser, bot, secondFactorSession);
-                Bukkit.getPluginManager().callEvent(userPassSecondFactorEvent);
+                    UserPassSecondFactorEvent userPassSecondFactorEvent = new UserPassSecondFactorEvent(discordUtilsUser, bot, secondFactorSession);
+                    Bukkit.getPluginManager().callEvent(userPassSecondFactorEvent);
+                });
             } else {
                 int attempts = 1;
                 if(bot.getSecondFactorAttempts().containsKey(playerIp)) {
@@ -156,8 +156,10 @@ public class BukkitSecondFactorListener implements Listener {
                     }
                 }
 
-                UserFailSecondFactorEvent userFailSecondFactorEvent = new UserFailSecondFactorEvent(discordUtilsUser, bot);
-                Bukkit.getPluginManager().callEvent(userFailSecondFactorEvent);
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    UserFailSecondFactorEvent userFailSecondFactorEvent = new UserFailSecondFactorEvent(discordUtilsUser, bot);
+                    Bukkit.getPluginManager().callEvent(userFailSecondFactorEvent);
+                });
             }
         } else {
             performChecks(event.getPlayer(), event);

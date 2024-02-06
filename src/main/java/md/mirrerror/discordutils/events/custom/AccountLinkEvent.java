@@ -17,6 +17,10 @@ public class AccountLinkEvent extends Event {
     private final DiscordUtilsBot bot;
     private final String linkCode;
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;

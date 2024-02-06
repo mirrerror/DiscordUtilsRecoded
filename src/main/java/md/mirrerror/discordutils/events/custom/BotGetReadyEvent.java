@@ -14,6 +14,10 @@ public class BotGetReadyEvent extends Event {
 
     private final DiscordUtilsBot bot;
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;
