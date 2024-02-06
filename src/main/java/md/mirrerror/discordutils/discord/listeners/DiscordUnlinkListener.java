@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
+import md.mirrerror.discordutils.events.custom.AccountUnlinkEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -45,6 +46,9 @@ public class DiscordUnlinkListener extends ListenerAdapter {
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         botSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
                     });
+
+                    AccountUnlinkEvent accountUnlinkEvent = new AccountUnlinkEvent(discordUtilsUser, bot);
+                    Bukkit.getPluginManager().callEvent(accountUnlinkEvent);
 
                     discordUtilsUser.unregister();
                 }

@@ -19,6 +19,7 @@ import md.mirrerror.discordutils.data.MySQLDataManager;
 import md.mirrerror.discordutils.events.BukkitSecondFactorListener;
 import md.mirrerror.discordutils.events.CacheListener;
 import md.mirrerror.discordutils.events.CustomTriggersListener;
+import md.mirrerror.discordutils.events.custom.MainGetReadyEvent;
 import md.mirrerror.discordutils.integrations.permissions.LuckPermsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.VaultIntegration;
@@ -122,6 +123,9 @@ public final class Main extends JavaPlugin {
         }
 
         isMainReady = true;
+
+        MainGetReadyEvent mainGetReadyEvent = new MainGetReadyEvent();
+        Bukkit.getPluginManager().callEvent(mainGetReadyEvent);
 
         setupMetrics();
         if(mainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();

@@ -5,10 +5,12 @@ import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.events.custom.UserSecondFactorStateChangeEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,6 +50,8 @@ public class SecondFactor implements SubCommand {
             discordUtilsUser.setSecondFactor(true);
             sender.sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.ENABLED.getText()));
 
+            UserSecondFactorStateChangeEvent userSecondFactorStateChangeEvent = new UserSecondFactorStateChangeEvent(discordUtilsUser, bot, false, true);
+            Bukkit.getPluginManager().callEvent(userSecondFactorStateChangeEvent);
         }
     }
 
