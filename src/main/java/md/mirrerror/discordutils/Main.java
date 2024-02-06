@@ -44,6 +44,7 @@ public final class Main extends JavaPlugin {
     private DataManager dataManager;
     private PAPIManager papiManager;
     private PermissionsIntegration permissionsIntegration;
+    private CommandsManager commandsManager;
 
     private DiscordUtilsBot bot;
 
@@ -147,7 +148,7 @@ public final class Main extends JavaPlugin {
     }
 
     private void registerCommands() {
-        CommandsManager commandManager = new CommandsManager(this);
+        commandsManager = new CommandsManager(this);
 
         List<SubCommand> discordUtilsSubCommands = new ArrayList<>();
         discordUtilsSubCommands.add(new Link(botSettings, bot));
@@ -157,7 +158,7 @@ public final class Main extends JavaPlugin {
         discordUtilsSubCommands.add(new VoiceInvite(bot, this));
         discordUtilsSubCommands.add(new Unlink(bot));
         discordUtilsSubCommands.add(new GetDiscord(dataManager, this, bot));
-        commandManager.registerCommand("discordutils", discordUtilsSubCommands);
+        commandsManager.registerCommand("discordutils", discordUtilsSubCommands);
 
         List<SubCommand> discordUtilsAdminSubCommands = new ArrayList<>();
         discordUtilsAdminSubCommands.add(new Reload(configManager));
@@ -184,7 +185,7 @@ public final class Main extends JavaPlugin {
 
         discordUtilsAdminSubCommands.add(new Migrate(migrateDataManager, dataManager, this));
 
-        commandManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
+        commandsManager.registerCommand("discordutilsadmin", discordUtilsAdminSubCommands);
     }
 
     public static void setBotReady(boolean isBotReady) {
