@@ -5,6 +5,7 @@ import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
+import md.mirrerror.discordutils.events.custom.AccountUnlinkEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
@@ -38,6 +39,9 @@ public class ForceUnlink implements SubCommand {
             bot.getUnlinkPlayers().remove(onlinePlayer.getUniqueId());
             onlinePlayer.sendMessage(Message.DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET.getText(true).replace("%sender%", sender.getName()).replace("%target%", player.getName()));
         }
+
+        AccountUnlinkEvent accountUnlinkEvent = new AccountUnlinkEvent(discordUtilsUser, bot);
+        Bukkit.getPluginManager().callEvent(accountUnlinkEvent);
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             botSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));

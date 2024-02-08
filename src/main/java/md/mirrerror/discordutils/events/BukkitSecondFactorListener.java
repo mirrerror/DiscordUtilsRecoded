@@ -6,6 +6,8 @@ import md.mirrerror.discordutils.config.ConfigManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
+import md.mirrerror.discordutils.events.custom.UserFailSecondFactorEvent;
+import md.mirrerror.discordutils.events.custom.UserPassSecondFactorEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import org.apache.commons.lang.StringUtils;
@@ -113,6 +115,8 @@ public class BukkitSecondFactorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+        DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
+
         if(bot.getSecondFactorType() == DiscordUtilsBot.SecondFactorType.CODE && bot.getSecondFactorPlayers().containsKey(player.getUniqueId())) {
             event.setCancelled(true);
             String message = event.getMessage();
@@ -120,10 +124,16 @@ public class BukkitSecondFactorListener implements Listener {
             if(message.replace(" ", "").equals(bot.getSecondFactorPlayers().get(player.getUniqueId()))) {
                 bot.getSecondFactorPlayers().remove(player.getUniqueId());
                 Message.SECONDFACTOR_AUTHORIZED.send(player, true);
-                bot.getSecondFactorSessions().put(player.getUniqueId(), new SecondFactorSession(playerIp,
-                        LocalDateTime.now().plusSeconds(botSettings.SECOND_FACTOR_SESSION_TIME)));
+
+                SecondFactorSession secondFactorSession = new SecondFactorSession(playerIp,
+                        LocalDateTime.now().plusSeconds(botSettings.SECOND_FACTOR_SESSION_TIME));
+                bot.getSecondFactorSessions().put(player.getUniqueId(), secondFactorSession);
+
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+
+                    UserPassSecondFactorEvent userPassSecondFactorEvent = new UserPassSecondFactorEvent(discordUtilsUser, bot, secondFactorSession);
+                    Bukkit.getPluginManager().callEvent(userPassSecondFactorEvent);
                 });
             } else {
                 int attempts = 1;
@@ -145,6 +155,11 @@ public class BukkitSecondFactorListener implements Listener {
                         });
                     }
                 }
+
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    UserFailSecondFactorEvent userFailSecondFactorEvent = new UserFailSecondFactorEvent(discordUtilsUser, bot);
+                    Bukkit.getPluginManager().callEvent(userFailSecondFactorEvent);
+                });
             }
         } else {
             performChecks(event.getPlayer(), event);

@@ -5,6 +5,7 @@ import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
+import md.mirrerror.discordutils.events.custom.AccountLinkEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import md.mirrerror.discordutils.utils.Validator;
@@ -44,6 +45,9 @@ public class Link implements SubCommand {
         Message.ACCOUNT_SUCCESSFULLY_LINKED.send(sender, true);
         botSettings.COMMANDS_AFTER_LINKING
                 .forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+
+        AccountLinkEvent accountLinkEvent = new AccountLinkEvent(discordUtilsUser, bot, args[0]);
+        Bukkit.getPluginManager().callEvent(accountLinkEvent);
     }
 
     @Override

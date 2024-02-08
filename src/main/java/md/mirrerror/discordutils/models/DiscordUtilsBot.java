@@ -13,6 +13,7 @@ import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.listeners.*;
 import md.mirrerror.discordutils.events.ChatToDiscordListener;
 import md.mirrerror.discordutils.events.ServerActivityListener;
+import md.mirrerror.discordutils.events.custom.BotGetReadyEvent;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
 import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
 import net.dv8tion.jda.api.JDA;
@@ -120,11 +121,11 @@ public class DiscordUtilsBot {
                     .addEventListeners(new MentionsListener(this, botSettings))
                     .addEventListeners(new VoiceRewardsListener(plugin, this, botSettings))
                     .addEventListeners(new VirtualConsoleCommandsListener(plugin, this, botSettings))
-                    .addEventListeners(new BoostListener(plugin, botSettings))
+                    .addEventListeners(new BoostListener(plugin, botSettings, this))
                     .addEventListeners(new DiscordUnlinkListener(plugin, this, botSettings))
                     .addEventListeners(new DiscordSecondFactorListener(plugin, this, botSettings))
                     .addEventListeners(new DiscordToChatListener(this, botSettings))
-                    .addEventListeners(new DiscordSecondFactorDisableListener(this))
+                    .addEventListeners(new DiscordSecondFactorDisableListener(plugin, this))
                     .setAutoReconnect(true)
                     .setToken(botSettings.BOT_TOKEN)
                     .setContextEnabled(false)
@@ -240,7 +241,7 @@ public class DiscordUtilsBot {
             if(botSettings.SERVER_ACTIVITY_LOGGING_ENABLED) {
                 serverActivityLoggingTextChannel = jda.getTextChannelById(botSettings.SERVER_ACTIVITY_LOGGING_CHANNEL_ID);
                 if(serverActivityLoggingTextChannel != null) {
-                    Bukkit.getPluginManager().registerEvents(new ServerActivityListener(botSettings), plugin);
+                    Bukkit.getPluginManager().registerEvents(new ServerActivityListener(this, botSettings), plugin);
                     plugin.getLogger().info("The Server Activity Logging module has been successfully enabled.");
                 } else {
                     plugin.getLogger().severe("The Server Activity Logging module couldn't start, because you have specified a wrong ID for its text channel. Check your settings!");
@@ -316,6 +317,11 @@ public class DiscordUtilsBot {
         }
 
         Main.setBotReady(true);
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            BotGetReadyEvent botGetReadyEvent = new BotGetReadyEvent(this);
+            Bukkit.getPluginManager().callEvent(botGetReadyEvent);
+        });
     }
 
     public void sendMessage(TextChannel textChannel, String message) {

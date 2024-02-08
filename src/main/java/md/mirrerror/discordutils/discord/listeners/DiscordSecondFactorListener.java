@@ -5,6 +5,8 @@ import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
+import md.mirrerror.discordutils.events.custom.UserFailSecondFactorEvent;
+import md.mirrerror.discordutils.events.custom.UserPassSecondFactorEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -46,16 +48,27 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
                 if(event.getComponentId().equals("accept")) {
                     bot.getSecondFactorPlayers().remove(uuid);
                     Message.SECONDFACTOR_AUTHORIZED.send(discordUtilsUser.getOfflinePlayer().getPlayer(), true);
-                    bot.getSecondFactorSessions().put(uuid, new SecondFactorSession(StringUtils.remove(player.getAddress().getAddress().toString(), '/'),
-                            LocalDateTime.now().plusSeconds(botSettings.SECOND_FACTOR_SESSION_TIME)));
+
+                    SecondFactorSession secondFactorSession = new SecondFactorSession(StringUtils.remove(player.getAddress().getAddress().toString(), '/'),
+                            LocalDateTime.now().plusSeconds(botSettings.SECOND_FACTOR_SESSION_TIME));
+                    bot.getSecondFactorSessions().put(uuid, secondFactorSession);
+
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_PASSING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+
+                        UserPassSecondFactorEvent userPassSecondFactorEvent = new UserPassSecondFactorEvent(discordUtilsUser, bot, secondFactorSession);
+                        Bukkit.getPluginManager().callEvent(userPassSecondFactorEvent);
                     });
                 } else if(event.getComponentId().equals("decline")) {
                     bot.getSecondFactorPlayers().remove(uuid);
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         player.kickPlayer(Message.SECONDFACTOR_REJECTED.getText());
                         botSettings.COMMANDS_AFTER_SECOND_FACTOR_DECLINING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+                    });
+
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        UserFailSecondFactorEvent userFailSecondFactorEvent = new UserFailSecondFactorEvent(discordUtilsUser, bot);
+                        Bukkit.getPluginManager().callEvent(userFailSecondFactorEvent);
                     });
                 }
 

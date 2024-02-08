@@ -3,11 +3,14 @@ package md.mirrerror.discordutils.discord.listeners;
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
+import md.mirrerror.discordutils.events.custom.UserSecondFactorStateChangeEvent;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -15,6 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DiscordSecondFactorDisableListener extends ListenerAdapter {
 
+    private final Plugin plugin;
     private final DiscordUtilsBot bot;
 
     @Override
@@ -40,6 +44,11 @@ public class DiscordSecondFactorDisableListener extends ListenerAdapter {
 
                     if (discordUtilsUser.getOfflinePlayer().isOnline())
                         discordUtilsUser.getOfflinePlayer().getPlayer().sendMessage(Message.DISCORDUTILS_SECONDFACTOR_SUCCESSFUL.getText(true).replace("%status%", Message.DISABLED.getText()));
+
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        UserSecondFactorStateChangeEvent userSecondFactorStateChangeEvent = new UserSecondFactorStateChangeEvent(discordUtilsUser, bot, true, false);
+                        Bukkit.getPluginManager().callEvent(userSecondFactorStateChangeEvent);
+                    });
 
                 } else if (event.getComponentId().equals("decline")) {
 

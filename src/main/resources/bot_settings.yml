@@ -134,10 +134,12 @@
 # Whether to enable or not the logging of some server events to an Discord channel
 # Enabled - true - enable, false - disable
 # ChannelID - text channel ID, in which will appear the logging messages
-# JoinEmbedColor - join embed messages' type color
-# QuitEmbedColor - quit embed messages' type color
-# DeathEmbedColor - death embed messages' type color
-# ChatEmbedColor - chat embed messages' type color
+# Join - messages that are triggered when a player joins the server
+# Quit - messages that are triggered when a player quits the server
+# Death - messages that are triggered when a player dies
+# Chat - messages that are triggered when a player uses chat
+# EmbedColor - color of the embed messages
+# Enabled - true - enable, false - disable
 # ------------------------------------------------------------------
 # Console
 # Whether to enable or not the virtual console in the specified Discord channel
@@ -283,10 +285,18 @@ GuildVoiceRewards:
 ServerActivityLogging:
   Enabled: false
   ChannelID: -1
-  JoinEmbedColor: '#8de113'
-  QuitEmbedColor: '#f34520'
-  DeathEmbedColor: '#f34520'
-  ChatEmbedColor: '#e8d725'
+  Join:
+    EmbedColor: '#8de113'
+    Enabled: true
+  Quit:
+    EmbedColor: '#f34520'
+    Enabled: true
+  Death:
+    EmbedColor: '#f34520'
+    Enabled: true
+  Chat:
+    EmbedColor: '#e8d725'
+    Enabled: true
 Console:
   Enabled: false
   ClearOnEveryInit: true
