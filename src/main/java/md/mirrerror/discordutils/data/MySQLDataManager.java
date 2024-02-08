@@ -285,9 +285,10 @@ public class MySQLDataManager implements DataManager {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if(resultSet.next()) {
-                    OffsetDateTime lastBoostingTime;
+                    OffsetDateTime lastBoostingTime = null;
                     try {
-                        lastBoostingTime = OffsetDateTime.parse(resultSet.getString("last_boosting_time"));
+                        String rawTime = resultSet.getString("last_boosting_time");
+                        if(rawTime != null) lastBoostingTime = OffsetDateTime.parse(rawTime);
                     } catch (DateTimeParseException ignored) {
                         return null;
                     }
