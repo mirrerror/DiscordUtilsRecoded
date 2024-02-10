@@ -61,7 +61,7 @@ public class Migrate implements SubCommand {
     }
 
     @Override
-    public Message getIncorrectUsageErrorMessage() {
+    public String getIncorrectUsageErrorMessage() {
         return null;
     }
 }

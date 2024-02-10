@@ -48,7 +48,7 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 
                     if(sender.hasPermission(subCommand.getPermission()))
                         if(subCommand.getMinArgsNeeded() > newArgs.length)
-                            subCommand.getIncorrectUsageErrorMessage().send(sender, true);
+                            sender.sendMessage(subCommand.getIncorrectUsageErrorMessage());
                         else
                             subCommand.onCommand(sender, command, label, newArgs);
                     else
@@ -86,6 +86,10 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
         List<SubCommand> subCommands = commands.get(command);
         subCommands.add(subCommand);
         commands.put(command, subCommands);
+    }
+
+    public void registerSubCommands(String command, List<SubCommand> subCommands) {
+        for(SubCommand subCommand : subCommands) registerSubCommand(command, subCommand);
     }
 
     @Override
