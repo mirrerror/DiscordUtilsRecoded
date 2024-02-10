@@ -19,7 +19,6 @@ import md.mirrerror.discordutils.data.MySQLDataManager;
 import md.mirrerror.discordutils.events.BukkitSecondFactorListener;
 import md.mirrerror.discordutils.events.CacheListener;
 import md.mirrerror.discordutils.events.CustomTriggersListener;
-import md.mirrerror.discordutils.events.custom.MainGetReadyEvent;
 import md.mirrerror.discordutils.integrations.permissions.LuckPermsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
 import md.mirrerror.discordutils.integrations.permissions.VaultIntegration;
@@ -125,9 +124,6 @@ public final class Main extends JavaPlugin {
 
         isMainReady = true;
 
-        MainGetReadyEvent mainGetReadyEvent = new MainGetReadyEvent();
-        Bukkit.getPluginManager().callEvent(mainGetReadyEvent);
-
         setupMetrics();
         if(mainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
     }
@@ -150,20 +146,22 @@ public final class Main extends JavaPlugin {
     private void registerCommands() {
         commandsManager = new CommandsManager(this);
 
-        List<SubCommand> discordUtilsSubCommands = new ArrayList<>();
-        discordUtilsSubCommands.add(new Link(botSettings, bot));
-        discordUtilsSubCommands.add(new SecondFactor(bot));
-        discordUtilsSubCommands.add(new Help());
-        discordUtilsSubCommands.add(new SendToDiscord(bot, botSettings));
-        discordUtilsSubCommands.add(new VoiceInvite(bot, this));
-        discordUtilsSubCommands.add(new Unlink(bot));
-        discordUtilsSubCommands.add(new GetDiscord(dataManager, this, bot));
+        List<SubCommand> discordUtilsSubCommands = List.of(
+                new Link(botSettings, bot),
+                new SecondFactor(bot),
+                new Help(),
+                new SendToDiscord(bot, botSettings),
+                new VoiceInvite(bot, this),
+                new Unlink(bot),
+                new GetDiscord(dataManager, this, bot)
+        );
         commandsManager.registerCommand("discordutils", discordUtilsSubCommands);
 
-        List<SubCommand> discordUtilsAdminSubCommands = new ArrayList<>();
-        discordUtilsAdminSubCommands.add(new Reload(configManager));
-        discordUtilsAdminSubCommands.add(new ForceUnlink(bot, botSettings, this));
-        discordUtilsAdminSubCommands.add(new Stats(bot));
+        List<SubCommand> discordUtilsAdminSubCommands = new ArrayList<>(List.of(
+                new Reload(configManager),
+                new ForceUnlink(bot, botSettings, this),
+                new Stats(bot)
+        ));
 
         String dataType = mainSettings.DATABASE_TYPE.toLowerCase();
         DataManager migrateDataManager = null;

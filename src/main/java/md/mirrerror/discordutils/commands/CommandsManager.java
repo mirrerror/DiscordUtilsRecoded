@@ -88,6 +88,10 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
         commands.put(command, subCommands);
     }
 
+    public void registerSubCommands(String command, List<SubCommand> subCommands) {
+        for(SubCommand subCommand : subCommands) registerSubCommand(command, subCommand);
+    }
+
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> results = new ArrayList<>();
