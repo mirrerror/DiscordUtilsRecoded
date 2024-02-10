@@ -72,8 +72,8 @@ public class ForceUnlink implements SubCommand {
     }
 
     @Override
-    public Message getIncorrectUsageErrorMessage() {
-        return Message.DISCORDUTILSADMIN_FORCEUNLINK_USAGE;
+    public String getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILSADMIN_FORCEUNLINK_USAGE.getText(true);
     }
 
 }

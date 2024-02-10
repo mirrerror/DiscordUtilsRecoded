@@ -76,8 +76,8 @@ public class GetDiscord implements SubCommand {
     }
 
     @Override
-    public Message getIncorrectUsageErrorMessage() {
-        return Message.DISCORDUTILS_GETDISCORD_USAGE;
+    public String getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_GETDISCORD_USAGE.getText(true);
     }
 
 }

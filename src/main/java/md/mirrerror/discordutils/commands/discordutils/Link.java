@@ -71,8 +71,8 @@ public class Link implements SubCommand {
     }
 
     @Override
-    public Message getIncorrectUsageErrorMessage() {
-        return Message.DISCORDUTILS_LINK_USAGE;
+    public String getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_LINK_USAGE.getText(true);
     }
 
 }

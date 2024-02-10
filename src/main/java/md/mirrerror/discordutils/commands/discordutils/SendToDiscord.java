@@ -63,8 +63,8 @@ public class SendToDiscord implements SubCommand {
     }
 
     @Override
-    public Message getIncorrectUsageErrorMessage() {
-        return Message.DISCORDUTILS_SENDTODISCORD_USAGE;
+    public String getIncorrectUsageErrorMessage() {
+        return Message.DISCORDUTILS_SENDTODISCORD_USAGE.getText(true);
     }
 
 }
