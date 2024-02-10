@@ -48,7 +48,7 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 
                     if(sender.hasPermission(subCommand.getPermission()))
                         if(subCommand.getMinArgsNeeded() > newArgs.length)
-                            subCommand.getIncorrectUsageErrorMessage().send(sender, true);
+                            sender.sendMessage(subCommand.getIncorrectUsageErrorMessage());
                         else
                             subCommand.onCommand(sender, command, label, newArgs);
                     else
