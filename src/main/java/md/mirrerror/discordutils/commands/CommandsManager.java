@@ -28,7 +28,7 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 
             int newLength = 0;
 
-            if(args.length >= 1) newLength = args.length-1;
+            if(args.length >= 2) newLength = args.length-1;
 
             String[] newArgs = new String[newLength];
 
