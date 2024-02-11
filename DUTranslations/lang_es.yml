@@ -46,6 +46,7 @@ SECONDFACTOR_DISABLE_CANCELLED: 'La solicitud de desactivación de A2F ha sido c
 INVALID_PLAYER_NAME_OR_UNVERIFIED: 'El jugador dado no está verificado o no existe.'
 ONLINE: 'Jugadores conectados: **%online%**'
 MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE: 'El Data Manager que has querido migrar ha fallado al finalizar. Comprueba tus configuraciones.'
+SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE: 'La desactivación de A2F no está disponible para ti.'
 SUCCESSFULLY_MIGRATED: 'Has migrado correctamente todos tus datos a tu actual database.'
 SOMETHING_WENT_WRONG_WHILE_MIGRATING: 'Algo ha ocurrido cuando se intentó migrar los datos a tu actual database.'
 UNLINK_SLASH_COMMAND_DESCRIPTION: 'Desvincula la cuenta del juego en la cuenta del servidor.'
