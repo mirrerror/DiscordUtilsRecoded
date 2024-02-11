@@ -3,6 +3,7 @@ package md.mirrerror.discordutils.utils;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.data.DataManager;
+import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -96,6 +97,14 @@ public class Validator {
     public static boolean validateMigrateDataManager(CommandSender sender, DataManager dataManager) {
         if(dataManager == null) {
             Message.MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE.send(sender, true);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateSecondFactorDisablingAvailability(CommandSender sender, DiscordUtilsUser discordUtilsUser) {
+        if(!Main.getInstance().getBot().checkForcedSecondFactor(discordUtilsUser)) {
+            Message.SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE.send(sender, true);
             return false;
         }
         return true;
