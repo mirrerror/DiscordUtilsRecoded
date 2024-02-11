@@ -433,6 +433,15 @@ public class DiscordUtilsBot {
     }
 
     public void applySecondFactor(Player player, DiscordUtilsUser discordUtilsUser) {
+        if(!checkForcedSecondFactor(discordUtilsUser)) {
+            if(discordUtilsUser.isLinked()) {
+                discordUtilsUser.setSecondFactor(true);
+            } else {
+                md.mirrerror.discordutils.config.messages.Message.VERIFICATION_NEEDED.send(player, true);
+                return;
+            }
+        }
+
         if(discordUtilsUser.isSecondFactorEnabled() || !checkForcedSecondFactor(discordUtilsUser)) {
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 

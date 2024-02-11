@@ -60,6 +60,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE", "The data manager that you want to migrate from failed to initialize. Check your settings.");
         getFileConfiguration().addDefault("SUCCESSFULLY_MIGRATED", "You have successfully migrated all of your data to your current database.");
         getFileConfiguration().addDefault("SOMETHING_WENT_WRONG_WHILE_MIGRATING", "Something went wrong while migrating all of your data to your current database.");
+        getFileConfiguration().addDefault("SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE", "2FA disabling is not available for you.");
         getFileConfiguration().addDefault("ONLINE", "Players online: **%online%**");
         getFileConfiguration().addDefault("COMMAND_EXECUTED", "The command has been successfully executed.");
         getFileConfiguration().addDefault("VOICE_INVITE_SENT", "Invite has been successfully sent.");

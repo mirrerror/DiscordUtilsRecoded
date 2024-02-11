@@ -67,8 +67,6 @@ public class BukkitSecondFactorListener implements Listener {
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(!discordUtilsUser.isLinked()) return;
-
         bot.applySecondFactor(player, discordUtilsUser);
 
         if(botSettings.NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
@@ -241,6 +239,13 @@ public class BukkitSecondFactorListener implements Listener {
 
     private boolean checkVerification(Player player, Cancellable event) {
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
+
+        if(!bot.checkForcedSecondFactor(discordUtilsUser) && !discordUtilsUser.isLinked()) {
+            event.setCancelled(true);
+            Message.VERIFICATION_NEEDED.send(player, true);
+            return false;
+        }
+
         if(botSettings.FORCE_LINKING_ENABLED) {
             if(!discordUtilsUser.isLinked()) {
                 event.setCancelled(true);

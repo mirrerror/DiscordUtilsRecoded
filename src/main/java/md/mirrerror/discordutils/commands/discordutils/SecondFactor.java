@@ -33,6 +33,7 @@ public class SecondFactor implements SubCommand {
         if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
         if(discordUtilsUser.isSecondFactorEnabled()) {
+            if(!Validator.validateSecondFactorDisablingAvailability(sender, discordUtilsUser)) return;
 
             String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 

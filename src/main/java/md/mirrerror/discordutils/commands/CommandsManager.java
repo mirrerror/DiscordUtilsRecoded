@@ -12,10 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 
             int newLength = 0;
 
-            if(args.length >= 1) newLength = args.length-1;
+            if(args.length >= 2) newLength = args.length-1;
 
             String[] newArgs = new String[newLength];
 
@@ -72,7 +69,7 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
             return;
         }
 
-        commands.put(command, subCommands);
+        commands.put(command, new LinkedList<>(subCommands));
         plugin.getCommand(command).setExecutor(this);
         plugin.getCommand(command).setTabCompleter(this);
     }
