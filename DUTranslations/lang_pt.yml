@@ -46,6 +46,7 @@ SECONDFACTOR_DISABLE_CANCELLED: 'A solicitação de desativação do AM foi canc
 INVALID_PLAYER_NAME_OR_UNVERIFIED: 'O jogador fornecido não foi verificado ou não existe.'
 ONLINE: 'Jogadores conectados: **%online%**'
 MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE: 'O Data Manager que você deseja migrar não foi concluído. Verifique suas configurações.'
+SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE: 'A desativação do AM não está disponível para você.'
 SUCCESSFULLY_MIGRATED: 'Você migrou com sucesso todos os dados para o banco de dados atual.'
 SOMETHING_WENT_WRONG_WHILE_MIGRATING: 'Algo aconteceu quando você tentou migrar os dados para seu database atual.'
 UNLINK_SLASH_COMMAND_DESCRIPTION: 'Desvincule a conta do jogo da conta do servidor.'
