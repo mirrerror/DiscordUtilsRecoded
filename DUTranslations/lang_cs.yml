@@ -90,6 +90,7 @@ SECONDFACTOR_DISABLE_REQUEST_SENT: 'Žádost o vypnutí dvoufázového ověřov�
 SECONDFACTOR_DISABLE_CANCELLED: 'Žádost o vypnutí dvoufázového ověřování byla zrušena.'
 ONLINE: 'Aktivní hráči: **%online%**'
 MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE: 'Manažer dat, ze kterého chcete migrovat, se nepodařilo zprovoznit. Zkontrolujte Vaše nastavení.'
+SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE: 'Vypnutí 2FA je pro Vás nedostupně'
 SUCCESSFULLY_MIGRATED: 'Úspěšně jste migroval Vaše všechna data na Vaší aktuální databázi.'
 SOMETHING_WENT_WRONG_WHILE_MIGRATING: 'Něco se pokazilo během migrace Vašich dat na Vaší aktuální databázi.'
 UNLINK_SLASH_COMMAND_DESCRIPTION: 'Odpojí Váš herní účet z Vašeho účtu na serveru.'
