@@ -34,8 +34,6 @@ public class DiscordSecondFactorListener extends ListenerAdapter {
         if(event.getUser().equals(bot.getJda().getSelfUser())) return;
         if(!event.getChannel().asPrivateChannel().equals(event.getUser().openPrivateChannel().complete())) return;
 
-        event.getInteraction().deferReply().queue();
-
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUser().getIdLong());
         if(!discordUtilsUser.isLinked()) return;
 

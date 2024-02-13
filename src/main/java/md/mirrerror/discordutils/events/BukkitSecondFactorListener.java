@@ -97,17 +97,7 @@ public class BukkitSecondFactorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        Player player = event.getPlayer();
-        DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-
-        if(bot.getSecondFactorPlayers().containsKey(player.getUniqueId()) ||
-                botSettings.FORCE_LINKING_ENABLED && !discordUtilsUser.isLinked()) {
-
-            if(!isAllowedCommand(event.getMessage().substring(1))) {
-                performChecks(event.getPlayer(), event);
-            }
-
-        }
+        if(!isAllowedCommand(event.getMessage().substring(1))) performChecks(event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
