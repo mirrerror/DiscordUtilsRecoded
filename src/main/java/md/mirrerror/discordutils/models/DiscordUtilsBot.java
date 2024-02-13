@@ -22,8 +22,11 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IDeferrableCallback;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -399,7 +402,7 @@ public class DiscordUtilsBot {
                 .whenComplete((msg, error) -> {
                     if (error == null) {
                         if (channel instanceof InteractionHook) {
-                            ((InteractionHook) channel).sendMessageEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
+                            ((InteractionHook) channel).editOriginalEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
                         } else if (channel instanceof MessageChannelUnion) {
                             ((MessageChannelUnion) channel).sendMessageEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
                         } else {
@@ -409,7 +412,7 @@ public class DiscordUtilsBot {
                         linkCodes.put(code.get(), user.getIdLong());
                     } else {
                         if (channel instanceof InteractionHook) {
-                            ((InteractionHook) channel).sendMessageEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
+                            ((InteractionHook) channel).editOriginalEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
                         } else if (channel instanceof MessageChannelUnion) {
                             ((MessageChannelUnion) channel).sendMessageEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
                         } else {
@@ -599,6 +602,12 @@ public class DiscordUtilsBot {
 
     public boolean isSecondFactorAuthorized(OfflinePlayer offlinePlayer) {
         return !secondFactorPlayers.containsKey(offlinePlayer.getUniqueId());
+    }
+
+    public InteractionHook delayReply(IReplyCallback event, boolean isEphemeral) {
+        event.deferReply(isEphemeral).queue();
+        event.getHook().editOriginalEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.WAITING_FOR_THE_RESPONSE.getText())).queue();
+        return event.getHook();
     }
 
 }
