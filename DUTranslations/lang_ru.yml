@@ -115,6 +115,7 @@ ERROR: Ошибка
 INFORMATION: Информация
 SUCCESSFULLY: Успешно
 EMBED_FOOTER: Bot by mirrerror
+WAITING_FOR_THE_RESPONSE: 'Ожидание ответа...'
 STATS_FORMAT:
 - 'Ник: %player_name%'
 - 'Последний заход на сервер: %player_last_join_date%'
