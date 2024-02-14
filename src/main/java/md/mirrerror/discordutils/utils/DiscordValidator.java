@@ -27,7 +27,7 @@ public class DiscordValidator {
 
     public static boolean validateLinkedUser(InteractionHook interactionHook, DiscordUtilsUser discordUtilsUser) {
         if(!discordUtilsUser.isLinked()) {
-            interactionHook.sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
+            interactionHook.editOriginalEmbeds(embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText())).queue();
             return false;
         }
         return true;
@@ -43,7 +43,7 @@ public class DiscordValidator {
 
     public static boolean validateNotLinkedUser(InteractionHook interactionHook, DiscordUtilsUser discordUtilsUser) {
         if(discordUtilsUser.isLinked()) {
-            interactionHook.sendMessageEmbeds(embedManager.errorEmbed(Message.ACCOUNT_ALREADY_VERIFIED.getText())).queue();
+            interactionHook.editOriginalEmbeds(embedManager.errorEmbed(Message.ACCOUNT_ALREADY_VERIFIED.getText())).queue();
             return false;
         }
         return true;
@@ -59,7 +59,7 @@ public class DiscordValidator {
 
     public static boolean validateColor(InteractionHook interactionHook, Color color) {
         if(color == null) {
-            interactionHook.sendMessageEmbeds(embedManager.errorEmbed(Message.INVALID_COLOR_VALUE.getText())).queue();
+            interactionHook.editOriginalEmbeds(embedManager.errorEmbed(Message.INVALID_COLOR_VALUE.getText())).queue();
             return false;
         }
         return true;
@@ -97,7 +97,7 @@ public class DiscordValidator {
 
     public static boolean validateLinkAvailability(InteractionHook interactionHook, User user) {
         if(Main.getInstance().getBot().getLinkCodes().containsValue(user.getIdLong())) {
-            interactionHook.sendMessageEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
+            interactionHook.editOriginalEmbeds(embedManager.errorEmbed(Message.LINK_ALREADY_INITIATED.getText())).queue();
             return false;
         }
         return true;
@@ -113,7 +113,7 @@ public class DiscordValidator {
 
     public static boolean validateAdminPermissions(InteractionHook interactionHook, Guild guild, DiscordUtilsUser discordUtilsUser) {
         if(!discordUtilsUser.isAdmin(guild)) {
-            interactionHook.sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
+            interactionHook.editOriginalEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
             return false;
         }
         return true;

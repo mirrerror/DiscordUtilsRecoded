@@ -11,6 +11,7 @@ import md.mirrerror.discordutils.utils.DiscordValidator;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -73,12 +74,12 @@ public class SlashCommandsListener extends ListenerAdapter {
 
         switch(event.getName()) {
             case "link": {
-                event.deferReply().queue();
+                InteractionHook hook = bot.delayReply(event, false);
 
-                if(!DiscordValidator.validateNotLinkedUser(event.getHook(), discordUtilsUser)) return;
-                if(!DiscordValidator.validateLinkAvailability(event.getHook(), event.getUser())) return;
+                if(!DiscordValidator.validateNotLinkedUser(hook, discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkAvailability(hook, event.getUser())) return;
 
-                bot.startLinkingProcess(event.getUser(), event.getHook());
+                bot.startLinkingProcess(event.getUser(), hook);
 
                 break;
             }
@@ -87,22 +88,23 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "sudo": {
-                event.deferReply().queue();
+                InteractionHook hook = bot.delayReply(event, false);
 
-                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
-                if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkedUser(hook, discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(hook, event.getGuild(), discordUtilsUser)) return;
 
                 String command = event.getOption(Message.SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
 
                 Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
-                event.getHook().sendMessageEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText())).queue();
+
+                hook.editOriginalEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText())).queue();
                 break;
             }
             case "embed": {
-                event.deferReply().queue();
+                InteractionHook hook = bot.delayReply(event, false);
 
-                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
-                if(!DiscordValidator.validateAdminPermissions(event.getHook(), event.getGuild(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkedUser(hook, discordUtilsUser)) return;
+                if(!DiscordValidator.validateAdminPermissions(hook, event.getGuild(), discordUtilsUser)) return;
 
                 String title = event.getOption(Message.EMBED_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
                 String text = event.getOption(Message.EMBED_SLASH_COMMAND_THIRD_ARGUMENT_NAME.getText()).getAsString();
@@ -114,19 +116,19 @@ public class SlashCommandsListener extends ListenerAdapter {
                     color = null;
                 }
 
-                if(!DiscordValidator.validateColor(event.getHook(), color)) return;
+                if(!DiscordValidator.validateColor(hook, color)) return;
 
-                event.getHook().sendMessageEmbeds(embedManager.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
+                hook.editOriginalEmbeds(embedManager.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
                         event.getUser().getName()))).queue();
                 break;
             }
             case "stats": {
-                event.deferReply().queue();
+                InteractionHook hook = bot.delayReply(event, false);
 
                 OfflinePlayer player;
                 OptionMapping firstArg = event.getOption(Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText());
                 if(firstArg == null) {
-                    if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+                    if(!DiscordValidator.validateLinkedUser(hook, discordUtilsUser)) return;
                     player = discordUtilsUser.getOfflinePlayer();
                 } else {
                     player = Bukkit.getOfflinePlayer(firstArg.getAsString());
@@ -139,26 +141,26 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 messageToSend = new StringBuilder(papiManager.setPlaceholders(player, messageToSend.toString()));
 
-                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
+                hook.editOriginalEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
 
                 break;
             }
             case "help": {
-                event.deferReply().queue();
+                InteractionHook hook = bot.delayReply(event, false);
 
                 StringBuilder messageToSend = new StringBuilder();
                 for (String s : Message.DISCORD_HELP.getTextList()) {
                     messageToSend.append(s).append("\n");
                 }
 
-                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
+                hook.editOriginalEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
 
                 break;
             }
             case "unlink": {
-                event.deferReply().queue();
+                InteractionHook hook = bot.delayReply(event, false);
 
-                if(!DiscordValidator.validateLinkedUser(event.getHook(), discordUtilsUser)) return;
+                if(!DiscordValidator.validateLinkedUser(hook, discordUtilsUser)) return;
 
                 bot.unAssignVerifiedRole(discordUtilsUser.getUser().getIdLong());
 
@@ -170,7 +172,7 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 discordUtilsUser.unregister();
 
-                event.getHook().sendMessageEmbeds(embedManager.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText())).queue();
+                hook.editOriginalEmbeds(embedManager.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText())).queue();
 
                 break;
             }

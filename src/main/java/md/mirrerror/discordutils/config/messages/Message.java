@@ -81,6 +81,7 @@ public enum Message {
     INFORMATION(false),
     SUCCESSFULLY(false),
     EMBED_FOOTER(false),
+    WAITING_FOR_THE_RESPONSE(false),
     DISCORD_TO_CHAT_FORMAT(false),
     STATS_FORMAT(true),
     DISCORD_HELP(true),

@@ -77,6 +77,7 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("INFORMATION", "Information");
         getFileConfiguration().addDefault("SUCCESSFULLY", "Success");
         getFileConfiguration().addDefault("EMBED_FOOTER", "Bot by mirrerror");
+        getFileConfiguration().addDefault("WAITING_FOR_THE_RESPONSE", "Waiting for the response...");
         getFileConfiguration().addDefault("DISCORD_TO_CHAT_FORMAT", "&b%user%&7 (&b%player%&7)&f: %message%");
         getFileConfiguration().addDefault("STATS_FORMAT", Arrays.asList("Nickname: %player_name%",
                 "Last join date: %player_last_join_date%"));

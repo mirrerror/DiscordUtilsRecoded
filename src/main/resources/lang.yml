@@ -64,6 +64,7 @@ ERROR: 'Error'
 INFORMATION: 'Information'
 SUCCESSFULLY: 'Success'
 EMBED_FOOTER: 'Bot by mirrerror'
+WAITING_FOR_THE_RESPONSE: 'Waiting for the response...'
 DISCORD_TO_CHAT_FORMAT: '&b%user%&7 (&b%player%&7)&f: %message%'
 STATS_FORMAT:
   - 'Nickname: %player_name%'
