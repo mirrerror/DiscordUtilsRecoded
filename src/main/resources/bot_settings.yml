@@ -276,6 +276,10 @@ NamesSynchronization:
   DelayedNamesCheck:
     Enabled: true
     Delay: 30
+BansSynchronization:
+  Enabled: false
+  MinecraftToDiscord: false
+  DiscordToMinecraft: false
 GuildVoiceRewards:
   Enabled: false
   Time: 600

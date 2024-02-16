@@ -54,6 +54,9 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("NamesSynchronization.NamesSyncFormat", "%player%");
         getFileConfiguration().addDefault("NamesSynchronization.DelayedNamesCheck.Enabled", true);
         getFileConfiguration().addDefault("NamesSynchronization.DelayedNamesCheck.Delay", 30);
+        getFileConfiguration().addDefault("BansSynchronization.Enabled", false);
+        getFileConfiguration().addDefault("BansSynchronization.MinecraftToDiscord", false);
+        getFileConfiguration().addDefault("BansSynchronization.DiscordToMinecraft", false);
         getFileConfiguration().addDefault("GuildVoiceRewards.Enabled", true);
         getFileConfiguration().addDefault("GuildVoiceRewards.Time", 300);
         getFileConfiguration().addDefault("GuildVoiceRewards.Reward", "eco give %player% 100");

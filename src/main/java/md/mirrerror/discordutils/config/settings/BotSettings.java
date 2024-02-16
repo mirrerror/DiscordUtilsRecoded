@@ -71,6 +71,9 @@ public class BotSettings {
     public final String NAMES_SYNCHRONIZATION_FORMAT = config.getString("NamesSynchronization.NamesSyncFormat");
     public final boolean DELAYED_NAMES_CHECK_ENABLED = config.getBoolean("NamesSynchronization.DelayedNamesCheck.Enabled");
     public final long DELAYED_NAMES_CHECK_DELAY = config.getLong("NamesSynchronization.DelayedNamesCheck.Delay");
+    public final boolean BANS_SYNCHRONIZATION_ENABLED = config.getBoolean("BansSynchronization.Enabled");
+    public final boolean BANS_SYNCHRONIZATION_MINECRAFT_TO_DISCORD_ENABLED = config.getBoolean("BansSynchronization.MinecraftToDiscord");
+    public final boolean BANS_SYNCHRONIZATION_DISCORD_TO_MINECRAFT_ENABLED = config.getBoolean("BansSynchronization.DiscordToMinecraft");
     public final boolean GUILD_VOICE_REWARDS_ENABLED = config.getBoolean("GuildVoiceRewards.Enabled");
     public final long GUILD_VOICE_REWARDS_TIME = config.getLong("GuildVoiceRewards.Time");
     public final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");

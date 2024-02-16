@@ -12,6 +12,7 @@ import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.listeners.*;
 import md.mirrerror.discordutils.events.ChatToDiscordListener;
+import md.mirrerror.discordutils.events.PlayerBanListener;
 import md.mirrerror.discordutils.events.ServerActivityListener;
 import md.mirrerror.discordutils.events.custom.BotGetReadyEvent;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
@@ -308,6 +309,20 @@ public class DiscordUtilsBot {
 
             }
             plugin.getLogger().info("The Info Channels module has been successfully loaded.");
+
+            if(botSettings.BANS_SYNCHRONIZATION_ENABLED) {
+                if(botSettings.BANS_SYNCHRONIZATION_MINECRAFT_TO_DISCORD_ENABLED) {
+                    Bukkit.getPluginManager().registerEvents(new PlayerBanListener(plugin, this), plugin);
+                    plugin.getLogger().info("Minecraft to Discord bans synchronization has been successfully enabled.");
+                }
+                if(botSettings.BANS_SYNCHRONIZATION_DISCORD_TO_MINECRAFT_ENABLED) {
+                    Bukkit.getPluginManager().registerEvents(new DiscordBanListener(this), plugin);
+                    plugin.getLogger().info("Discord to Minecraft bans synchronization has been successfully enabled.");
+                }
+                plugin.getLogger().info("The Bans Synchronization module has been successfully enabled.");
+            } else {
+                plugin.getLogger().info("The Bans Synchronization module is disabled by the user.");
+            }
 
             plugin.getLogger().info("Bot has been successfully loaded.");
 
