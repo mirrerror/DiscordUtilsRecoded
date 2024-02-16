@@ -44,6 +44,7 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("Linking.ForceLinking", false);
         getFileConfiguration().addDefault("Linking.CommandsAfterLinking", Collections.emptyList());
         getFileConfiguration().addDefault("Linking.CommandsAfterUnlinking", Collections.emptyList());
+        getFileConfiguration().addDefault("Linking.CommandsAfterLeavingGuild", Collections.emptyList());
         getFileConfiguration().addDefault("Boosting.CommandsAfterServerBoosting", Collections.emptyList());
         getFileConfiguration().addDefault("Boosting.CommandsAfterStoppingServerBoosting", Collections.emptyList());
         getFileConfiguration().addDefault("RolesSynchronization.Enabled", true);

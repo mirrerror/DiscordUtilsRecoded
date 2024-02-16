@@ -100,6 +100,9 @@
 # CommandsAfterUnlinking
 # Commands that are performed after the player unlink his Discord account (%player% - placeholder for the player nickname)
 # ------------------------------------------------------------------
+# CommandsAfterLeavingGuild
+# Commands that are performed after the player leaves the Discord server (%player% - placeholder for the player nickname)
+# ------------------------------------------------------------------
 # CommandsAfterServerBoosting
 # Commands that are performed after the player start boosting your Discord server (%player% - placeholder for the player nickname, %user% - placeholder for the player's Discord nickname)
 # ------------------------------------------------------------------
@@ -121,6 +124,11 @@
 # DelayedNamesCheck - whether to enable or disable the nicknames check every Delay seconds (if it is disable, the plugin will check it only when players join and leave the server)
 # Enabled - true - enable, false - disable
 # Delay - checks delay
+# ------------------------------------------------------------------
+# BansSynchronization
+# Enabled - true - enable, false - disable
+# MinecraftToDiscord - whether to enable or not the synchronization of the bans from the Minecraft server to the Discord server
+# DiscordToMinecraft - whether to enable or not the synchronization of the bans from the Discord server to the Minecraft server
 # ------------------------------------------------------------------
 # GuildVoiceRewards
 # Whether to enable or not the reward giving for spending time in the voice channels on your server in Discord
@@ -261,6 +269,7 @@ Linking:
   ForceLinking: false
   CommandsAfterLinking: []
   CommandsAfterUnlinking: []
+  CommandsAfterLeavingGuild: []
 Boosting:
   CommandsAfterServerBoosting: []
   CommandsAfterStoppingServerBoosting: []

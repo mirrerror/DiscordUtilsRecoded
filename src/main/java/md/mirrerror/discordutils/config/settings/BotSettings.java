@@ -61,6 +61,7 @@ public class BotSettings {
     public final boolean FORCE_LINKING_ENABLED = config.getBoolean("Linking.ForceLinking");
     public final List<String> COMMANDS_AFTER_LINKING = config.getStringList("Linking.CommandsAfterLinking");
     public final List<String> COMMANDS_AFTER_UNLINKING = config.getStringList("Linking.CommandsAfterUnlinking");
+    public final List<String> COMMANDS_AFTER_LEAVING_GUILD = config.getStringList("Linking.CommandsAfterLeavingGuild");
     public final List<String> COMMANDS_AFTER_SERVER_BOOSTING = config.getStringList("CommandsAfterServerBoosting");
     public final List<String> COMMANDS_AFTER_STOPPING_SERVER_BOOSTING = config.getStringList("Boosting.CommandsAfterStoppingServerBoosting");
     public final boolean ROLES_SYNCHRONIZATION_ENABLED = config.getBoolean("RolesSynchronization.Enabled");
