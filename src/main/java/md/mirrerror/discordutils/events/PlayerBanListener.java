@@ -44,28 +44,4 @@ public class PlayerBanListener implements Listener {
         });
     }
 
-//    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-//    public void onKick(PlayerKickEvent event) {
-//        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-//            DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(event.getPlayer().getUniqueId());
-//            if(Bukkit.getBannedPlayers().contains(Bukkit.getOfflinePlayer(event.getPlayer().getUniqueId()))) {
-//                bot.getJda().getGuilds().forEach(guild -> {
-//                    Member member = guild.getMember(discordUtilsUser.getUser());
-//
-//                    if(member == null) return;
-//
-//                    guild.retrieveBan(discordUtilsUser.getUser()).queue(
-//                            success -> {},
-//                            failure -> {
-//                                if(guild.getSelfMember().canInteract(member))
-//                                    member.ban(0, TimeUnit.DAYS).queue();
-//                                else
-//                                    plugin.getLogger().warning("Couldn't ban " + member.getUser().getName() + " because of the hierarchy.");
-//                            }
-//                    );
-//                });
-//            }
-//        }, 20L);
-//    }
-
 }

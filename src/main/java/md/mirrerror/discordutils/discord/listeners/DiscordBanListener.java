@@ -45,22 +45,4 @@ public class DiscordBanListener implements Listener {
         });
     }
 
-//    @Override
-//    public void onGuildBan(@NotNull GuildBanEvent event) {
-//        DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUser().getIdLong());
-//        BanList banList = Bukkit.getBanList(BanList.Type.NAME);
-//
-//        if(discordUtilsUser.isLinked() && !banList.isBanned(discordUtilsUser.getOfflinePlayer().getName()))
-//            banList.addBan(discordUtilsUser.getOfflinePlayer().getName(), "Banned by Discord", null, "DiscordUtils");
-//    }
-//
-//    @Override
-//    public void onGuildUnban(@NotNull GuildUnbanEvent event) {
-//        DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getUser().getIdLong());
-//        BanList banList = Bukkit.getBanList(BanList.Type.NAME);
-//
-//        if(discordUtilsUser.isLinked() && banList.isBanned(discordUtilsUser.getOfflinePlayer().getName()))
-//            banList.pardon(discordUtilsUser.getOfflinePlayer().getName());
-//    }
-
 }
