@@ -1,0 +1,159 @@
+'YES': '&aigen'
+'NO': '&csem'
+PREFIX: '&9DiscordUtils &7/&f'
+INSUFFICIENT_PERMISSIONS: Hiányos jogosultságok.
+ACCOUNT_SUCCESSFULLY_LINKED: A fiókod sikeresen hitelesítve lett.
+ACCOUNT_UNLINK_REQUEST_SENT: Fiók feloldási kérés elküldve. Ellenőrizd a privát üzeneteket.
+ACCOUNT_SUCCESSFULLY_UNLINKED: A fiók sikeresen feloldva.
+ACCOUNT_UNLINK_CONFIRMATION: 'Valaki próbálja feloldani a fiókod. Válaszd ki, hogy
+  feloldjam-e a fiókodat vagy sem. IP: %playerIp%.'
+SECONDFACTOR_DISABLE_CONFIRMATION: 'Valaki próbálja letiltani a kétlépcsős azonosítást
+  a fiókodban. Válaszd ki, hogy megtegyem-e ezt vagy sem. IP: %playerIp%.'
+SECONDFACTOR_DISABLE_REQUEST_SENT: A kétlépcsős azonosítás letiltási kérése elküldve.
+  Ellenőrizd a privát üzeneteket.
+SECONDFACTOR_DISABLE_CANCELLED: A kétlépcsős azonosítás letiltási kérelem törölve.
+ACCOUNT_UNLINK_CANCELLED: A fiók feloldási kérelem törölve.
+INVALID_LINK_CODE: Érvénytelen kód.
+SECONDFACTOR_REJECTED: A fióktulajdonos elutasította a fiók hitelesítését.
+SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED: Nem sikerült átmenned a kétlépcsős azonosításon.
+  Kérlek, próbáld újra.
+ACCOUNT_ALREADY_VERIFIED: A fiókod már hitelesítve van.
+DISCORDUTILS_LINK_USAGE: 'Használat: &b/discordutils link [kód]'
+DISCORDUTILS_GETDISCORD_USAGE: 'Használat: &b/discordutils getdiscord [játékos]'
+GETDISCORD_SUCCESSFUL: 'Játékos linkelt Discord fiókja: &b%discord%'
+SENDER_IS_NOT_A_PLAYER: Csak játékosok használhatják ezt a parancsot.
+CONFIG_FILES_RELOADED: Konfigurációs fájlok újratöltve.
+ACCOUNT_IS_NOT_VERIFIED: A fióknak hitelesítve kell lennie ahhoz, hogy ezt megtehesd.
+ENABLED: '&aengedélyezve'
+DISABLED: '&ckikapcsolva'
+DISCORDUTILS_SECONDFACTOR_SUCCESSFUL: '2FA: %állapot%'
+SECONDFACTOR_NEEDED: Hitelesítened kell. Ellenőrizd a Discord privát üzeneteidet.
+SECONDFACTOR_NEEDED_KICK: Hitelesítened kell. Ellenőrizd a Discord privát üzeneteidet.
+VERIFICATION_NEEDED: Hitelesítened kell a fiókodat. Ehhez használd a '&b!link&f'
+  parancsot a Discord szerverünkön.
+SECONDFACTOR_AUTHORIZED: Sikeresen hitelesítetted magad. Kellemes időtöltést!
+SECONDFACTOR_CODE_MESSAGE: 'Az azonosítási kódod: || %code% ||. Ne mutasd meg
+  senkinek! IP: %playerIp%.'
+SECONDFACTOR_REACTION_MESSAGE: 'Valaki belépni próbál a fiókodba. Válaszd ki, hogy
+  engedélyezzem-e vagy sem. IP: %playerIp%.'
+SECONDFACTOR_DISABLED_REMINDER: '&cFigyelem!&f A 2FA letiltva van. Javasoljuk,
+  hogy kapcsold be azért, hogy biztonságosabbá tedd a fiókodat. Ehhez használd ezt
+  a parancsot: &b/discordutils twofactor'
+VERIFICATION_MESSAGE: A hitelesítési kódot elküldtük neked. Ellenőrizd a privát üzeneteidet.
+VERIFICATION_CODE_MESSAGE: 'A hitelesítési kódod: || %code% ||. Ne mutasd meg senkinek!
+  A hitelesítési folyamat befejezéséhez használd ezt a parancsot a szerveren: /discordutils
+  link [kód].'
+CAN_NOT_SEND_MESSAGE: Nem tudok üzenetet küldeni neked. Valószínűleg le vannak
+  zárva a privát üzeneteid.
+UNKNOWN_SUBCOMMAND: Ismeretlen alparancs.
+LINK_ALREADY_INITIATED: Már kértél hitelesítési kódot.
+UNLINK_ALREADY_INITIATED: Már elkezdtél egy fiók feloldási folyamatot. Ellenőrizd
+  a Discord privát üzeneteidet.
+DISCORDUTILS_SENDTODISCORD_USAGE: 'Használat: &b/discordutils sendtodiscord [cím] [szín]
+  [szöveg]'
+SENDTODISCORD_SENT_BY: 'Küldte: %sender%'
+DISCORDUTILS_SENDTODISCORD_SUCCESSFUL: Sikeresen elküldted az üzenetet a Discordra.
+DISCORDUTILSADMIN_FORCEUNLINK_USAGE: 'Használat: &b/discordutilsadmin forceunlink
+  [játékos]'
+DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_SENDER: Sikeresen feloldottad %target%
+  linkelt fiókját.
+DISCORDUTILSADMIN_FORCEUNLINK_SUCCESSFUL_TO_TARGET: A Discord fiókodat sikeresen
+  feloldották az in-game fiókodból %sender% által.
+COMMAND_DISABLED: Ez a parancs letiltva a szerver adminisztrátorai által.
+INVALID_COLOR_VALUE: Érvénytelen színérték.
+INVALID_PLAYER_NAME_OR_UNVERIFIED: A megadott játékos nincs hitelesítve vagy nem
+  létezik.
+PLUGIN_IS_NOT_READY_YET: '&cA szerver még betöltődik, kérlek várj egy kicsit, majd
+  próbálkozz újra a csatlakozással.'
+MIGRATE_DATA_MANAGER_FAILED_TO_INITIALIZE: Az adatkezelő, amelyből szeretnéd migrálni
+  az adatokat, nem inicializálódott. Ellenőrizd a beállításokat.
+SUCCESSFULLY_MIGRATED: Sikeresen átmigráltad az összes adatot az aktuális adatbázisodba.
+SOMETHING_WENT_WRONG_WHILE_MIGRATING: Valami hiba történt az összes adat átmigrálása
+  közben az aktuális adatbázisodba.
+SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE: A 2FA letiltása nem elérhető számodra.
+ONLINE: 'Online játékosok: **%online%**'
+COMMAND_EXECUTED: A parancs sikeresen végrehajtva.
+VOICE_INVITE_SENT: A meghívó sikeresen elküldve.
+VOICE_INVITE: A játékos &b%sender%&f meghív minden online játékost beszélgetésre
+  a hangcsatornában. &bKattints&f erre az üzenetre a csatlakozáshoz a hangcsatornához.
+VOICE_INVITE_HOVER: '&bKattints&f a hangcsatornához való csatlakozáshoz.'
+SENDER_IS_NOT_IN_A_VOICE_CHANNEL: Nem vagy hangcsatornában.
+UNKNOWN_ERROR: Ismeretlen hiba.
+COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL: Ebben a csatornában nem használhatsz
+  parancsokat.
+THIS_COMMAND_IS_BLACKLISTED: Ez a parancs tiltólistán van.
+CHANNEL_DOES_NOT_EXIST: Nincs ilyen azonosítójú csatorna.
+TARGET_IS_OFFLINE: A megadott játékos offline.
+EMBED_SENT_BY: 'Küldte: %sender%'
+ERROR: Hiba
+INFORMATION: Információ
+SUCCESSFULLY: Sikeresen
+EMBED_FOOTER: Bot készítője: mirrerror
+WAITING_FOR_THE_RESPONSE: Várok a válaszra...
+DISCORD_TO_CHAT_FORMAT: '&b%user%&7 (&b%player%&7)&f: %message%'
+STATS_FORMAT:
+- 'Becenév: %player_name%'
+- 'Utolsó csatlakozás dátuma: %player_last_join_date%'
+DISCORD_HELP:
+- '**Elérhető parancsok:**'
+- '**/link** — összeköti a Discord fiókodat az in-game fiókoddal'
+- '**/online** — megmutatja az aktuális szerveren lévő online játékosok számát'
+- '**/stats [játékos]** — megmutatja a saját vagy más játékos adatait (ha nem
+  adsz meg játékost, a saját adataidat jeleníti meg)'
+- '**/sudo [parancs]** — lehetővé teszi parancsok futtatását konzolként (csak
+  adminoknak)'
+- '**/embed [cím] [szín] [szöveg]** — beágyazott üzenet küldése (csak adminoknak)'
+HELP:
+- '&9DiscordUtils&f plugin segítség:'
+- '&7-&b /du help&f - segítség parancs'
+- '&7-&b /du link [kód]&f - összeköti a Discord fiókodat a szerver fiókoddal'
+- '&7-&b /du unlink&f - feloldja a Discord fiókodat a szerver fiókoddal való összeköttetésből'
+- '&7-&b /du 2fa&f - engedélyezi/letiltja a kétlépcsős azonosítást'
+- '&7-&b /du sendtodiscord [csatorna] [cím] [szín] [szöveg]&f - beágyazott üzenet
+  küldése a Discord szerverre'
+- '&7-&b /du voiceinvite&f - meghív minden online játékost beszélgetésre a hangcsatornába'
+- '&7-&b /du getdiscord [játékos]&f - ellenőrzi a játékos linkelt Discord fiókját'
+- '&7-&b /dua reload&f - újratölti a konfigurációs fájlokat'
+- '&7-&b /dua forceunlink [játékos]&f - feloldja egy játékos Discord fiókját
+  az in-game fiókjából'
+- '&7-&b /dua stats&f - ellenőrzi az admin statisztikákat'
+- '&7-&b /dua migrate&f - migrál a konfigurációs adatbázisból az aktuális adatkezelődbe
+  (ez a beállítás felülírja az esetlegesen már létező felhasználókat)'
+DISCORDUTILSADMIN_STATS_FORMAT:
+- '&9DiscordUtils&f plugin statisztika:'
+- '&7-&f Összekötött játékosok: &b%linkedPlayers%'
+CHAT_LOGGING_EMBED_TITLE: 'Chat üzenet feladója: %player%'
+CHAT_LOGGING_EMBED_TEXT: '%message%'
+JOIN_LOGGING_EMBED_TITLE: Csatlakozás
+JOIN_LOGGING_EMBED_TEXT: '%player% csatlakozott a szerverhez'
+QUIT_LOGGING_EMBED_TITLE: Kijelentkezés
+QUIT_LOGGING_EMBED_TEXT: '%player% kijelentkezett a szerverről'
+DEATH_LOGGING_EMBED_TITLE: Halál
+DEATH_LOGGING_EMBED_TEXT: '%player% meghalt'
+'true': '&aigen'
+'false': '&csem'
+NOT_AVAILABLE: '&cnem elérhető'
+LINK_SLASH_COMMAND_DESCRIPTION: Összeköti az in-game fiókodat a szerver fiókoddal.
+UNLINK_SLASH_COMMAND_DESCRIPTION: Feloldja az in-game fiókodat a szerver fiókoddal
+  való összeköttetésből.
+ONLINE_SLASH_COMMAND_DESCRIPTION: Elküldi az aktuálisan online lévő játékosok
+  számát a szerveren.
+SUDO_SLASH_COMMAND_DESCRIPTION: Lehetővé teszi konzol parancsok végrehajtását a
+  Discordról.
+SUDO_SLASH_COMMAND_FIRST_ARGUMENT_NAME: parancs
+SUDO_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: A végrehajtandó parancs.
+EMBED_SLASH_COMMAND_DESCRIPTION: Beágyazott üzenet küldése a megadott paraméterekkel
+  az aktuális csatornában.
+EMBED_SLASH_COMMAND_FIRST_ARGUMENT_NAME: cím
+EMBED_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: A beágyazott üzenet címe.
+EMBED_SLASH_COMMAND_SECOND_ARGUMENT_NAME: szín
+EMBED_SLASH_COMMAND_SECOND_ARGUMENT_DESCRIPTION: A beágyazott üzenet színe.
+EMBED_SLASH_COMMAND_THIRD_ARGUMENT_NAME: szöveg
+EMBED_SLASH_COMMAND_THIRD_ARGUMENT_DESCRIPTION: A beágyazott üzenet szövege.
+STATS_SLASH_COMMAND_DESCRIPTION: A saját vagy más játékos adatainak megjelenítése
+  (ha meg van adva).
+STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME: név
+STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION: Játékos neve.
+HELP_SLASH_COMMAND_DESCRIPTION: Elküldi a parancsok listáját.
+ACCEPT: Elfogad
+DECLINE: Elutasít
