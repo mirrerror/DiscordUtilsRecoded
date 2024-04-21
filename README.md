@@ -29,9 +29,9 @@ DiscordUtils is a powerful plugin that enables you to seamlessly integrate a Dis
 - **Set Discord Channel Names to Update Every N Seconds Using PlaceholderAPI Placeholders**: Dynamically update Discord channel names using PlaceholderAPI placeholders.
 - **Extend the Functionality of the Plugin with Your Own Addon Using DiscordUtils API**: Develop custom addons to enhance the plugin's functionality.
 
-## Installation
+## Developers API
 
-To install DiscordUtils, simply add the following dependency to your project:
+To install DiscordUtils into your project, simply add the following dependency to your project:
 
 ### Maven
 
