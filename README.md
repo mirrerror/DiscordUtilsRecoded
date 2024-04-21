@@ -15,7 +15,19 @@ DiscordUtils is a powerful plugin that enables you to seamlessly integrate a Dis
 - **Event Logging**: Log important events such as player joins, quits, deaths, and chats.
 - **Discord-Minecraft Chat Integration**: Facilitate communication between Discord users and Minecraft players.
 - **Hex Color Customization**: Customize colors using hex values.
-- **Plugin Extensibility**: Extend functionality with your own addons using DiscordUtils API.
+- **Generate invites in voice channels in-game**: Allow players to generate invites for voice channels within the game.
+- **Display Animated Bot Activity**: Show animated activity for the Discord bot.
+- **Integrate PlaceholderAPI with Custom PAPI Placeholders**: Extend functionality by integrating PlaceholderAPI with custom placeholders.
+- **Create a Virtual Console on Your Discord Server**: Admins can execute commands and view the full console log from Discord.
+- **Log Events from the Minecraft Server to Your Discord Server**: Log various events such as player joins, quits, deaths, and chats.
+- **Notify Verified Players about Mentions from Discord In-Game**: Keep players informed about mentions in Discord while in-game.
+- **Support for Slash Commands**: Utilize slash commands for better command management.
+- **Establish a Chat Between Your Minecraft Players and Linked Discord Users**: Enable communication between Minecraft players and linked Discord users.
+- **Force Specific Groups or Roles to Undergo 2FA**: Ensure specific groups or roles undergo 2FA for added security.
+- **Choose and Download Official Translations Directly from the Bot Settings File**: Access official translations directly from the bot settings file.
+- **Create Custom Triggers for In-Game Events**: Customize triggers for in-game events according to your preferences.
+- **Set Discord Channel Names to Update Every N Seconds Using PlaceholderAPI Placeholders**: Dynamically update Discord channel names using PlaceholderAPI placeholders.
+- **Extend the Functionality of the Plugin with Your Own Addon Using DiscordUtils API**: Develop custom addons to enhance the plugin's functionality.
 
 ## Installation
 
@@ -81,7 +93,7 @@ For a comprehensive guide on API usage, refer to the [API Usage Example](https:/
 
 ## Support
 
-If you encounter any issues or require technical assistance, feel free to join the DiscordUtils community on [Discord](https://discord.gg/47txjnVtz7) and create a ticket.
+If you encounter any issues or require technical assistance, feel free to join the DiscordUtils community on [Discord](https://discord.gg/47txjnVtz7) and create a ticket. Your support is highly appreciated and will greatly motivate further updates to the plugin.
 
 ## Donation
 
