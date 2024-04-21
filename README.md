@@ -81,7 +81,7 @@ For a comprehensive guide on API usage, refer to the [API Usage Example](https:/
 
 ## Support
 
-If you encounter any issues or require technical assistance, feel free to join the DiscordUtils community on [Discord](https://discord.gg/47txjnVtz7) and create a ticket. Your support is highly appreciated and will greatly motivate further updates to the plugin.
+If you encounter any issues or require technical assistance, feel free to join the DiscordUtils community on [Discord](https://discord.gg/47txjnVtz7) and create a ticket.
 
 ## Donation
 
