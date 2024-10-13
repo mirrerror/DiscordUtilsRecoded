@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.events;
 
+import de.leonhard.storage.Config;
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.EmbedManager;
@@ -9,7 +10,6 @@ import md.mirrerror.discordutils.utils.ExpressionManager;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -32,11 +32,11 @@ public class CustomTriggersListener implements Listener {
 
     private final Plugin plugin;
     private final DiscordUtilsBot bot;
-    private final FileConfiguration botSettingsConfig;
+    private final Config botSettingsConfig;
     private final EmbedManager embedManager;
     private final PAPIManager papiManager;
 
-    public CustomTriggersListener(Plugin plugin, DiscordUtilsBot bot, FileConfiguration botSettingsConfig, BotSettings botSettings, PAPIManager papiManager) {
+    public CustomTriggersListener(Plugin plugin, DiscordUtilsBot bot, Config botSettingsConfig, BotSettings botSettings, PAPIManager papiManager) {
         this.plugin = plugin;
         this.bot = bot;
         this.botSettingsConfig = botSettingsConfig;
@@ -68,7 +68,7 @@ public class CustomTriggersListener implements Listener {
 
         Set<String> entries = new HashSet<>();
 
-        for(String entry : botSettingsConfig.getConfigurationSection("CustomTriggers.InGameEvents").getKeys(false)) {
+        for(String entry : botSettingsConfig.getSection("CustomTriggers.InGameEvents").singleLayerKeySet()) {
             if(botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".TriggerOn")
                     .equalsIgnoreCase(event.getEventName())) {
                 entries.add(entry);

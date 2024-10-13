@@ -1,25 +1,24 @@
 package md.mirrerror.discordutils.config.settings;
 
+import de.leonhard.storage.Config;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import net.dv8tion.jda.api.OnlineStatus;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BotSettings {
 
-    private static final FileConfiguration config = Main.getInstance().getConfigManager().getBotSettings().getFileConfiguration();
+    private static final Config config = Main.getInstance().getConfigManager().getBotSettings().getConfig();
 
     public final String BOT_TOKEN = config.getString("MainSettings.BotToken");
     public final List<Long> BOT_COMMAND_TEXT_CHANNELS = config.getLongList("MainSettings.BotCommandTextChannels");
     public final boolean ASYNC_BOT_LOADING = config.getBoolean("MainSettings.AsyncBotLoading");
     public final OnlineStatus ONLINE_STATUS = OnlineStatus.fromKey(config.getString("MainSettings.OnlineStatus"));
-    public final boolean ACTIVITIES_ENABLED = config.getBoolean("Activities.Enabled");
+    public final boolean ACTIVITIES_ENABLED = config.getBoolean("Activities.ActivitiesEnabled");
     public final long ACTIVITIES_UPDATE_DELAY = config.getLong("Activities.UpdateDelay");
     public final Color SUCCESSFUL_EMBED_COLOR = Color.decode(config.getString("EmbedMessages.SuccessfulEmbedColor"));
     public final Color INFORMATION_EMBED_COLOR = Color.decode(config.getString("EmbedMessages.InformationEmbedColor"));
@@ -28,15 +27,15 @@ public class BotSettings {
     {
         GROUP_ROLES = new HashMap<>();
 
-        for(String role : config.getConfigurationSection("Roles.GroupRoles").getKeys(false)) {
+        for(String role : config.getSection("Roles.GroupRoles").singleLayerKeySet()) {
             try {
-                if(config.isList("Roles.GroupRoles." + role)) {
+//                if(config.isList("Roles.GroupRoles." + role)) {
                     GROUP_ROLES.put(Long.parseLong(role), config.getStringList("Roles.GroupRoles." + role));
-                } else {
-                    List<String> groups = new ArrayList<>();
-                    groups.add(config.getString("Roles.GroupRoles." + role));
-                    GROUP_ROLES.put(Long.parseLong(role), groups);
-                }
+//                } else {
+//                    List<String> groups = new ArrayList<>();
+//                    groups.add(config.getString("Roles.GroupRoles." + role));
+//                    GROUP_ROLES.put(Long.parseLong(role), groups);
+//                }
             } catch (NumberFormatException ignored) {
                 Main.getInstance().getLogger().warning("Found an unknown role ID in the group roles section: " + role + ". Skipping it...");
             }

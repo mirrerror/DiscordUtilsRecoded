@@ -2,7 +2,6 @@ package md.mirrerror.discordutils.data;
 
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.customconfigs.DataConfig;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
@@ -24,31 +23,29 @@ public class ConfigDataManager implements DataManager {
     @Override
     public CompletableFuture<Void> registerUser(UUID uuid, long userId, boolean secondFactor) {
         return CompletableFuture.runAsync(() -> {
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".UserID", userId);
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".2FA", secondFactor);
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
-            dataConfig.saveConfigFile();
+            dataConfig.getConfig().set("DiscordLink." + uuid + ".UserID", userId);
+            dataConfig.getConfig().set("DiscordLink." + uuid + ".2FA", secondFactor);
+            dataConfig.getConfig().set("DiscordLink." + uuid + ".LastBoostingTime", "");
         });
     }
 
     @Override
     public CompletableFuture<Void> unregisterUser(UUID uuid) {
         return CompletableFuture.runAsync(() -> {
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid, null);
-            dataConfig.saveConfigFile();
+            dataConfig.getConfig().set("DiscordLink." + uuid, null);
         });
     }
 
     @Override
     public CompletableFuture<Boolean> userExists(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false).contains(uuid.toString()));
+        return CompletableFuture.supplyAsync(() -> dataConfig.getConfig().getSection("DiscordLink").singleLayerKeySet().contains(uuid.toString()));
     }
 
     @Override
     public CompletableFuture<Boolean> userLinked(long userId) {
         return CompletableFuture.supplyAsync(() -> {
-            for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false))
-                if(dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID") == userId) return true;
+            for(String entry : dataConfig.getConfig().getSection("DiscordLink").singleLayerKeySet())
+                if(dataConfig.getConfig().getLong("DiscordLink." + entry + ".UserID") == userId) return true;
             return false;
         });
     }
@@ -56,8 +53,8 @@ public class ConfigDataManager implements DataManager {
     @Override
     public CompletableFuture<UUID> getPlayerUniqueId(long userId) {
         return CompletableFuture.supplyAsync(() -> {
-            for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false))
-                if(dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID") == userId) return UUID.fromString(entry);
+            for(String entry : dataConfig.getConfig().getSection("DiscordLink").singleLayerKeySet())
+                if(dataConfig.getConfig().getLong("DiscordLink." + entry + ".UserID") == userId) return UUID.fromString(entry);
             return null;
         });
     }
@@ -65,34 +62,31 @@ public class ConfigDataManager implements DataManager {
     @Override
     public CompletableFuture<Void> setSecondFactor(UUID uuid, boolean secondFactor) {
         return CompletableFuture.runAsync(() -> {
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".2FA", secondFactor);
-            dataConfig.saveConfigFile();
+            dataConfig.getConfig().set("DiscordLink." + uuid + ".2FA", secondFactor);
         });
     }
 
     @Override
     public CompletableFuture<Boolean> hasSecondFactor(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> dataConfig.getFileConfiguration().getBoolean("DiscordLink." + uuid + ".2FA"));
+        return CompletableFuture.supplyAsync(() -> dataConfig.getConfig().getBoolean("DiscordLink." + uuid + ".2FA"));
     }
 
     @Override
     public CompletableFuture<Void> setDiscordUserId(UUID uuid, long userId) {
         return CompletableFuture.runAsync(() -> {
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".UserID", userId);
-            dataConfig.saveConfigFile();
+            dataConfig.getConfig().set("DiscordLink." + uuid + ".UserID", userId);
         });
     }
 
     @Override
     public CompletableFuture<Long> getDiscordUserId(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> dataConfig.getFileConfiguration().getLong("DiscordLink." + uuid + ".UserID"));
+        return CompletableFuture.supplyAsync(() -> dataConfig.getConfig().getLong("DiscordLink." + uuid + ".UserID"));
     }
 
     @Override
     public CompletableFuture<Void> setLastBoostingTime(UUID uuid, OffsetDateTime lastBoostingTime) {
         return CompletableFuture.runAsync(() -> {
-            dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", lastBoostingTime.toString());
-            dataConfig.saveConfigFile();
+            dataConfig.getConfig().set("DiscordLink." + uuid + ".LastBoostingTime", lastBoostingTime.toString());
         });
     }
 
@@ -101,10 +95,9 @@ public class ConfigDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
             OffsetDateTime lastBoostingTime;
 
-            String rawBoostingTime = dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime");
+            String rawBoostingTime = dataConfig.getConfig().getString("DiscordLink." + uuid + ".LastBoostingTime");
             if(rawBoostingTime == null) {
-                dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
-                dataConfig.saveConfigFile();
+                dataConfig.getConfig().set("DiscordLink." + uuid + ".LastBoostingTime", "");
                 return null;
             }
 
@@ -122,8 +115,8 @@ public class ConfigDataManager implements DataManager {
     public CompletableFuture<Long> countLinkedUsers() {
         return CompletableFuture.supplyAsync(() -> {
             long count = 0;
-            for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false))
-                if(dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID") > 0) count += 1;
+            for(String entry : dataConfig.getConfig().getSection("DiscordLink").singleLayerKeySet())
+                if(dataConfig.getConfig().getLong("DiscordLink." + entry + ".UserID") > 0) count += 1;
             return count;
         });
     }
@@ -132,12 +125,10 @@ public class ConfigDataManager implements DataManager {
     public CompletableFuture<Void> performUserBatchUpdate(List<UserBatchUpdateEntry> newUsers) {
         return CompletableFuture.runAsync(() -> {
             for(UserBatchUpdateEntry entry : newUsers) {
-                dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".UserID", entry.getUserId());
-                dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".2FA", entry.isSecondFactorEnabled());
-                dataConfig.getFileConfiguration().set("DiscordLink." + entry.getUuid() + ".LastBoostingTime", entry.getLastTimeBoosted());
+                dataConfig.getConfig().set("DiscordLink." + entry.getUuid() + ".UserID", entry.getUserId());
+                dataConfig.getConfig().set("DiscordLink." + entry.getUuid() + ".2FA", entry.isSecondFactorEnabled());
+                dataConfig.getConfig().set("DiscordLink." + entry.getUuid() + ".LastBoostingTime", entry.getLastTimeBoosted());
             }
-
-            dataConfig.saveConfigFile();
         });
     }
 
@@ -147,7 +138,7 @@ public class ConfigDataManager implements DataManager {
 
             List<UserBatchUpdateEntry> batchUpdateEntries = new LinkedList<>();
 
-            for(String entry : dataConfig.getFileConfiguration().getConfigurationSection("DiscordLink").getKeys(false)) {
+            for(String entry : dataConfig.getConfig().getSection("DiscordLink").singleLayerKeySet()) {
                 UUID uuid;
 
                 try {
@@ -156,15 +147,14 @@ public class ConfigDataManager implements DataManager {
                     continue;
                 }
 
-                long userId = dataConfig.getFileConfiguration().getLong("DiscordLink." + entry + ".UserID");
-                boolean isSecondFactorEnabled = dataConfig.getFileConfiguration().getBoolean("DiscordLink." + entry + ".2FA");
+                long userId = dataConfig.getConfig().getLong("DiscordLink." + entry + ".UserID");
+                boolean isSecondFactorEnabled = dataConfig.getConfig().getBoolean("DiscordLink." + entry + ".2FA");
 
                 OffsetDateTime lastBoostingTime;
 
-                String rawBoostingTime = dataConfig.getFileConfiguration().getString("DiscordLink." + uuid + ".LastBoostingTime");
+                String rawBoostingTime = dataConfig.getConfig().getString("DiscordLink." + uuid + ".LastBoostingTime");
                 if(rawBoostingTime == null) {
-                    dataConfig.getFileConfiguration().set("DiscordLink." + uuid + ".LastBoostingTime", "");
-                    dataConfig.saveConfigFile();
+                    dataConfig.getConfig().set("DiscordLink." + uuid + ".LastBoostingTime", "");
                     return null;
                 }
 

@@ -26,13 +26,6 @@ public class ConfigManager {
         lang = new LangConfig(plugin, "lang.yml");
     }
 
-    public void saveConfigFiles() {
-        config.saveConfigFile();
-        botSettings.saveConfigFile();
-        data.saveConfigFile();
-        lang.saveConfigFile();
-    }
-
     public void reloadConfigFiles() {
         config.reloadConfigFile();
         botSettings.reloadConfigFile();

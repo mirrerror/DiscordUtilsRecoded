@@ -131,9 +131,9 @@ public class BukkitSecondFactorListener implements Listener {
                 } else {
                     bot.getSecondFactorAttempts().put(playerIp, attempts);
                 }
-                if(configManager.getBotSettings().getFileConfiguration().getConfigurationSection("ActionsAfterFailing2FA." + attempts) != null) {
-                    List<String> messages = configManager.getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Messages");
-                    List<String> commands = configManager.getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Commands");
+                if(!configManager.getBotSettings().getConfig().getSection("ActionsAfterFailing2FA." + attempts).singleLayerKeySet().isEmpty()) {
+                    List<String> messages = configManager.getBotSettings().getConfig().getStringList("ActionsAfterFailing2FA." + attempts + ".Messages");
+                    List<String> commands = configManager.getBotSettings().getConfig().getStringList("ActionsAfterFailing2FA." + attempts + ".Commands");
                     if(messages != null) {
                         messages.forEach(msg -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%player%", player.getName()))));
                     }

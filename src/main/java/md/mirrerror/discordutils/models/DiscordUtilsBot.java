@@ -23,10 +23,8 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.callbacks.IDeferrableCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -130,6 +128,7 @@ public class DiscordUtilsBot {
                     .addEventListeners(new DiscordSecondFactorListener(plugin, this, botSettings))
                     .addEventListeners(new DiscordToChatListener(this, botSettings))
                     .addEventListeners(new DiscordSecondFactorDisableListener(plugin, this))
+                    .addEventListeners(new GuildLeavingListener(plugin, botSettings))
                     .setAutoReconnect(true)
                     .setToken(botSettings.BOT_TOKEN)
                     .setContextEnabled(false)
@@ -222,8 +221,7 @@ public class DiscordUtilsBot {
                         consoleLoggingTextChannel.delete().queue();
                         consoleLoggingTextChannel = textChannel;
 
-                        botSettingsConfig.getFileConfiguration().set("Console.ChannelID", consoleLoggingTextChannel.getIdLong());
-                        botSettingsConfig.saveConfigFile();
+                        botSettingsConfig.getConfig().set("Console.ChannelID", consoleLoggingTextChannel.getIdLong());
                     }
 
                     virtualConsoleBlacklistedCommands = botSettings.CONSOLE_BLACKLISTED_COMMANDS;
@@ -277,9 +275,9 @@ public class DiscordUtilsBot {
                 plugin.getLogger().info("The Chat module is disabled by the user.");
             }
 
-            for(String entry : botSettingsConfig.getFileConfiguration().getConfigurationSection("InfoChannels").getKeys(false)) {
+            for(String entry : botSettingsConfig.getConfig().getSection("InfoChannels").singleLayerKeySet()) {
 
-                long delay = botSettingsConfig.getFileConfiguration().getLong("InfoChannels." + entry + ".UpdateDelay");
+                long delay = botSettingsConfig.getConfig().getLong("InfoChannels." + entry + ".UpdateDelay");
 
                 if(delay < 600) {
 
@@ -288,14 +286,14 @@ public class DiscordUtilsBot {
                 } else {
 
                     Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-                        GuildChannel channel = jda.getChannelById(GuildChannel.class, botSettingsConfig.getFileConfiguration().getLong("InfoChannels." + entry + ".ChannelID"));
+                        GuildChannel channel = jda.getChannelById(GuildChannel.class, botSettingsConfig.getConfig().getLong("InfoChannels." + entry + ".ChannelID"));
 
                         if(channel == null) {
                             plugin.getLogger().severe("Couldn't enable the Info Channels module for the entry with name: " + entry + ", because the specified channel didn't exist.");
                             return;
                         }
 
-                        String channelName = botSettingsConfig.getFileConfiguration().getString("InfoChannels." + entry + ".NameFormat");
+                        String channelName = botSettingsConfig.getConfig().getString("InfoChannels." + entry + ".NameFormat");
 
                         if(channelName == null) {
                             plugin.getLogger().severe("Couldn't enable the Info Channels module for the entry with name: " + entry + ", because you hadn't specified the name format.");
@@ -512,16 +510,16 @@ public class DiscordUtilsBot {
     }
 
     public void setOnDisableInfoChannelNames() {
-        for(String entry : botSettingsConfig.getFileConfiguration().getConfigurationSection("InfoChannels").getKeys(false)) {
+        for(String entry : botSettingsConfig.getConfig().getSection("InfoChannels").singleLayerKeySet()) {
 
-            GuildChannel channel = jda.getChannelById(GuildChannel.class, botSettingsConfig.getFileConfiguration().getLong("InfoChannels." + entry + ".ChannelID"));
+            GuildChannel channel = jda.getChannelById(GuildChannel.class, botSettingsConfig.getConfig().getLong("InfoChannels." + entry + ".ChannelID"));
 
             if(channel == null) {
                 plugin.getLogger().severe("Couldn't disable the Info Channels module for the entry with name: " + entry + ", because the specified channel didn't exist.");
                 return;
             }
 
-            String nameOnDisable = botSettingsConfig.getFileConfiguration().getString("InfoChannels." + entry + ".NameFormatOnDisable");
+            String nameOnDisable = botSettingsConfig.getConfig().getString("InfoChannels." + entry + ".NameFormatOnDisable");
 
             if(nameOnDisable == null) {
                 plugin.getLogger().severe("Couldn't disable the Info Channels module for the entry with name: " + entry + ", because you hadn't specified the on disable name format.");

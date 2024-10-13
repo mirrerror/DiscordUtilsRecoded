@@ -30,10 +30,10 @@ public class Activities {
 
     private List<Activity> getActivitiesFromConfig() {
         final List<Activity> botActivities = new LinkedList<>();
-        botSettings.getFileConfiguration().getConfigurationSection("Activities").getKeys(false).forEach(activity -> {
-            if(!activity.equals("UpdateDelay") && !activity.equals("Enabled")) {
-                Activity.ActivityType activityType = Activity.ActivityType.valueOf(botSettings.getFileConfiguration().getString("Activities." + activity + ".Type").toUpperCase());
-                String activityText = botSettings.getFileConfiguration().getString("Activities." + activity + ".Text");
+        botSettings.getConfig().getSection("Activities").singleLayerKeySet().forEach(activity -> {
+            if(!activity.equals("UpdateDelay") && !activity.equals("ActivitiesEnabled")) {
+                Activity.ActivityType activityType = Activity.ActivityType.valueOf(botSettings.getConfig().getString("Activities." + activity + ".Type").toUpperCase());
+                String activityText = botSettings.getConfig().getString("Activities." + activity + ".Text");
                 botActivities.add(Activity.of(activityType, activityText));
             }
         });

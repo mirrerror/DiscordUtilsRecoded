@@ -3,7 +3,6 @@ package md.mirrerror.discordutils.utils;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.data.DataManager;
-import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;

@@ -1,11 +1,11 @@
 package md.mirrerror.discordutils.config.settings;
 
+import de.leonhard.storage.Config;
 import md.mirrerror.discordutils.Main;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class MainSettings {
 
-    private static final FileConfiguration config = Main.getInstance().getConfigManager().getConfig().getFileConfiguration();
+    private static final Config config = Main.getInstance().getConfigManager().getConfig().getConfig();
 
     public final String PERMISSIONS_PLUGIN = config.getString("PermissionsPlugin");
     public final boolean CHECK_FOR_UPDATES = config.getBoolean("CheckForUpdates");

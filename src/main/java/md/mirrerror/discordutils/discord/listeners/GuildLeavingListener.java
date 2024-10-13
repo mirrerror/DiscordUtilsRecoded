@@ -23,7 +23,7 @@ public class GuildLeavingListener extends ListenerAdapter {
         if(!discordUtilsUser.isLinked()) return;
 
         Bukkit.getScheduler().runTask(plugin, () -> {
-            botSettings.COMMANDS_AFTER_UNLINKING.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
+            botSettings.COMMANDS_AFTER_LEAVING_GUILD.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", discordUtilsUser.getOfflinePlayer().getName())));
         });
     }
 }

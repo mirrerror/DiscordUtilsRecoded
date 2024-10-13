@@ -1,7 +1,6 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
 import lombok.RequiredArgsConstructor;
-import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;

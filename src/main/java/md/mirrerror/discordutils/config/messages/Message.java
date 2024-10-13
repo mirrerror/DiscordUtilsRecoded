@@ -125,27 +125,27 @@ public enum Message {
     private final boolean isList;
 
     public String getText() {
-        return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
+        return HexUtils.color(Main.getInstance().getConfigManager().getLang().getConfig().getString(String.valueOf(this)));
     }
 
     public String getText(boolean addPrefix) {
         if(addPrefix) {
-            return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(PREFIX))
-                    + " " + Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
+            return HexUtils.color(Main.getInstance().getConfigManager().getLang().getConfig().getString(String.valueOf(PREFIX))
+                    + " " + Main.getInstance().getConfigManager().getLang().getConfig().getString(String.valueOf(this)));
         }
         return this.getText();
     }
 
     public List<String> getTextList() {
         List<String> stringList = new ArrayList<>();
-        Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)).forEach(s -> stringList.add(HexUtils.color(s)));
+        Main.getInstance().getConfigManager().getLang().getConfig().getStringList(String.valueOf(this)).forEach(s -> stringList.add(HexUtils.color(s)));
         return stringList;
     }
 
     public List<String> getTextList(boolean addPrefix) {
         List<String> stringList = new ArrayList<>();
         if(addPrefix)
-            for(String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)))
+            for(String s : Main.getInstance().getConfigManager().getLang().getConfig().getStringList(String.valueOf(this)))
                 stringList.add(PREFIX.getText() + HexUtils.color(" " + s));
         else
             return this.getTextList();

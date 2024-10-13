@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.cache;
 
+import lombok.Getter;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 public class DiscordUtilsUsersCacheManager {
 
+    @Getter
     private static final Set<DiscordUtilsUser> cachedUsers = new HashSet<>();
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUuid(UUID uuid) {
@@ -106,7 +108,4 @@ public class DiscordUtilsUsersCacheManager {
         return retrieveUserFromDatabaseByUserId(userId);
     }
 
-    public static Set<DiscordUtilsUser> getCachedUsers() {
-        return cachedUsers;
-    }
 }
