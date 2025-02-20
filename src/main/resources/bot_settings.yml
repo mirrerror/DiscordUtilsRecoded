@@ -26,7 +26,7 @@
 # Error embed messages' type color
 # ------------------------------------------------------------------
 # GroupRoles
-# These roles will automatically be assigned if the player owns respective groups
+# These roles will automatically be assigned if the player owns the respective groups
 # Format: role_id: 'group_name' or role_id: ['group_name1', 'group_name2', ...]
 # For example:
 # GroupRoles:
@@ -34,6 +34,18 @@
 #   934834130198751892: 'vip'
 # or
 # GroupRoles:
+#   905508941230915684: ['admin', 'helper']
+#   934834130198751892: 'vip'
+# ------------------------------------------------------------------
+# RolesToGroups
+# These groups will automatically be assigned if the player owns the respective roles
+# Format: role_id: 'group_name' or role_id: ['group_name1', 'group_name2', ...]
+# For example:
+# RolesToGroups:
+#   905508941230915684: 'admin'
+#   934834130198751892: 'vip'
+# or
+# RolesToGroups:
 #   905508941230915684: ['admin', 'helper']
 #   934834130198751892: 'vip'
 # ------------------------------------------------------------------
@@ -110,6 +122,7 @@
 # Synchronization of the in-game permission groups and Discord roles
 # Enabled - true - enable, false - disable
 # AssignOnlyPrimaryGroup - true - assign only player's primary group role, false - assign all player's groups roles
+# AssignGroupsOnlyByPrimaryRole - true - assign groups only by the primary role, false - assign groups by all roles
 # DelayedRolesCheck - whether to enable or disable the roles check every Delay seconds (if it is disable, the plugin will check it only when players join and leave the server)
 # Enabled - true - enable, false - disable
 # Delay - checks delay
@@ -230,6 +243,7 @@ EmbedMessages:
   ErrorEmbedColor: '#A80000'
 Roles:
   GroupRoles: {}
+  RolesToGroups: {}
   AdminRoles: []
   VerifiedRole:
     Enabled: false
@@ -267,6 +281,7 @@ Boosting:
 RolesSynchronization:
   Enabled: true
   AssignOnlyPrimaryGroup: true
+  AssignGroupsOnlyByPrimaryRole: true
   DelayedRolesCheck:
     Enabled: true
     Delay: 30

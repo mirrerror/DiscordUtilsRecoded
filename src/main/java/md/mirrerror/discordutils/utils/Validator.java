@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 public class Validator {
     public static boolean validatePlayerSender(CommandSender sender) {
@@ -102,11 +103,13 @@ public class Validator {
         return true;
     }
 
-    public static boolean validateSecondFactorDisablingAvailability(CommandSender sender, DiscordUtilsUser discordUtilsUser) {
-        if(!Main.getInstance().getBot().checkForcedSecondFactor(discordUtilsUser)) {
-            Message.SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE.send(sender, true);
-            return false;
-        }
-        return true;
+    public static CompletableFuture<Boolean> validateSecondFactorDisablingAvailability(CommandSender sender, DiscordUtilsUser discordUtilsUser) {
+        return CompletableFuture.supplyAsync(() -> {
+            if(!Main.getInstance().getBot().checkForcedSecondFactor(discordUtilsUser).join()) {
+                Message.SECONDFACTOR_DISABLING_IS_NOT_AVAILABLE.send(sender, true);
+                return false;
+            }
+            return true;
+        });
     }
 }

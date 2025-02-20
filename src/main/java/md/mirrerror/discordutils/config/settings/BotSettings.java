@@ -42,6 +42,24 @@ public class BotSettings {
             }
         }
     }
+    public final Map<Long, List<String>> ROLES_TO_GROUPS;
+    {
+        ROLES_TO_GROUPS = new HashMap<>();
+
+        for(String role : config.getConfigurationSection("Roles.RolesToGroups").getKeys(false)) {
+            try {
+                if(config.isList("Roles.RolesToGroups." + role)) {
+                    ROLES_TO_GROUPS.put(Long.parseLong(role), config.getStringList("Roles.RolesToGroups." + role));
+                } else {
+                    List<String> groups = new ArrayList<>();
+                    groups.add(config.getString("Roles.RolesToGroups." + role));
+                    ROLES_TO_GROUPS.put(Long.parseLong(role), groups);
+                }
+            } catch (NumberFormatException ignored) {
+                Main.getInstance().getLogger().warning("Found an unknown role ID in the group roles section: " + role + ". Skipping it...");
+            }
+        }
+    }
     public final List<Long> ADMIN_ROLES = config.getLongList("Roles.AdminRoles");
     public final boolean VERIFIED_ROLE_ENABLED = config.getBoolean("Roles.VerifiedRole.Enabled");
     public final long VERIFIED_ROLE_ID = config.getLong("Roles.VerifiedRole.ID");
@@ -65,6 +83,7 @@ public class BotSettings {
     public final List<String> COMMANDS_AFTER_STOPPING_SERVER_BOOSTING = config.getStringList("Boosting.CommandsAfterStoppingServerBoosting");
     public final boolean ROLES_SYNCHRONIZATION_ENABLED = config.getBoolean("RolesSynchronization.Enabled");
     public final boolean ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP = config.getBoolean("RolesSynchronization.AssignOnlyPrimaryGroup");
+    public final boolean ROLES_SYNCHRONIZATION_ASSIGN_GROUPS_ONLY_BY_PRIMARY_ROLE = config.getBoolean("RolesSynchronization.AssignGroupsOnlyByPrimaryRole");
     public final boolean DELAYED_ROLES_CHECK_ENABLED = config.getBoolean("RolesSynchronization.DelayedRolesCheck.Enabled");
     public final long DELAYED_ROLES_CHECK_DELAY = config.getLong("RolesSynchronization.DelayedRolesCheck.Delay");
     public final boolean NAMES_SYNCHRONIZATION_ENABLED = config.getBoolean("NamesSynchronization.Enabled");

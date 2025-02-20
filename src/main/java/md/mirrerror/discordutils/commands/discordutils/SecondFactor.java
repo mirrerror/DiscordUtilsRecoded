@@ -1,7 +1,6 @@
 package md.mirrerror.discordutils.commands.discordutils;
 
 import lombok.RequiredArgsConstructor;
-import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
@@ -33,17 +32,24 @@ public class SecondFactor implements SubCommand {
         if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;
 
         if(discordUtilsUser.isSecondFactorEnabled()) {
-            if(!Validator.validateSecondFactorDisablingAvailability(sender, discordUtilsUser)) return;
-
-            String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
-
-            bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText()).whenComplete((msg, error) -> {
-                if (error == null) {
-                    bot.getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
-                    Message.SECONDFACTOR_DISABLE_REQUEST_SENT.send(sender, true);
+            Validator.validateSecondFactorDisablingAvailability(sender, discordUtilsUser).whenComplete((isAvailable, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
                     return;
                 }
-                Message.CAN_NOT_SEND_MESSAGE.send(sender, true);
+
+                if (!isAvailable) return;
+
+                String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
+
+                bot.sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, Message.SECONDFACTOR_DISABLE_CONFIRMATION.getText()).whenComplete((msg, error) -> {
+                    if (error == null) {
+                        bot.getSecondFactorDisablePlayers().put(player.getUniqueId(), msg);
+                        Message.SECONDFACTOR_DISABLE_REQUEST_SENT.send(sender, true);
+                        return;
+                    }
+                    Message.CAN_NOT_SEND_MESSAGE.send(sender, true);
+                });
             });
 
         } else {
