@@ -56,7 +56,7 @@ public class BotSettings {
                     ROLES_TO_GROUPS.put(Long.parseLong(role), groups);
                 }
             } catch (NumberFormatException ignored) {
-                Main.getInstance().getLogger().warning("Found an unknown role ID in the group roles section: " + role + ". Skipping it...");
+                Main.getInstance().getLogger().warning("Found an unknown role ID in the roles to groups section: " + role + ". Skipping it...");
             }
         }
     }
@@ -79,6 +79,7 @@ public class BotSettings {
     public final boolean FORCE_LINKING_ENABLED = config.getBoolean("Linking.ForceLinking");
     public final List<String> COMMANDS_AFTER_LINKING = config.getStringList("Linking.CommandsAfterLinking");
     public final List<String> COMMANDS_AFTER_UNLINKING = config.getStringList("Linking.CommandsAfterUnlinking");
+    public final List<String> COMMANDS_AFTER_LEAVING_GUILD = config.getStringList("Linking.CommandsAfterLeavingGuild");
     public final List<String> COMMANDS_AFTER_SERVER_BOOSTING = config.getStringList("CommandsAfterServerBoosting");
     public final List<String> COMMANDS_AFTER_STOPPING_SERVER_BOOSTING = config.getStringList("Boosting.CommandsAfterStoppingServerBoosting");
     public final boolean ROLES_SYNCHRONIZATION_ENABLED = config.getBoolean("RolesSynchronization.Enabled");
@@ -90,6 +91,9 @@ public class BotSettings {
     public final String NAMES_SYNCHRONIZATION_FORMAT = config.getString("NamesSynchronization.NamesSyncFormat");
     public final boolean DELAYED_NAMES_CHECK_ENABLED = config.getBoolean("NamesSynchronization.DelayedNamesCheck.Enabled");
     public final long DELAYED_NAMES_CHECK_DELAY = config.getLong("NamesSynchronization.DelayedNamesCheck.Delay");
+    public final boolean BANS_SYNCHRONIZATION_ENABLED = config.getBoolean("BansSynchronization.Enabled");
+    public final boolean BANS_SYNCHRONIZATION_MINECRAFT_TO_DISCORD_ENABLED = config.getBoolean("BansSynchronization.MinecraftToDiscord");
+    public final boolean BANS_SYNCHRONIZATION_DISCORD_TO_MINECRAFT_ENABLED = config.getBoolean("BansSynchronization.DiscordToMinecraft");
     public final boolean GUILD_VOICE_REWARDS_ENABLED = config.getBoolean("GuildVoiceRewards.Enabled");
     public final long GUILD_VOICE_REWARDS_TIME = config.getLong("GuildVoiceRewards.Time");
     public final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");
