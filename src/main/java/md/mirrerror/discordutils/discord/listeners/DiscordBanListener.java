@@ -2,6 +2,7 @@ package md.mirrerror.discordutils.discord.listeners;
 
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
+import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.Member;
@@ -33,8 +34,8 @@ public class DiscordBanListener implements Listener {
             guild.retrieveBan(discordUtilsUser.getUser()).queue(
                     success -> {
                         if(!banList.isBanned(discordUtilsUser.getOfflinePlayer().getName())) {
-                            banList.addBan(discordUtilsUser.getOfflinePlayer().getName(), "Banned by Discord", null, "DiscordUtils");
-                            event.getPlayer().kickPlayer("Banned by Discord");
+                            banList.addBan(discordUtilsUser.getOfflinePlayer().getName(), Message.BAN_SYNCHRONIZATION_REASON.getText(false), null, Message.BAN_SYNCHRONIZATION_SOURCE.getText(false));
+                            event.getPlayer().kickPlayer(Message.BAN_SYNCHRONIZATION_REASON.getText());
                         }
                     },
                     failure -> {

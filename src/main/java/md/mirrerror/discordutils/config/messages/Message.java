@@ -76,6 +76,8 @@ public enum Message {
     THIS_COMMAND_IS_BLACKLISTED(false),
     CHANNEL_DOES_NOT_EXIST(false),
     TARGET_IS_OFFLINE(false),
+    BAN_SYNCHRONIZATION_SOURCE(false),
+    BAN_SYNCHRONIZATION_REASON(false),
     EMBED_SENT_BY(false),
     ERROR(false),
     INFORMATION(false),
