@@ -39,7 +39,7 @@ To install DiscordUtils into your project, simply add the following dependency t
 <dependency>
     <groupId>io.github.mirrerror</groupId>
     <artifactId>discordutils</artifactId>
-    <version>5.0.1</version>
+    <version>5.1</version>
     <scope>provided</scope>
 </dependency>
 ```
