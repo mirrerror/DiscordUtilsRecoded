@@ -9,19 +9,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class CacheListener implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-
+    public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
         if(!Main.isMainReady() || !Main.isBotReady()) {
-            player.kickPlayer(Message.PLUGIN_IS_NOT_READY_YET.getText());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Message.PLUGIN_IS_NOT_READY_YET.getText());
             return;
         }
+
+        DiscordUtilsUsersCacheManager.getFromCacheByUuid(event.getUniqueId());
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
 
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
             DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
