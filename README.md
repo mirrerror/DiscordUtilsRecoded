@@ -47,7 +47,7 @@ To install DiscordUtils into your project, simply add the following dependency t
 ### Gradle
 
 ```gradle
-implementation 'io.github.mirrerror:discordutils:5.0.1'
+implementation 'io.github.mirrerror:discordutils:5.1'
 ```
 
 For a comprehensive guide on API usage, refer to the [API Usage Example](https://github.com/mirrerror/DiscordUtilsAPIUsageExample/tree/main) repository.
