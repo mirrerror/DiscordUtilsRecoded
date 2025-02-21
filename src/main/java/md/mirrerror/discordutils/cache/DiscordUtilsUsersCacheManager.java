@@ -5,52 +5,34 @@ import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.*;
 
 public class DiscordUtilsUsersCacheManager {
 
     private static final Set<DiscordUtilsUser> cachedUsers = new HashSet<>();
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUuid(UUID uuid) {
-        try {
-            boolean exists = Main.getInstance().getDataManager().userExists(uuid).get();
-            if(!exists) {
-                try {
-                    Main.getInstance().getDataManager().registerUser(uuid, -1, false).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-            DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(), offlinePlayer,
-                    Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getDataManager().getDiscordUserId(uuid).get()),
-                    Main.getInstance().getDataManager().hasSecondFactor(offlinePlayer.getUniqueId()).get(),
-                    Main.getInstance().getDataManager().getLastBoostingTime(offlinePlayer.getUniqueId()).get());
-            addToCache(discordUtilsUser);
-            return discordUtilsUser;
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        boolean exists = Main.getInstance().getDataManager().userExists(uuid).join();
+        if(!exists) Main.getInstance().getDataManager().registerUser(uuid, -1, false).join();
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(), offlinePlayer,
+                Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getDataManager().getDiscordUserId(uuid).join()),
+                Main.getInstance().getDataManager().hasSecondFactor(offlinePlayer.getUniqueId()).join(),
+                Main.getInstance().getDataManager().getLastBoostingTime(offlinePlayer.getUniqueId()).join());
+        addToCache(discordUtilsUser);
+        return discordUtilsUser;
     }
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUserId(long userId) {
-        try {
-            UUID uuid = Main.getInstance().getDataManager().getPlayerUniqueId(userId).get();
-            if(uuid == null) return new DiscordUtilsUser(null, null, null, null, false, null);
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-            DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(),
-                    offlinePlayer, Main.getInstance().getBot().getJda().getUserById(userId),
-                    Main.getInstance().getDataManager().hasSecondFactor(uuid).get(),
-                    Main.getInstance().getDataManager().getLastBoostingTime(offlinePlayer.getUniqueId()).get());
-            addToCache(discordUtilsUser);
-            return discordUtilsUser;
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        UUID uuid = Main.getInstance().getDataManager().getPlayerUniqueId(userId).join();
+        if(uuid == null) return new DiscordUtilsUser(null, null, null, null, false, null);
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(),
+                offlinePlayer, Main.getInstance().getBot().getJda().getUserById(userId),
+                Main.getInstance().getDataManager().hasSecondFactor(uuid).join(),
+                Main.getInstance().getDataManager().getLastBoostingTime(offlinePlayer.getUniqueId()).join());
+        addToCache(discordUtilsUser);
+        return discordUtilsUser;
     }
 
     public static void addToCache(DiscordUtilsUser discordUtilsUser) {
@@ -107,6 +89,7 @@ public class DiscordUtilsUsersCacheManager {
     }
 
     public static Set<DiscordUtilsUser> getCachedUsers() {
-        return cachedUsers;
+        return Collections.unmodifiableSet(cachedUsers);
     }
+
 }

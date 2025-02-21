@@ -42,6 +42,24 @@ public class BotSettings {
             }
         }
     }
+    public final Map<Long, List<String>> ROLES_TO_GROUPS;
+    {
+        ROLES_TO_GROUPS = new HashMap<>();
+
+        for(String role : config.getConfigurationSection("Roles.RolesToGroups").getKeys(false)) {
+            try {
+                if(config.isList("Roles.RolesToGroups." + role)) {
+                    ROLES_TO_GROUPS.put(Long.parseLong(role), config.getStringList("Roles.RolesToGroups." + role));
+                } else {
+                    List<String> groups = new ArrayList<>();
+                    groups.add(config.getString("Roles.RolesToGroups." + role));
+                    ROLES_TO_GROUPS.put(Long.parseLong(role), groups);
+                }
+            } catch (NumberFormatException ignored) {
+                Main.getInstance().getLogger().warning("Found an unknown role ID in the roles to groups section: " + role + ". Skipping it...");
+            }
+        }
+    }
     public final List<Long> ADMIN_ROLES = config.getLongList("Roles.AdminRoles");
     public final boolean VERIFIED_ROLE_ENABLED = config.getBoolean("Roles.VerifiedRole.Enabled");
     public final long VERIFIED_ROLE_ID = config.getLong("Roles.VerifiedRole.ID");
@@ -61,16 +79,21 @@ public class BotSettings {
     public final boolean FORCE_LINKING_ENABLED = config.getBoolean("Linking.ForceLinking");
     public final List<String> COMMANDS_AFTER_LINKING = config.getStringList("Linking.CommandsAfterLinking");
     public final List<String> COMMANDS_AFTER_UNLINKING = config.getStringList("Linking.CommandsAfterUnlinking");
+    public final List<String> COMMANDS_AFTER_LEAVING_GUILD = config.getStringList("Linking.CommandsAfterLeavingGuild");
     public final List<String> COMMANDS_AFTER_SERVER_BOOSTING = config.getStringList("CommandsAfterServerBoosting");
     public final List<String> COMMANDS_AFTER_STOPPING_SERVER_BOOSTING = config.getStringList("Boosting.CommandsAfterStoppingServerBoosting");
     public final boolean ROLES_SYNCHRONIZATION_ENABLED = config.getBoolean("RolesSynchronization.Enabled");
     public final boolean ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP = config.getBoolean("RolesSynchronization.AssignOnlyPrimaryGroup");
+    public final boolean ROLES_SYNCHRONIZATION_ASSIGN_GROUPS_ONLY_BY_PRIMARY_ROLE = config.getBoolean("RolesSynchronization.AssignGroupsOnlyByPrimaryRole");
     public final boolean DELAYED_ROLES_CHECK_ENABLED = config.getBoolean("RolesSynchronization.DelayedRolesCheck.Enabled");
     public final long DELAYED_ROLES_CHECK_DELAY = config.getLong("RolesSynchronization.DelayedRolesCheck.Delay");
     public final boolean NAMES_SYNCHRONIZATION_ENABLED = config.getBoolean("NamesSynchronization.Enabled");
     public final String NAMES_SYNCHRONIZATION_FORMAT = config.getString("NamesSynchronization.NamesSyncFormat");
     public final boolean DELAYED_NAMES_CHECK_ENABLED = config.getBoolean("NamesSynchronization.DelayedNamesCheck.Enabled");
     public final long DELAYED_NAMES_CHECK_DELAY = config.getLong("NamesSynchronization.DelayedNamesCheck.Delay");
+    public final boolean BANS_SYNCHRONIZATION_ENABLED = config.getBoolean("BansSynchronization.Enabled");
+    public final boolean BANS_SYNCHRONIZATION_MINECRAFT_TO_DISCORD_ENABLED = config.getBoolean("BansSynchronization.MinecraftToDiscord");
+    public final boolean BANS_SYNCHRONIZATION_DISCORD_TO_MINECRAFT_ENABLED = config.getBoolean("BansSynchronization.DiscordToMinecraft");
     public final boolean GUILD_VOICE_REWARDS_ENABLED = config.getBoolean("GuildVoiceRewards.Enabled");
     public final long GUILD_VOICE_REWARDS_TIME = config.getLong("GuildVoiceRewards.Time");
     public final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");

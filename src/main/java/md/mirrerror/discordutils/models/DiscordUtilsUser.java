@@ -59,6 +59,7 @@ public class DiscordUtilsUser {
 
     public void synchronizeRoles(Guild guild) {
         bot.synchronizeRoles(guild, this);
+        bot.synchronizeRolesToGroups(guild, this);
     }
 
     public void synchronizeNickname(Guild guild) {

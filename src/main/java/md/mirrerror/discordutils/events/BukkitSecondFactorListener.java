@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class BukkitSecondFactorListener implements Listener {
 
@@ -67,7 +68,7 @@ public class BukkitSecondFactorListener implements Listener {
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        bot.applySecondFactor(player, discordUtilsUser);
+        bot.applySecondFactor(player, discordUtilsUser).join();
 
         if(botSettings.NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
             if(!discordUtilsUser.isSecondFactorEnabled()) Message.SECONDFACTOR_DISABLED_REMINDER.send(player, true);
@@ -222,28 +223,31 @@ public class BukkitSecondFactorListener implements Listener {
         return true;
     }
 
-    private void performChecks(Player player, Cancellable event) {
-        if(!checkSecondFactor(player, event)) return;
-        checkVerification(player, event);
+    private CompletableFuture<Boolean> performChecks(Player player, Cancellable event) {
+        boolean secondFactorCheckResult = checkSecondFactor(player, event);
+        if(!secondFactorCheckResult) return CompletableFuture.completedFuture(false);
+        return CompletableFuture.completedFuture(checkVerification(player, event).join());
     }
 
-    private boolean checkVerification(Player player, Cancellable event) {
-        DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
+    private CompletableFuture<Boolean> checkVerification(Player player, Cancellable event) {
+        return CompletableFuture.supplyAsync(() -> {
+            DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        if(!bot.checkForcedSecondFactor(discordUtilsUser) && !discordUtilsUser.isLinked()) {
-            event.setCancelled(true);
-            Message.VERIFICATION_NEEDED.send(player, true);
-            return false;
-        }
-
-        if(botSettings.FORCE_LINKING_ENABLED) {
-            if(!discordUtilsUser.isLinked()) {
+            if(!bot.checkForcedSecondFactor(discordUtilsUser).join() && !discordUtilsUser.isLinked()) {
                 event.setCancelled(true);
                 Message.VERIFICATION_NEEDED.send(player, true);
                 return false;
             }
-        }
-        return true;
+
+            if(botSettings.FORCE_LINKING_ENABLED) {
+                if(!discordUtilsUser.isLinked()) {
+                    event.setCancelled(true);
+                    Message.VERIFICATION_NEEDED.send(player, true);
+                    return false;
+                }
+            }
+            return true;
+        });
     }
 
     private boolean isAllowedCommand(String cmd) {

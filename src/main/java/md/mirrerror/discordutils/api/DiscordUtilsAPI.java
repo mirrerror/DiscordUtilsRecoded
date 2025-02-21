@@ -4,8 +4,8 @@
  * This class serves as a convenient entry point for interacting with the DiscordUtils plugin.
  *
  * @author mirrerror
- * @version 4.8
- * @since 2024-02-07
+ * @version 5.1
+ * @since 2025-02-21
  */
 package md.mirrerror.discordutils.api;
 

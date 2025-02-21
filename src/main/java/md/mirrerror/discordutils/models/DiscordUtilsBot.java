@@ -12,6 +12,7 @@ import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.listeners.*;
 import md.mirrerror.discordutils.events.ChatToDiscordListener;
+import md.mirrerror.discordutils.events.PlayerBanListener;
 import md.mirrerror.discordutils.events.ServerActivityListener;
 import md.mirrerror.discordutils.events.custom.BotGetReadyEvent;
 import md.mirrerror.discordutils.integrations.permissions.PermissionsIntegration;
@@ -22,10 +23,8 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.callbacks.IDeferrableCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -41,7 +40,6 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -61,6 +59,7 @@ public class DiscordUtilsBot {
 
     private final List<Long> adminRoles = new ArrayList<>();
     private final Map<Long, List<String>> groupRoles = new HashMap<>(); // group, roles
+    private final Map<Long, List<String>> rolesToGroups = new HashMap<>(); // role, groups
     private final Map<UUID, Message> unlinkPlayers = new HashMap<>();
     private final Map<UUID, Message> secondFactorDisablePlayers = new HashMap<>();
     private final Map<UUID, String> secondFactorPlayers = new HashMap<>();
@@ -129,6 +128,7 @@ public class DiscordUtilsBot {
                     .addEventListeners(new DiscordSecondFactorListener(plugin, this, botSettings))
                     .addEventListeners(new DiscordToChatListener(this, botSettings))
                     .addEventListeners(new DiscordSecondFactorDisableListener(plugin, this))
+                    .addEventListeners(new GuildLeavingListener(plugin, botSettings))
                     .setAutoReconnect(true)
                     .setToken(botSettings.BOT_TOKEN)
                     .setContextEnabled(false)
@@ -158,6 +158,9 @@ public class DiscordUtilsBot {
 
             groupRoles.putAll(botSettings.GROUP_ROLES);
             plugin.getLogger().info("Successfully loaded respective roles for the " + groupRoles.size() + " groups.");
+
+            rolesToGroups.putAll(botSettings.ROLES_TO_GROUPS);
+            plugin.getLogger().info("Successfully loaded respective groups for the " + rolesToGroups.size() + " roles.");
 
             if(botSettings.ROLES_SYNCHRONIZATION_ENABLED && botSettings.DELAYED_ROLES_CHECK_ENABLED) {
                 Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
@@ -309,6 +312,20 @@ public class DiscordUtilsBot {
             }
             plugin.getLogger().info("The Info Channels module has been successfully loaded.");
 
+            if(botSettings.BANS_SYNCHRONIZATION_ENABLED) {
+                if(botSettings.BANS_SYNCHRONIZATION_MINECRAFT_TO_DISCORD_ENABLED) {
+                    Bukkit.getPluginManager().registerEvents(new PlayerBanListener(plugin, this), plugin);
+                    plugin.getLogger().info("Minecraft to Discord bans synchronization has been successfully enabled.");
+                }
+                if(botSettings.BANS_SYNCHRONIZATION_DISCORD_TO_MINECRAFT_ENABLED) {
+                    Bukkit.getPluginManager().registerEvents(new DiscordBanListener(this), plugin);
+                    plugin.getLogger().info("Discord to Minecraft bans synchronization has been successfully enabled.");
+                }
+                plugin.getLogger().info("The Bans Synchronization module has been successfully enabled.");
+            } else {
+                plugin.getLogger().info("The Bans Synchronization module is disabled by the user.");
+            }
+
             plugin.getLogger().info("Bot has been successfully loaded.");
 
         } catch (InterruptedException e) {
@@ -351,14 +368,8 @@ public class DiscordUtilsBot {
         textChannel.sendMessageEmbeds(message).complete().delete().queueAfter(delay, TimeUnit.SECONDS);
     }
 
-    public long countLinkedUsers() {
-        try {
-            return dataManager.countLinkedUsers().get();
-        } catch (InterruptedException | ExecutionException e) {
-            plugin.getLogger().severe("Something went wrong while counting the linked players!");
-            plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
-        }
-        return -1L;
+    public CompletableFuture<Long> countLinkedUsers() {
+        return dataManager.countLinkedUsers();
     }
 
     public void assignVerifiedRole(long userId) {
@@ -422,78 +433,85 @@ public class DiscordUtilsBot {
                 });
     }
 
-    public boolean checkForcedSecondFactor(DiscordUtilsUser discordUtilsUser) {
-        for(String group : botSettings.SECOND_FACTOR_FORCED_GROUPS)
-            for(String userGroup : permissionsIntegration.getUserGroups(discordUtilsUser.getOfflinePlayer()))
-                if(userGroup.equals(group)) return false;
+    public CompletableFuture<Boolean> checkForcedSecondFactor(DiscordUtilsUser discordUtilsUser) {
+        return CompletableFuture.supplyAsync(() -> {
+            for(String group : botSettings.SECOND_FACTOR_FORCED_GROUPS)
+                for(String userGroup : permissionsIntegration.getUserGroups(discordUtilsUser.getOfflinePlayer()).join())
+                    if(userGroup.equals(group)) return false;
 
-        for(long roleId : botSettings.SECOND_FACTOR_FORCED_ROLES)
-            for(Guild guild : jda.getGuilds())
-                for(Role role : guild.getMemberById(discordUtilsUser.getUser().getIdLong()).getRoles())
-                    if(role.getIdLong() == roleId) return false;
+            for(long roleId : botSettings.SECOND_FACTOR_FORCED_ROLES)
+                for(Guild guild : jda.getGuilds())
+                    for(Role role : guild.getMemberById(discordUtilsUser.getUser().getIdLong()).getRoles())
+                        if(role.getIdLong() == roleId) return false;
 
-        return true;
+            return true;
+        });
     }
 
-    public void applySecondFactor(Player player, DiscordUtilsUser discordUtilsUser) {
-        if(!checkForcedSecondFactor(discordUtilsUser)) {
-            if(discordUtilsUser.isLinked()) {
-                discordUtilsUser.setSecondFactor(true);
-            } else {
-                md.mirrerror.discordutils.config.messages.Message.VERIFICATION_NEEDED.send(player, true);
-                return;
+    public CompletableFuture<Void> applySecondFactor(Player player, DiscordUtilsUser discordUtilsUser) {
+        return CompletableFuture.runAsync(() -> {
+            boolean forcedSecondFactorCheckResult = checkForcedSecondFactor(discordUtilsUser).join();
+
+            if(!forcedSecondFactorCheckResult) {
+                if(discordUtilsUser.isLinked()) {
+                    discordUtilsUser.setSecondFactor(true);
+                } else {
+                    md.mirrerror.discordutils.config.messages.Message.VERIFICATION_NEEDED.send(player, true);
+                    return;
+                }
             }
-        }
 
-        if(discordUtilsUser.isSecondFactorEnabled() || !checkForcedSecondFactor(discordUtilsUser)) {
-            String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
+            if(discordUtilsUser.isSecondFactorEnabled() || !forcedSecondFactorCheckResult) {
+                String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
-            if(botSettings.SECOND_FACTOR_SESSIONS_ENABLED)
-                if(secondFactorSessions.containsKey(player.getUniqueId())) {
-                    if(botSettings.SECOND_FACTOR_SESSION_TIME > 0) {
+                if(botSettings.SECOND_FACTOR_SESSIONS_ENABLED)
+                    if(secondFactorSessions.containsKey(player.getUniqueId())) {
+                        if(botSettings.SECOND_FACTOR_SESSION_TIME > 0) {
 
-                        if(secondFactorSessions.get(player.getUniqueId()).getEnd().isAfter(LocalDateTime.now()))
-                            if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
+                            if(secondFactorSessions.get(player.getUniqueId()).getEnd().isAfter(LocalDateTime.now()))
+                                if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
 
-                    } else if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
+                        } else if(secondFactorSessions.get(player.getUniqueId()).getIpAddress().equals(playerIp)) return;
+                    }
+
+                if(secondFactorType != SecondFactorType.CODE && botSettings.SECOND_FACTOR_BLOCK_PLAYER_JOIN)
+                    player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_NEEDED_KICK.getText());
+
+                if(secondFactorType == DiscordUtilsBot.SecondFactorType.REACTION) {
+                    sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText()).whenComplete((msg, error) -> {
+                        if (error == null) {
+                            secondFactorPlayers.put(player.getUniqueId(), msg.getId());
+                            return;
+                        }
+                        md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
+                    });
+                }
+                if(secondFactorType == DiscordUtilsBot.SecondFactorType.CODE) {
+                    AtomicReference<String> code = new AtomicReference<>("");
+                    byte[] secureRandomSeed = new SecureRandom().generateSeed(botSettings.SECOND_FACTOR_CODE_LENGTH);
+                    for(byte b : secureRandomSeed) code.set(code.get() + b);
+                    code.set(code.get().replace("-", ""));
+
+                    sendCodeMessage(discordUtilsUser.getUser(), code.get(), playerIp, md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_CODE_MESSAGE.getText()).whenComplete((msg, error) -> {
+                        if (error == null) {
+                            secondFactorPlayers.put(player.getUniqueId(), code.get());
+                            return;
+                        }
+                        md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
+                    });
                 }
 
-            if(secondFactorType != SecondFactorType.CODE && botSettings.SECOND_FACTOR_BLOCK_PLAYER_JOIN)
-                player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_NEEDED_KICK.getText());
+                long timeToAuthorize = botSettings.SECOND_FACTOR_TIME_TO_AUTHORIZE;
 
-            if(secondFactorType == DiscordUtilsBot.SecondFactorType.REACTION) {
-                sendActionChoosingMessage(discordUtilsUser.getUser(), playerIp, md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_REACTION_MESSAGE.getText()).whenComplete((msg, error) -> {
-                    if (error == null) {
-                        secondFactorPlayers.put(player.getUniqueId(), msg.getId());
-                        return;
+                if(timeToAuthorize > 0) Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    if(player.isOnline()) {
+                        if(secondFactorPlayers.containsKey(player.getUniqueId()))
+                            player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
                     }
-                    md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
-                });
-            }
-            if(secondFactorType == DiscordUtilsBot.SecondFactorType.CODE) {
-                AtomicReference<String> code = new AtomicReference<>("");
-                byte[] secureRandomSeed = new SecureRandom().generateSeed(botSettings.SECOND_FACTOR_CODE_LENGTH);
-                for(byte b : secureRandomSeed) code.set(code.get() + b);
-                code.set(code.get().replace("-", ""));
-
-                sendCodeMessage(discordUtilsUser.getUser(), code.get(), playerIp, md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_CODE_MESSAGE.getText()).whenComplete((msg, error) -> {
-                    if (error == null) {
-                        secondFactorPlayers.put(player.getUniqueId(), code.get());
-                        return;
-                    }
-                    md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.send(player, true);
-                });
+                }, timeToAuthorize*20L);
             }
 
-            long timeToAuthorize = botSettings.SECOND_FACTOR_TIME_TO_AUTHORIZE;
-
-            if(timeToAuthorize > 0) Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if(player.isOnline()) {
-                    if(secondFactorPlayers.containsKey(player.getUniqueId()))
-                        player.kickPlayer(md.mirrerror.discordutils.config.messages.Message.SECONDFACTOR_TIME_TO_AUTHORIZE_HAS_EXPIRED.getText());
-                }
-            }, timeToAuthorize*20L);
-        }
+        });
     }
 
     public void setOnDisableInfoChannelNames() {
@@ -549,12 +567,14 @@ public class DiscordUtilsBot {
     }
 
     public void synchronizeRoles(Guild guild, DiscordUtilsUser discordUtilsUser) {
+        if (groupRoles.isEmpty()) return;
+
         if(!discordUtilsUser.isLinked()) return;
         Set<Long> assignedRoles = new HashSet<>();
         Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
 
         if(botSettings.ROLES_SYNCHRONIZATION_ASSIGN_ONLY_PRIMARY_GROUP) {
-            String primaryGroup = permissionsIntegration.getHighestUserGroup(discordUtilsUser.getOfflinePlayer());
+            String primaryGroup = permissionsIntegration.getHighestUserGroup(discordUtilsUser.getOfflinePlayer()).join();
 
             for(long roleId : groupRoles.keySet()) {
                 if(groupRoles.get(roleId).contains(primaryGroup)) {
@@ -566,7 +586,7 @@ public class DiscordUtilsBot {
                 }
             }
         } else {
-            List<String> playerGroups = permissionsIntegration.getUserGroups(discordUtilsUser.getOfflinePlayer());
+            List<String> playerGroups = permissionsIntegration.getUserGroups(discordUtilsUser.getOfflinePlayer()).join();
 
             for(long roleId : groupRoles.keySet()) {
                 if(groupRoles.get(roleId).stream().distinct().anyMatch(playerGroups::contains)) {
@@ -584,6 +604,44 @@ public class DiscordUtilsBot {
                 try {
                     guild.removeRoleFromMember(member, guild.getRoleById(roleId)).queue();
                 } catch (IllegalArgumentException ignored) {}
+            }
+        }
+    }
+
+    public void synchronizeRolesToGroups(Guild guild, DiscordUtilsUser discordUtilsUser) {
+        if (rolesToGroups.isEmpty()) return;
+
+        if(!discordUtilsUser.isLinked()) return;
+        Set<Long> assignedRoles = new HashSet<>();
+        Member member = guild.getMemberById(discordUtilsUser.getUser().getIdLong());
+
+        if(botSettings.ROLES_SYNCHRONIZATION_ASSIGN_GROUPS_ONLY_BY_PRIMARY_ROLE) {
+            if (!member.getRoles().isEmpty()) {
+                long primaryRoleId = member.getRoles().get(0).getIdLong();
+                List<String> groupsToAssign = rolesToGroups.getOrDefault(primaryRoleId, new ArrayList<>());
+                for (String group : groupsToAssign) {
+                    permissionsIntegration.assignGroup(discordUtilsUser.getOfflinePlayer(), group);
+                    assignedRoles.add(primaryRoleId);
+                }
+            }
+        } else {
+            List<Long> memberRoles = member.getRoles().stream().map(ISnowflake::getIdLong).toList();
+
+            for (long roleId : rolesToGroups.keySet()) {
+                if (memberRoles.contains(roleId)) {
+                    List<String> groupsToAssign = rolesToGroups.getOrDefault(roleId, new ArrayList<>());
+                    for (String group : groupsToAssign) {
+                        permissionsIntegration.assignGroup(discordUtilsUser.getOfflinePlayer(), group);
+                        assignedRoles.add(roleId);
+                    }
+                }
+            }
+        }
+
+        for(long roleId : rolesToGroups.keySet()) {
+            if(!assignedRoles.contains(roleId)) {
+                List<String> groups = rolesToGroups.get(roleId);
+                for (String group : groups) permissionsIntegration.removeGroup(discordUtilsUser.getOfflinePlayer(), group);
             }
         }
     }

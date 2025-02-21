@@ -72,6 +72,8 @@ public class LangConfig extends CustomConfig {
         getFileConfiguration().addDefault("THIS_COMMAND_IS_BLACKLISTED", "This command is blacklisted.");
         getFileConfiguration().addDefault("CHANNEL_DOES_NOT_EXIST", "Channel with this ID does not exist.");
         getFileConfiguration().addDefault("TARGET_IS_OFFLINE", "The specified player is offline.");
+        getFileConfiguration().addDefault("BAN_SYNCHRONIZATION_SOURCE", "DiscordUtils");
+        getFileConfiguration().addDefault("BAN_SYNCHRONIZATION_REASON", "You have been banned by the ban synchronization system");
         getFileConfiguration().addDefault("EMBED_SENT_BY", "Sent by: %sender%");
         getFileConfiguration().addDefault("ERROR", "Error");
         getFileConfiguration().addDefault("INFORMATION", "Information");

@@ -59,6 +59,8 @@ COMMANDS_ARE_NOT_WORKING_IN_THIS_CHANNEL: 'You can''t use any commands in this c
 THIS_COMMAND_IS_BLACKLISTED: 'This command is blacklisted.'
 CHANNEL_DOES_NOT_EXIST: 'Channel with this ID does not exist.'
 TARGET_IS_OFFLINE: 'The specified player is offline.'
+BAN_SYNCHRONIZATION_SOURCE: 'DiscordUtils'
+BAN_SYNCHRONIZATION_REASON: 'You have been banned by the ban synchronization system'
 EMBED_SENT_BY: 'Sent by: %sender%'
 ERROR: 'Error'
 INFORMATION: 'Information'

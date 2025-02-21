@@ -17,8 +17,15 @@ public class Stats implements SubCommand {
 
     @Override
     public void onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Message.DISCORDUTILSADMIN_STATS_FORMAT.getTextList().forEach(msg -> sender.sendMessage(msg.replace("%linkedPlayers%",
-                String.valueOf(bot.countLinkedUsers()))));
+        bot.countLinkedUsers().whenComplete((count, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+
+            Message.DISCORDUTILSADMIN_STATS_FORMAT.getTextList().forEach(msg -> sender.sendMessage(msg.replace("%linkedPlayers%",
+                    String.valueOf(count))));
+        });
     }
 
     @Override
