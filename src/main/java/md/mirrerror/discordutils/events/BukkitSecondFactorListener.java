@@ -68,7 +68,7 @@ public class BukkitSecondFactorListener implements Listener {
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
 
-        bot.applySecondFactor(player, discordUtilsUser);
+        bot.applySecondFactor(player, discordUtilsUser).join();
 
         if(botSettings.NOTIFY_ABOUT_DISABLED_SECOND_FACTOR) {
             if(!discordUtilsUser.isSecondFactorEnabled()) Message.SECONDFACTOR_DISABLED_REMINDER.send(player, true);
@@ -226,7 +226,7 @@ public class BukkitSecondFactorListener implements Listener {
     private CompletableFuture<Boolean> performChecks(Player player, Cancellable event) {
         boolean secondFactorCheckResult = checkSecondFactor(player, event);
         if(!secondFactorCheckResult) return CompletableFuture.completedFuture(false);
-        return checkVerification(player, event);
+        return CompletableFuture.completedFuture(checkVerification(player, event).join());
     }
 
     private CompletableFuture<Boolean> checkVerification(Player player, Cancellable event) {

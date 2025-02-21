@@ -438,8 +438,9 @@ public class DiscordUtilsBot {
 
     public CompletableFuture<Void> applySecondFactor(Player player, DiscordUtilsUser discordUtilsUser) {
         return CompletableFuture.runAsync(() -> {
+            boolean forcedSecondFactorCheckResult = checkForcedSecondFactor(discordUtilsUser).join();
 
-            if(!checkForcedSecondFactor(discordUtilsUser).join()) {
+            if(!forcedSecondFactorCheckResult) {
                 if(discordUtilsUser.isLinked()) {
                     discordUtilsUser.setSecondFactor(true);
                 } else {
@@ -448,7 +449,7 @@ public class DiscordUtilsBot {
                 }
             }
 
-            if(discordUtilsUser.isSecondFactorEnabled() || !checkForcedSecondFactor(discordUtilsUser).join()) {
+            if(discordUtilsUser.isSecondFactorEnabled() || !forcedSecondFactorCheckResult) {
                 String playerIp = StringUtils.remove(player.getAddress().getAddress().toString(), '/');
 
                 if(botSettings.SECOND_FACTOR_SESSIONS_ENABLED)
