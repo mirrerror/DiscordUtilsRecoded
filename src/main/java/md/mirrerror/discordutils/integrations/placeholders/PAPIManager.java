@@ -1,20 +1,20 @@
 package md.mirrerror.discordutils.integrations.placeholders;
 
 import lombok.Getter;
+import md.mirrerror.discordutils.Main;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 @Getter
 public class PAPIManager {
 
-    private final Plugin plugin;
+    private final Main plugin;
 
     private final boolean isEnabled;
 
-    public PAPIManager(Plugin plugin) {
+    public PAPIManager(Main plugin) {
         this.plugin = plugin;
         this.isEnabled = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
         if(!isEnabled) {
