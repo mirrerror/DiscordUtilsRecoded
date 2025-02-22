@@ -12,6 +12,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.awt.*;
+
 public class ServerActivityListener implements Listener {
 
     private final DiscordUtilsBot bot;
@@ -30,13 +32,9 @@ public class ServerActivityListener implements Listener {
 
         Player player = event.getPlayer();
         String message = event.getMessage();
-        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(
-                embedManager.embed(
-                        Message.CHAT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()).replace("%message%", message),
-                        Message.CHAT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()).replace("%message%", message),
-                        botSettings.SERVER_ACTIVITY_LOGGING_CHAT_EMBED_COLOR
-                )
-        ).queue();
+        logActivity(Message.CHAT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()).replace("%message%", message),
+                Message.CHAT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()).replace("%message%", message),
+                botSettings.SERVER_ACTIVITY_LOGGING_CHAT_EMBED_COLOR);
     }
 
     @EventHandler
@@ -44,13 +42,9 @@ public class ServerActivityListener implements Listener {
         if(!botSettings.SERVER_ACTIVITY_LOGGING_JOIN_ENABLED) return;
 
         Player player = event.getPlayer();
-        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(
-                embedManager.embed(
-                        Message.JOIN_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
-                        Message.JOIN_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
-                        botSettings.SERVER_ACTIVITY_LOGGING_JOIN_EMBED_COLOR
-                )
-        ).queue();
+        logActivity(Message.JOIN_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
+                Message.JOIN_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
+                botSettings.SERVER_ACTIVITY_LOGGING_JOIN_EMBED_COLOR);
     }
 
     @EventHandler
@@ -58,13 +52,9 @@ public class ServerActivityListener implements Listener {
         if(!botSettings.SERVER_ACTIVITY_LOGGING_QUIT_ENABLED) return;
 
         Player player = event.getPlayer();
-        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(
-                embedManager.embed(
-                        Message.QUIT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
-                        Message.QUIT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
-                        botSettings.SERVER_ACTIVITY_LOGGING_QUIT_EMBED_COLOR
-                )
-        ).queue();
+        logActivity(Message.QUIT_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
+                Message.QUIT_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
+                botSettings.SERVER_ACTIVITY_LOGGING_QUIT_EMBED_COLOR);
     }
 
     @EventHandler
@@ -72,13 +62,13 @@ public class ServerActivityListener implements Listener {
         if(!botSettings.SERVER_ACTIVITY_LOGGING_DEATH_ENABLED) return;
 
         Player player = event.getEntity();
-        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(
-                embedManager.embed(
-                        Message.DEATH_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
-                        Message.DEATH_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
-                        botSettings.SERVER_ACTIVITY_LOGGING_DEATH_EMBED_COLOR
-                )
-        ).queue();
+        logActivity(Message.DEATH_LOGGING_EMBED_TITLE.getText().replace("%player%", player.getName()),
+                Message.DEATH_LOGGING_EMBED_TEXT.getText().replace("%player%", player.getName()),
+                botSettings.SERVER_ACTIVITY_LOGGING_DEATH_EMBED_COLOR);
+    }
+
+    private void logActivity(String title, String text, Color color) {
+        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(embedManager.embed(title, text, color)).queue();
     }
 
 }

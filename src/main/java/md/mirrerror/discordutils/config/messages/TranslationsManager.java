@@ -20,7 +20,7 @@ public class TranslationsManager {
     private final Plugin plugin;
     private final ConfigManager configManager;
 
-    private static final String TRANSLATION_URL = "https://github.com/mirrerror/DiscordUtilsRecoded/raw/main/DUTranslations/lang_";
+    private static final String TRANSLATION_URL = "https://github.com/mirrerror/DiscordUtilsRecoded/raw/main/DUTranslations/";
 
     public void downloadTranslation(String key) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -29,7 +29,7 @@ public class TranslationsManager {
             if(!file.exists())
                 try {
                     plugin.getLogger().info("Started downloading translation with the key: " + key + ".");
-                    URL url = new URL(TRANSLATION_URL + key.toLowerCase() + ".yml");
+                    URL url = new URL(TRANSLATION_URL + fileName);
                     Files.copy(url.openStream(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     plugin.getLogger().info("Finished downloading translation with the key: " + key + ".");
                     configManager.setLang(new LangConfig(plugin, fileName));

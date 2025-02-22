@@ -18,7 +18,7 @@ public class ConfigDataManager implements DataManager {
 
     @Override
     public CompletableFuture<Void> setup() {
-        return CompletableFuture.runAsync(() -> {}); // Config files are already initialized on the start
+        return CompletableFuture.completedFuture(null); // Config files are already initialized on the start
     }
 
     @Override

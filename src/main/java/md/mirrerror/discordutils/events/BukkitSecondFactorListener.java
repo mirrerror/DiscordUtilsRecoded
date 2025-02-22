@@ -135,14 +135,10 @@ public class BukkitSecondFactorListener implements Listener {
                 if(configManager.getBotSettings().getFileConfiguration().getConfigurationSection("ActionsAfterFailing2FA." + attempts) != null) {
                     List<String> messages = configManager.getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Messages");
                     List<String> commands = configManager.getBotSettings().getFileConfiguration().getStringList("ActionsAfterFailing2FA." + attempts + ".Commands");
-                    if(messages != null) {
-                        messages.forEach(msg -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%player%", player.getName()))));
-                    }
-                    if(commands != null) {
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            commands.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
-                        });
-                    }
+                    messages.forEach(msg -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%player%", player.getName()))));
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        commands.forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", player.getName())));
+                    });
                 }
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
