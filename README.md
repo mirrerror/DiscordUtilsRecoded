@@ -85,6 +85,7 @@ For a comprehensive guide on API usage, refer to the [API Usage Example](https:/
 - `%discordutils_islinked%`: Check whether the player is linked or not.
 - `%discordutils_2fa%`: Check whether the player has 2FA enabled or not.
 - `%discordutils_discord%`: Get the Discord of the linked player.
+- `%discordutils_isboosting<guild_id>%`: Check whether the player is boosting a Discord server or not (replace the `<guild_id>` with an actual guild ID).
 
 ## Supported Plugins
 
