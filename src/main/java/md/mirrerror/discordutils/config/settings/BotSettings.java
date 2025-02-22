@@ -96,7 +96,18 @@ public class BotSettings {
     public final boolean BANS_SYNCHRONIZATION_DISCORD_TO_MINECRAFT_ENABLED = config.getBoolean("BansSynchronization.DiscordToMinecraft");
     public final boolean GUILD_VOICE_REWARDS_ENABLED = config.getBoolean("GuildVoiceRewards.Enabled");
     public final long GUILD_VOICE_REWARDS_TIME = config.getLong("GuildVoiceRewards.Time");
-    public final String GUILD_VOICE_REWARDS_REWARD = config.getString("GuildVoiceRewards.Reward");
+
+    public final List<String> GUILD_VOICE_REWARDS_REWARD;
+    {
+        if(config.isList("GuildVoiceRewards.Reward")) {
+            GUILD_VOICE_REWARDS_REWARD = config.getStringList("GuildVoiceRewards.Reward");
+        } else {
+            List<String> rewardCommands = new ArrayList<>();
+            rewardCommands.add(config.getString("GuildVoiceRewards.Reward"));
+            GUILD_VOICE_REWARDS_REWARD = rewardCommands;
+        }
+    }
+
     public final List<Long> GUILD_VOICE_REWARDS_BLACKLISTED_CHANNELS = config.getLongList("GuildVoiceRewards.BlacklistedChannels");
     public final int GUILD_VOICE_REWARDS_MIN_MEMBERS = config.getInt("GuildVoiceRewards.MinMembers");
     public final boolean SERVER_ACTIVITY_LOGGING_ENABLED = config.getBoolean("ServerActivityLogging.Enabled");

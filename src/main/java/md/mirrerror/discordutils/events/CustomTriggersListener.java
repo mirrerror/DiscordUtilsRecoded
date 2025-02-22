@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.discord.EmbedManager;
 import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
+import md.mirrerror.discordutils.models.CustomTrigger;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.utils.ExpressionManager;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -22,9 +23,8 @@ import org.reflections.Reflections;
 
 import java.awt.*;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -36,6 +36,8 @@ public class CustomTriggersListener implements Listener {
     private final EmbedManager embedManager;
     private final PAPIManager papiManager;
 
+    private List<CustomTrigger> customTriggers;
+
     public CustomTriggersListener(Plugin plugin, DiscordUtilsBot bot, FileConfiguration botSettingsConfig, BotSettings botSettings, PAPIManager papiManager) {
         this.plugin = plugin;
         this.bot = bot;
@@ -44,12 +46,31 @@ public class CustomTriggersListener implements Listener {
         this.embedManager = new EmbedManager(botSettings);
     }
 
-//    private static final String[] IGNORED_EVENTS = {
-//
-//    };
-
     public void initialize() {
-        // search event classes
+        customTriggers = new ArrayList<>();
+        for(String entry : botSettingsConfig.getConfigurationSection("CustomTriggers.InGameEvents").getKeys(false)) {
+            String eventName = botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".TriggerOn");
+            List<String> conditions = botSettingsConfig.getStringList("CustomTriggers.InGameEvents." + entry + ".Conditions");
+            List<String> commands = botSettingsConfig.getStringList("CustomTriggers.InGameEvents." + entry + ".InGameCommands");
+            long messageEmbedChannelId = botSettingsConfig.getLong("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.ChannelID");
+            Color messageEmbedColor;
+
+            try {
+                messageEmbedColor = Color.decode(botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.Color"));
+            } catch (NumberFormatException e) {
+                plugin.getLogger().warning("Invalid color format for the trigger " + entry + ". Skipping this trigger.");
+                continue;
+            }
+
+            String messageEmbedTitle = botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.Title");
+            String messageEmbedDescription = botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.Description");
+
+            customTriggers.add(new CustomTrigger(entry, eventName, conditions, commands, messageEmbedChannelId, messageEmbedColor, messageEmbedTitle, messageEmbedDescription));
+        }
+        plugin.getLogger().info("Successfully loaded " + customTriggers.size() + " custom triggers.");
+
+        if (customTriggers.isEmpty()) return;
+
         Reflections reflections = new Reflections("org.bukkit");
         Set<Class<? extends Event>> eventClasses = reflections.getSubTypesOf(Event.class).stream().
                 filter(clazz -> Arrays.stream(clazz.getDeclaredFields())
@@ -57,23 +78,17 @@ public class CustomTriggersListener implements Listener {
                 .collect(Collectors.toSet());
         plugin.getLogger().info("Found " + eventClasses.size() + " available events.");
 
-        // register events
         EventExecutor eventExecutor = (listener, event) -> onEvent(event);
         eventClasses.forEach(clazz -> plugin.getServer().getPluginManager()
                 .registerEvent(clazz, this, EventPriority.MONITOR, eventExecutor, plugin));
     }
 
     public void onEvent(Event event) {
-//        if(Arrays.stream(IGNORED_EVENTS).anyMatch(ignored -> event.getEventName().equals(ignored))) return;
+        if (customTriggers.isEmpty()) return;
 
-        Set<String> entries = new HashSet<>();
-
-        for(String entry : botSettingsConfig.getConfigurationSection("CustomTriggers.InGameEvents").getKeys(false)) {
-            if(botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".TriggerOn")
-                    .equalsIgnoreCase(event.getEventName())) {
-                entries.add(entry);
-            }
-        }
+        List<CustomTrigger> entries = customTriggers.stream()
+                .filter(customTrigger -> customTrigger.getEventName().equalsIgnoreCase(event.getEventName()))
+                .toList();
 
         if(entries.isEmpty()) return;
 
@@ -114,48 +129,44 @@ public class CustomTriggersListener implements Listener {
                 .addContextVariable("player", player)
                 .addContextVariable("sender", sender);
 
-        for(String entry : entries)
-            if(expressionManager.parseConditions(botSettingsConfig.getStringList("CustomTriggers.InGameEvents." + entry + ".Conditions"))) {
+        for(CustomTrigger customTrigger : entries) {
+            customTrigger.setExpressionManager(expressionManager);
 
-                for(String cmd : botSettingsConfig.getStringList("CustomTriggers.InGameEvents." + entry + ".InGameCommands"))
+            if(customTrigger.parseConditions()) {
+
+                for(String cmd :customTrigger.getCommands())
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                             (player == null)
                                     ? cmd.replace("%player%", "null")
                                     : papiManager.setPlaceholders(player, cmd.replace("%player%", player.getName())));
 
-                TextChannel textChannel = bot.getJda().getTextChannelById(botSettingsConfig.getLong("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.ChannelID"));
+                TextChannel textChannel = bot.getJda().getTextChannelById(customTrigger.getMessageEmbedChannelId());
 
                 if(textChannel == null) {
-                    plugin.getLogger().warning("Found an invalid text channel, skipping embed message sending for the current trigger. Trigger name: " + entry + ".");
+                    plugin.getLogger().warning("Found an invalid text channel, skipping embed message sending for the current trigger. Trigger name: " + customTrigger.getTriggerName() + ".");
                     continue;
                 }
 
-                Color color;
-
-                try {
-                    color = Color.decode(botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.Color"));
-                } catch (Exception e) {
-                    color = null;
-                }
+                Color color = customTrigger.getMessageEmbedColor();
 
                 if(color == null) {
-                    plugin.getLogger().warning("Found an invalid color, skipping embed message sending for the current trigger. Trigger name: " + entry + ".");
+                    plugin.getLogger().warning("Found an invalid color, skipping embed message sending for the current trigger. Trigger name: " + customTrigger.getTriggerName() + ".");
                     continue;
                 }
 
-                String title = botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.Title");
+                String title = customTrigger.getMessageEmbedTitle();
 
                 if(title == null) {
-                    plugin.getLogger().warning("Embed title is not found, skipping embed message sending for the current trigger. Trigger name: " + entry + ".");
+                    plugin.getLogger().warning("Embed title is not found, skipping embed message sending for the current trigger. Trigger name: " + customTrigger.getTriggerName() + ".");
                     continue;
                 }
 
                 if(player != null) title = papiManager.setPlaceholders(player, title.replace("%player%", player.getName()));
 
-                String description = botSettingsConfig.getString("CustomTriggers.InGameEvents." + entry + ".DiscordMessageEmbed.Description");
+                String description = customTrigger.getMessageEmbedDescription();
 
                 if(description == null) {
-                    plugin.getLogger().warning("Embed description is not found, skipping embed message sending for the current trigger. Trigger name: " + entry + ".");
+                    plugin.getLogger().warning("Embed description is not found, skipping embed message sending for the current trigger. Trigger name: " + customTrigger.getTriggerName() + ".");
                     continue;
                 }
 
@@ -164,5 +175,7 @@ public class CustomTriggersListener implements Listener {
                 textChannel.sendMessageEmbeds(embedManager.embed(title, description, color)).queue();
 
             }
+
+        }
     }
 }

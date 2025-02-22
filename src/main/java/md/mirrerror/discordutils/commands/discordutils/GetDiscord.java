@@ -31,21 +31,19 @@ public class GetDiscord implements SubCommand {
 
         if(player == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
-            if(offlinePlayer != null) {
-                dataManager.getDiscordUserId(offlinePlayer.getUniqueId()).whenComplete((userId, throwable) -> {
-                    if(throwable != null) {
-                        Message.UNKNOWN_ERROR.send(sender, true);
-                        plugin.getLogger().severe("Something went wrong while getting Discord user ID for the player: " + offlinePlayer.getUniqueId() + "!");
-                        return;
-                    }
+            dataManager.getDiscordUserId(offlinePlayer.getUniqueId()).whenComplete((userId, throwable) -> {
+                if (throwable != null) {
+                    Message.UNKNOWN_ERROR.send(sender, true);
+                    plugin.getLogger().severe("Something went wrong while getting Discord user ID for the player: " + offlinePlayer.getUniqueId() + "!");
+                    return;
+                }
 
-                    try {
-                        sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", bot.getJda().getUserById(userId).getName()));
-                    } catch (NullPointerException ignored) {
-                        Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.send(sender, true);
-                    }
-                });
-            }
+                try {
+                    sender.sendMessage(Message.GETDISCORD_SUCCESSFUL.getText(true).replace("%discord%", bot.getJda().getUserById(userId).getName()));
+                } catch (NullPointerException ignored) {
+                    Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.send(sender, true);
+                }
+            });
         } else {
             DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
             if(!Validator.validateLinkedUser(sender, discordUtilsUser)) return;

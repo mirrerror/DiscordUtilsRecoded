@@ -147,7 +147,7 @@
 # Whether to enable or not the reward giving for spending time in the voice channels on your server in Discord
 # Enabled - true - enable, false - disable
 # Time - minimum time for achieving the reward (in seconds)
-# Reward - command that is executed if the player reach the minimum time (executes multiple times if the minimum time is played by player more than one time)
+# Reward - command(-s) that is/are executed if the player reach the minimum time (executes multiple times if the minimum time is played by player more than one time)
 # BlacklistedChannels - ignored channel IDs. For example: BlacklistedChannels: [905508941230915684, 123123123131231233]
 # MinMembers - the minimum amount of members that has to be in a voice channel to get the rewards
 # ------------------------------------------------------------------
@@ -307,7 +307,8 @@ BansSynchronization:
 GuildVoiceRewards:
   Enabled: false
   Time: 600
-  Reward: 'eco give %player% 100'
+  Reward:
+    - 'eco give %player% 100'
   BlacklistedChannels: []
   MinMembers: 1
 ServerActivityLogging:

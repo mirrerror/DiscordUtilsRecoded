@@ -62,7 +62,7 @@ public class BotSettingsConfig extends CustomConfig {
         getFileConfiguration().addDefault("BansSynchronization.DiscordToMinecraft", false);
         getFileConfiguration().addDefault("GuildVoiceRewards.Enabled", true);
         getFileConfiguration().addDefault("GuildVoiceRewards.Time", 300);
-        getFileConfiguration().addDefault("GuildVoiceRewards.Reward", "eco give %player% 100");
+        getFileConfiguration().addDefault("GuildVoiceRewards.Reward", Collections.singletonList("eco give %player% 100"));
         getFileConfiguration().addDefault("GuildVoiceRewards.BlacklistedChannels", Collections.emptyList());
         getFileConfiguration().addDefault("GuildVoiceRewards.MinMembers", 1);
         getFileConfiguration().addDefault("ServerActivityLogging.Enabled", false);

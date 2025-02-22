@@ -25,12 +25,13 @@ public class ExpressionManager {
     public boolean parseConditions(List<String> conditions) {
         addDefaultContextVariables();
 
-        Set<Expression> expressions = new HashSet<>();
         try {
-            for(String condition : conditions) expressions.add(expressionParser.parseExpression(condition));
-            StandardEvaluationContext context = new StandardEvaluationContext();
-            context.setVariables(contextVariables);
-            for(Expression expression : expressions) if(!expression.getValue(context, Boolean.class)) return false;
+            for (String condition : conditions) {
+                Expression expression = expressionParser.parseExpression(condition);
+                StandardEvaluationContext context = new StandardEvaluationContext();
+                context.setVariables(contextVariables);
+                if(!expression.getValue(context, Boolean.class)) return false;
+            }
         } catch (EvaluationException | ParseException | NullPointerException e) {
             plugin.getLogger().severe("Something went wrong while parsing an expression. Check your settings.");
             plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
