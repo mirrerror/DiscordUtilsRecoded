@@ -54,9 +54,11 @@ public class VoiceRewardsListener extends ListenerAdapter {
                 long time = voiceTime.get(id);
 
                 if(time >= minTime) {
-                    String command = botSettings.GUILD_VOICE_REWARDS_REWARD.replace("%player%", discordUtilsUser.getOfflinePlayer().getName());
-                    Bukkit.getScheduler().callSyncMethod(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
-                    voiceTime.put(id, 0L);
+                    botSettings.GUILD_VOICE_REWARDS_REWARD.forEach(entry -> {
+                        String command = entry.replace("%player%", discordUtilsUser.getOfflinePlayer().getName());
+                        Bukkit.getScheduler().callSyncMethod(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+                        voiceTime.put(id, 0L);
+                    });
                 }
             }, 0L, 20L);
 
