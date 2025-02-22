@@ -56,13 +56,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
         }
 
         if (params.startsWith("isboosting")) {
-            long guildId;
-
-            try {
-                guildId = Long.parseLong(params.replaceFirst("isboosting", ""));
-            } catch (NumberFormatException e) {
-                return null;
-            }
+            String guildId = params.replaceFirst("isboosting", "");
 
             Guild guild = plugin.getBot().getJda().getGuildById(guildId);
             if (guild == null) return null;
