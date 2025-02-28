@@ -1,32 +1,25 @@
-# PermissionsPlugin
 # Permission plugin that you are currently using (set it to '' if you want to disable the permission integration)
 # Available plugins: LuckPerms, Vault (includes many plugins support: https://www.spigotmc.org/resources/vault.34315/)
-# ------------------------------------------------------------------
-# CheckForUpdates
+PermissionsPlugin: 'LuckPerms'
 # Set it to true if you want plugin to check for available updates, otherwise set it to false
-# ------------------------------------------------------------------
-# Language
+CheckForUpdates: true
 # You can choose a translation of the plugin, and the plugin will download it automatically. Available ones: ru (Russian), cs (Czech), pt (Portuguese), es (Spanish)
 # Set it to '' of you don't need any official translations (the default plugin language is English)
-# ------------------------------------------------------------------
-# Database
-# Usage of the database instead of the data.yml file to save and load your data
-# Type - database type (available: mysql) (set it to '' to disable this feature, in this case the data will be stored in the data.yml file)
-# Host - database host (by default - localhost)
-# Port - database port (by default - 3306)
-# Database - database name
-# Username - database username (by default - root)
-# Password - database password (by default there is not a password)
-# ConnectionUrl - the URL that is used to connect to the database
-
-PermissionsPlugin: 'LuckPerms'
-CheckForUpdates: true
 Language: ''
+
+# Usage of the database instead of the data.yml file to save and load your data
 Database:
+  # Database type (available: mysql) (set it to '' to disable this feature, in this case the data will be stored in the data.yml file)
   Type: ''
+  # Database host (by default - localhost)
   Host: 'localhost'
+  # Database port (by default - 3306)
   Port: 3306
+  # Database name
   Database: 'DiscordUtils'
+  # Database username (by default - root)
   Username: 'root'
+  # Database password (by default there is not a password)
   Password: ''
+  # The URL that is used to connect to the database
   ConnectionUrl: 'jdbc:mysql://%host%:%port%/%database%?autoReconnect=true&useSSL=false'
