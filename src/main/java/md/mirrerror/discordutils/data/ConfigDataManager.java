@@ -2,7 +2,6 @@ package md.mirrerror.discordutils.data;
 
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.customconfigs.DataConfig;
-import md.mirrerror.discordutils.models.DiscordUtilsUser;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
