@@ -3,6 +3,7 @@ package md.mirrerror.discordutils.config.customconfigs;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class DataConfig extends CustomConfig {
     public DataConfig(Plugin plugin, String fileName) {
@@ -10,10 +11,11 @@ public class DataConfig extends CustomConfig {
     }
 
     @Override
-    public void initializeFields() {
-        getFileConfiguration().addDefault("DiscordLink", new HashMap<>());
-        getFileConfiguration().options().copyDefaults(true);
-        getFileConfiguration().options().copyHeader(true);
-        saveConfigFile();
+    public Map<String, Object> initializeFields() {
+        Map<String, Object> fields = new HashMap<>();
+
+        fields.put("DiscordLink", new HashMap<>());
+
+        return fields;
     }
 }

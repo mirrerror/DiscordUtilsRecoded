@@ -1,13 +1,14 @@
 package md.mirrerror.discordutils.config.customconfigs;
 
 import lombok.Getter;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Level;
 
 @Getter
 public abstract class CustomConfig {
@@ -16,48 +17,66 @@ public abstract class CustomConfig {
     private final File file;
     private FileConfiguration fileConfiguration;
 
+    private final Map<String, Object> fields;
+
     public CustomConfig(Plugin plugin, String fileName) {
         this.file = new File(plugin.getDataFolder(), fileName);
         this.plugin = plugin;
+        this.fields = initializeFields();
         initializeConfigFile();
-        initializeFields();
     }
 
     public void initializeConfigFile() {
         if(!file.exists()) {
-            file.getParentFile().mkdirs();
-            plugin.saveResource(file.getName(), false);
+            saveDefaultConfig();
             plugin.getLogger().info("Config file '" + file.getName() + "' has been successfully created.");
         }
 
-        fileConfiguration = new YamlConfiguration();
-        try {
-            fileConfiguration.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            plugin.getLogger().severe("Something went wrong while initializing the config file named '" + file.getName() + "'!");
-            plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+        reloadConfigFile();
+        setMissingDefaults();
+    }
+
+    public FileConfiguration getConfig() {
+        if (fileConfiguration == null) {
+            this.reloadConfigFile();
         }
+        return fileConfiguration;
     }
 
     public void saveConfigFile() {
-        try {
-            fileConfiguration.save(file);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Something went wrong while saving the config file named '" + file.getName() + "'!");
-            plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
+        if (fileConfiguration != null && file != null) {
+            try {
+                getConfig().save(file);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Could not save config to " + file, ex);
+            }
         }
+    }
+
+    public void saveDefaultConfig() {
+        if (!file.exists()) this.plugin.saveResource(file.getName(), false);
     }
 
     public void reloadConfigFile() {
-        fileConfiguration = new YamlConfiguration();
-        try {
-            fileConfiguration.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            plugin.getLogger().severe("Something went wrong while loading the config file named '" + file.getName() + "'!");
-            plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
-        }
+        fileConfiguration = YamlConfiguration.loadConfiguration(file);
+
+//        InputStream defConfigStream = plugin.getResource(file.getName());
+//        if (defConfigStream != null) {
+//            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
+//            fileConfiguration.setDefaults(defConfig);
+//        }
     }
 
-    public abstract void initializeFields();
+    public abstract Map<String, Object> initializeFields();
+
+    public void setMissingDefaults() {
+        if (fileConfiguration == null) reloadConfigFile();
+
+        for (Map.Entry<String, Object> entry : fields.entrySet())
+            if (fileConfiguration.get(entry.getKey()) == null)
+                fileConfiguration.set(entry.getKey(), entry.getValue());
+
+        saveConfigFile();
+    }
 
 }
