@@ -11,6 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 public class Validator {
@@ -110,5 +113,14 @@ public class Validator {
             }
             return true;
         });
+    }
+
+    public static boolean validateUrl(String stringUrl) {
+        try {
+            new URL(stringUrl).toURI();
+            return true;
+        } catch (MalformedURLException | URISyntaxException ignored) {
+            return false;
+        }
     }
 }

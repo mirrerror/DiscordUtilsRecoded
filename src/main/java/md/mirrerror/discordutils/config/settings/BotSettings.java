@@ -2,11 +2,13 @@ package md.mirrerror.discordutils.config.settings;
 
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
+import md.mirrerror.discordutils.utils.Validator;
 import net.dv8tion.jda.api.OnlineStatus;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.awt.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +31,9 @@ public class BotSettings {
         String urlString = config.getString("EmbedMessages.SuccessfulEmbedImageUrl");
         String result = null;
 
-        try {
-            new URL(urlString);
+        if (Validator.validateUrl(urlString)) {
             result = urlString;
-        } catch (MalformedURLException | NullPointerException ignored) {
+        } else {
             Main.getInstance().getLogger().warning("Wrong URL for the successful embed image: " + urlString);
         }
 
@@ -45,10 +46,9 @@ public class BotSettings {
         String urlString = config.getString("EmbedMessages.InformationEmbedImageUrl");
         String result = null;
 
-        try {
-            new URL(urlString);
+        if (Validator.validateUrl(urlString)) {
             result = urlString;
-        } catch (MalformedURLException | NullPointerException ignored) {
+        } else {
             Main.getInstance().getLogger().warning("Wrong URL for the information embed image: " + urlString);
         }
 
@@ -61,10 +61,9 @@ public class BotSettings {
         String urlString = config.getString("EmbedMessages.ErrorEmbedImageUrl");
         String result = null;
 
-        try {
-            new URL(urlString);
+        if (Validator.validateUrl(urlString)) {
             result = urlString;
-        } catch (MalformedURLException | NullPointerException ignored) {
+        } else {
             Main.getInstance().getLogger().warning("Wrong URL for the error embed image: " + urlString);
         }
 
