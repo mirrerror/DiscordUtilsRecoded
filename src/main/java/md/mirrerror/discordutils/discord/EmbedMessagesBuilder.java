@@ -32,12 +32,12 @@ public class EmbedMessagesBuilder extends EmbedBuilder {
     }
 
     public EmbedMessagesBuilder embed(String title, String text, Color color) {
-        setTitle(title).setColor(color).setDescription(text).setFooter(FOOTER);
+        embed(title, text, color, null);
         return this;
     }
 
     public EmbedMessagesBuilder embed(String title, String text, Color color, String footer) {
-        embed(title, text, color).setFooter(footer + " / " + FOOTER);
+        setTitle(title).setColor(color).setDescription(text).setFooter(footer == null ? FOOTER : footer + " / " + FOOTER);
         return this;
     }
 
