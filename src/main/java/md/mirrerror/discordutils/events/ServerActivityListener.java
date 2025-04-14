@@ -2,7 +2,7 @@ package md.mirrerror.discordutils.events;
 
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,13 +17,13 @@ import java.awt.*;
 public class ServerActivityListener implements Listener {
 
     private final DiscordUtilsBot bot;
-    private final EmbedManager embedManager;
+    private final EmbedMessagesBuilder embedMessagesBuilder;
     private final BotSettings botSettings;
 
     public ServerActivityListener(DiscordUtilsBot discordUtilsBot, BotSettings botSettings) {
         this.bot = discordUtilsBot;
         this.botSettings = botSettings;
-        this.embedManager = new EmbedManager(botSettings);
+        this.embedMessagesBuilder = new EmbedMessagesBuilder(botSettings);
     }
 
     @EventHandler
@@ -68,7 +68,7 @@ public class ServerActivityListener implements Listener {
     }
 
     private void logActivity(String title, String text, Color color) {
-        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(embedManager.embed(title, text, color)).queue();
+        bot.getServerActivityLoggingTextChannel().sendMessageEmbeds(embedMessagesBuilder.embed(title, text, color).build()).queue();
     }
 
 }

@@ -24,8 +24,11 @@ public class BotSettingsConfig extends CustomConfig {
         fields.put("Activities.1.Type", "playing");
         fields.put("Activities.1.Text", "Minecraft");
         fields.put("EmbedMessages.SuccessfulEmbedColor", "#0AAC00");
+        fields.put("EmbedMessages.SuccessfulEmbedImageUrl", "");
         fields.put("EmbedMessages.InformationEmbedColor", "#ECC846");
+        fields.put("EmbedMessages.InformationEmbedImageUrl", "");
         fields.put("EmbedMessages.ErrorEmbedColor", "#A80000");
+        fields.put("EmbedMessages.ErrorEmbedImageUrl", "");
         fields.put("Roles.GroupRoles", new HashMap<>());
         fields.put("Roles.RolesToGroups", new HashMap<>());
         fields.put("Roles.AdminRoles", Collections.emptyList());

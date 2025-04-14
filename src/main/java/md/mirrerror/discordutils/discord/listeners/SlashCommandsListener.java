@@ -3,7 +3,7 @@ package md.mirrerror.discordutils.discord.listeners;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
@@ -31,14 +31,14 @@ public class SlashCommandsListener extends ListenerAdapter {
     private final BotSettings botSettings;
     private final Plugin plugin;
     private final PAPIManager papiManager;
-    private final EmbedManager embedManager;
+    private final EmbedMessagesBuilder embedMessagesBuilder;
 
     public SlashCommandsListener(DiscordUtilsBot bot, Plugin plugin, PAPIManager papiManager, BotSettings botSettings, List<Guild> guilds) {
         this.bot = bot;
         this.botSettings = botSettings;
         this.plugin = plugin;
         this.papiManager = papiManager;
-        this.embedManager = new EmbedManager(botSettings);
+        this.embedMessagesBuilder = new EmbedMessagesBuilder(botSettings);
 
         List<CommandData> commandData = new ArrayList<>();
 
@@ -84,7 +84,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                 break;
             }
             case "online": {
-                event.replyEmbeds(embedManager.infoEmbed(Message.ONLINE.getText().replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size())))).queue();
+                event.replyEmbeds(embedMessagesBuilder.infoEmbed(Message.ONLINE.getText().replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))).build()).queue();
                 break;
             }
             case "sudo": {
@@ -97,7 +97,7 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
 
-                hook.editOriginalEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText())).queue();
+                hook.editOriginalEmbeds(embedMessagesBuilder.successfulEmbed(Message.COMMAND_EXECUTED.getText()).build()).queue();
                 break;
             }
             case "embed": {
@@ -118,8 +118,8 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 if(!DiscordValidator.validateColor(hook, color)) return;
 
-                hook.editOriginalEmbeds(embedManager.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
-                        event.getUser().getName()))).queue();
+                hook.editOriginalEmbeds(embedMessagesBuilder.embed(title, text, color, Message.EMBED_SENT_BY.getText().replace("%sender%",
+                        event.getUser().getName())).build()).queue();
                 break;
             }
             case "stats": {
@@ -141,7 +141,7 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 messageToSend = new StringBuilder(papiManager.setPlaceholders(player, messageToSend.toString()));
 
-                hook.editOriginalEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
+                hook.editOriginalEmbeds(embedMessagesBuilder.infoEmbed(messageToSend.toString()).build()).queue();
 
                 break;
             }
@@ -153,7 +153,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                     messageToSend.append(s).append("\n");
                 }
 
-                hook.editOriginalEmbeds(embedManager.infoEmbed(messageToSend.toString())).queue();
+                hook.editOriginalEmbeds(embedMessagesBuilder.infoEmbed(messageToSend.toString()).build()).queue();
 
                 break;
             }
@@ -172,7 +172,7 @@ public class SlashCommandsListener extends ListenerAdapter {
 
                 discordUtilsUser.unregister();
 
-                hook.editOriginalEmbeds(embedManager.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText())).queue();
+                hook.editOriginalEmbeds(embedMessagesBuilder.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText()).build()).queue();
 
                 break;
             }

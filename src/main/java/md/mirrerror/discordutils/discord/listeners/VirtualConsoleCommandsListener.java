@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -21,13 +21,13 @@ public class VirtualConsoleCommandsListener extends ListenerAdapter {
     private final Plugin plugin;
     private final DiscordUtilsBot bot;
     private final BotSettings botSettings;
-    private final EmbedManager embedManager;
+    private final EmbedMessagesBuilder embedMessagesBuilder;
 
     public VirtualConsoleCommandsListener(Plugin plugin, DiscordUtilsBot bot, BotSettings botSettings) {
         this.plugin = plugin;
         this.bot = bot;
         this.botSettings = botSettings;
-        this.embedManager = new EmbedManager(botSettings);
+        this.embedMessagesBuilder = new EmbedMessagesBuilder(botSettings);
     }
 
     @Override
@@ -43,20 +43,20 @@ public class VirtualConsoleCommandsListener extends ListenerAdapter {
         if(!textChannel.getId().equals(bot.getConsoleLoggingTextChannel().getId())) return;
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
         if(!discordUtilsUser.isAdmin(event.getGuild())) {
-            if(deleteDelay < 1) textChannel.sendMessageEmbeds(embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText())).queue();
-            else bot.sendTimedMessageEmbed(textChannel, embedManager.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText()), deleteDelay);
+            if(deleteDelay < 1) textChannel.sendMessageEmbeds(embedMessagesBuilder.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText()).build()).queue();
+            else bot.sendTimedMessageEmbed(textChannel, embedMessagesBuilder.errorEmbed(Message.INSUFFICIENT_PERMISSIONS.getText()).build(), deleteDelay);
             return;
         }
 
         for(String cmd : bot.getVirtualConsoleBlacklistedCommands()) if(event.getMessage().getContentRaw().startsWith(cmd)) {
-            if(deleteDelay < 1) textChannel.sendMessageEmbeds(embedManager.errorEmbed(Message.THIS_COMMAND_IS_BLACKLISTED.getText())).queue();
-            else bot.sendTimedMessageEmbed(textChannel, embedManager.errorEmbed(Message.THIS_COMMAND_IS_BLACKLISTED.getText()), deleteDelay);
+            if(deleteDelay < 1) textChannel.sendMessageEmbeds(embedMessagesBuilder.errorEmbed(Message.THIS_COMMAND_IS_BLACKLISTED.getText()).build()).queue();
+            else bot.sendTimedMessageEmbed(textChannel, embedMessagesBuilder.errorEmbed(Message.THIS_COMMAND_IS_BLACKLISTED.getText()).build(), deleteDelay);
             return;
         }
 
         Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), event.getMessage().getContentRaw()));
-        if(deleteDelay < 1) textChannel.sendMessageEmbeds(embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText())).queue();
-        else bot.sendTimedMessageEmbed(textChannel, embedManager.successfulEmbed(Message.COMMAND_EXECUTED.getText()), deleteDelay);
+        if(deleteDelay < 1) textChannel.sendMessageEmbeds(embedMessagesBuilder.successfulEmbed(Message.COMMAND_EXECUTED.getText()).build()).queue();
+        else bot.sendTimedMessageEmbed(textChannel, embedMessagesBuilder.successfulEmbed(Message.COMMAND_EXECUTED.getText()).build(), deleteDelay);
     }
 
 }

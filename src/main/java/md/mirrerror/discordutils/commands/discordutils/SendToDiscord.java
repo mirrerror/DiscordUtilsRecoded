@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.commands.SubCommand;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.utils.Validator;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -38,7 +38,7 @@ public class SendToDiscord implements SubCommand {
         if(!Validator.validateColor(sender, color)) return;
 
         bot.sendMessageEmbed(textChannel,
-                new EmbedManager(botSettings).embed(args[1], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())));
+                new EmbedMessagesBuilder(botSettings).embed(args[1], text.toString().trim().replace("\\n", "\n"), color, Message.SENDTODISCORD_SENT_BY.getText().replace("%sender%", sender.getName())).build());
         Message.DISCORDUTILS_SENDTODISCORD_SUCCESSFUL.send(sender, true);
     }
 

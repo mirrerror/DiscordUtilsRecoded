@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
 import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
 import md.mirrerror.discordutils.models.DiscordUtilsUser;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -26,9 +26,9 @@ public class DiscordToChatListener extends ListenerAdapter {
         if(event.getChannel().getIdLong() != bot.getChatTextChannel().getIdLong()) return;
 
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUserId(event.getAuthor().getIdLong());
-        EmbedManager embedManager = new EmbedManager(botSettings);
+        EmbedMessagesBuilder embedMessagesBuilder = new EmbedMessagesBuilder(botSettings);
         if(!discordUtilsUser.isLinked()) {
-            bot.sendTimedMessageEmbed(event.getGuildChannel().asTextChannel(), embedManager.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()), 10);
+            bot.sendTimedMessageEmbed(event.getGuildChannel().asTextChannel(), embedMessagesBuilder.errorEmbed(Message.ACCOUNT_IS_NOT_VERIFIED.getText()).build(), 10);
             return;
         }
 

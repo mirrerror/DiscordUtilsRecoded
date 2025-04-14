@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.OnlineStatus;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.awt.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +24,53 @@ public class BotSettings {
     public final boolean ACTIVITIES_ENABLED = config.getBoolean("Activities.Enabled");
     public final long ACTIVITIES_UPDATE_DELAY = config.getLong("Activities.UpdateDelay");
     public final Color SUCCESSFUL_EMBED_COLOR = Color.decode(config.getString("EmbedMessages.SuccessfulEmbedColor"));
+
+    public final String SUCCESSFUL_EMBED_IMAGE_URL; {
+        String urlString = config.getString("EmbedMessages.SuccessfulEmbedImageUrl");
+        String result = null;
+
+        try {
+            new URL(urlString);
+            result = urlString;
+        } catch (MalformedURLException | NullPointerException ignored) {
+            Main.getInstance().getLogger().warning("Wrong URL for the successful embed image: " + urlString);
+        }
+
+        SUCCESSFUL_EMBED_IMAGE_URL = result;
+    }
+
     public final Color INFORMATION_EMBED_COLOR = Color.decode(config.getString("EmbedMessages.InformationEmbedColor"));
+
+    public final String INFORMATION_EMBED_IMAGE_URL; {
+        String urlString = config.getString("EmbedMessages.InformationEmbedImageUrl");
+        String result = null;
+
+        try {
+            new URL(urlString);
+            result = urlString;
+        } catch (MalformedURLException | NullPointerException ignored) {
+            Main.getInstance().getLogger().warning("Wrong URL for the information embed image: " + urlString);
+        }
+
+        INFORMATION_EMBED_IMAGE_URL = result;
+    }
+
     public final Color ERROR_EMBED_COLOR = Color.decode(config.getString("EmbedMessages.ErrorEmbedColor"));
+
+    public final String ERROR_EMBED_IMAGE_URL; {
+        String urlString = config.getString("EmbedMessages.ErrorEmbedImageUrl");
+        String result = null;
+
+        try {
+            new URL(urlString);
+            result = urlString;
+        } catch (MalformedURLException | NullPointerException ignored) {
+            Main.getInstance().getLogger().warning("Wrong URL for the error embed image: " + urlString);
+        }
+
+        ERROR_EMBED_IMAGE_URL = result;
+    }
+
     public final Map<Long, List<String>> GROUP_ROLES;
     {
         GROUP_ROLES = new HashMap<>();

@@ -8,7 +8,7 @@ import md.mirrerror.discordutils.config.settings.BotSettings;
 import md.mirrerror.discordutils.data.DataManager;
 import md.mirrerror.discordutils.discord.Activities;
 import md.mirrerror.discordutils.discord.ConsoleLoggingManager;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.discord.SecondFactorSession;
 import md.mirrerror.discordutils.discord.listeners.*;
 import md.mirrerror.discordutils.events.ChatToDiscordListener;
@@ -76,7 +76,7 @@ public class DiscordUtilsBot {
     private List<String> virtualConsoleBlacklistedCommands;
     private List<Long> notifyAboutMentionsBlacklistedChannels;
 
-    private final EmbedManager embedManager;
+    private final EmbedMessagesBuilder embedMessagesBuilder;
 
     public enum SecondFactorType {
         CODE, REACTION;
@@ -92,7 +92,7 @@ public class DiscordUtilsBot {
     }
 
     public DiscordUtilsBot(Plugin plugin, BotSettingsConfig botSettingsConfig, BotSettings botSettings, PAPIManager papiManager, DataManager dataManager, PermissionsIntegration permissionsIntegration) {
-        this.embedManager = new EmbedManager(botSettings);
+        this.embedMessagesBuilder = new EmbedMessagesBuilder(botSettings);
         this.botSettings = botSettings;
         this.botSettingsConfig = botSettingsConfig;
         this.plugin = plugin;
@@ -409,13 +409,13 @@ public class DiscordUtilsBot {
         code.set(code.get().replace("-", "").trim());
 
         user.openPrivateChannel().submit()
-                .thenCompose(privateChannel -> privateChannel.sendMessageEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_CODE_MESSAGE.getText().replace("%code%", code.get()))).submit())
+                .thenCompose(privateChannel -> privateChannel.sendMessageEmbeds(embedMessagesBuilder.infoEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_CODE_MESSAGE.getText().replace("%code%", code.get())).build()).submit())
                 .whenComplete((msg, error) -> {
                     if (error == null) {
                         if (channel instanceof InteractionHook) {
-                            ((InteractionHook) channel).editOriginalEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
+                            ((InteractionHook) channel).editOriginalEmbeds(embedMessagesBuilder.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText()).build()).queue();
                         } else if (channel instanceof MessageChannelUnion) {
-                            ((MessageChannelUnion) channel).sendMessageEmbeds(embedManager.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText())).queue();
+                            ((MessageChannelUnion) channel).sendMessageEmbeds(embedMessagesBuilder.successfulEmbed(md.mirrerror.discordutils.config.messages.Message.VERIFICATION_MESSAGE.getText()).build()).queue();
                         } else {
                             plugin.getLogger().severe("Something went wrong while starting the verification process!");
                             return;
@@ -423,9 +423,9 @@ public class DiscordUtilsBot {
                         linkCodes.put(code.get(), user.getIdLong());
                     } else {
                         if (channel instanceof InteractionHook) {
-                            ((InteractionHook) channel).editOriginalEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
+                            ((InteractionHook) channel).editOriginalEmbeds(embedMessagesBuilder.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText()).build()).queue();
                         } else if (channel instanceof MessageChannelUnion) {
-                            ((MessageChannelUnion) channel).sendMessageEmbeds(embedManager.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText())).queue();
+                            ((MessageChannelUnion) channel).sendMessageEmbeds(embedMessagesBuilder.errorEmbed(md.mirrerror.discordutils.config.messages.Message.CAN_NOT_SEND_MESSAGE.getText()).build()).queue();
                         } else {
                             plugin.getLogger().severe("Something went wrong while starting the verification process!");
                         }
@@ -540,8 +540,8 @@ public class DiscordUtilsBot {
         return user.openPrivateChannel().submit()
                 .thenCompose(channel ->
                         channel.sendMessageEmbeds(
-                                embedManager.infoEmbed(
-                                        message.replace("%playerIp%", playerIp))
+                                embedMessagesBuilder.infoEmbed(
+                                        message.replace("%playerIp%", playerIp)).build()
                         ).addActionRow(Button.success("accept", md.mirrerror.discordutils.config.messages.Message.ACCEPT.getText()))
                                 .addActionRow(Button.danger("decline", md.mirrerror.discordutils.config.messages.Message.DECLINE.getText()))
                                 .submit()
@@ -552,7 +552,7 @@ public class DiscordUtilsBot {
         return user.openPrivateChannel().submit()
                 .thenCompose(channel ->
                         channel.sendMessageEmbeds(
-                                        embedManager.infoEmbed(message.replace("%code%", code).replace("%playerIp%", playerIp))
+                                        embedMessagesBuilder.infoEmbed(message.replace("%code%", code).replace("%playerIp%", playerIp)).build()
                                 ).submit()
                 );
     }
@@ -664,7 +664,7 @@ public class DiscordUtilsBot {
 
     public InteractionHook delayReply(IReplyCallback event, boolean isEphemeral) {
         event.deferReply(isEphemeral).queue();
-        event.getHook().editOriginalEmbeds(embedManager.infoEmbed(md.mirrerror.discordutils.config.messages.Message.WAITING_FOR_THE_RESPONSE.getText())).queue();
+        event.getHook().editOriginalEmbeds(embedMessagesBuilder.infoEmbed(md.mirrerror.discordutils.config.messages.Message.WAITING_FOR_THE_RESPONSE.getText()).build()).queue();
         return event.getHook();
     }
 

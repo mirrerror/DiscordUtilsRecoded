@@ -2,7 +2,7 @@ package md.mirrerror.discordutils.events;
 
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.config.settings.BotSettings;
-import md.mirrerror.discordutils.discord.EmbedManager;
+import md.mirrerror.discordutils.discord.EmbedMessagesBuilder;
 import md.mirrerror.discordutils.integrations.placeholders.PAPIManager;
 import md.mirrerror.discordutils.models.CustomTrigger;
 import md.mirrerror.discordutils.models.DiscordUtilsBot;
@@ -33,7 +33,7 @@ public class CustomTriggersListener implements Listener {
     private final Plugin plugin;
     private final DiscordUtilsBot bot;
     private final FileConfiguration botSettingsConfig;
-    private final EmbedManager embedManager;
+    private final EmbedMessagesBuilder embedMessagesBuilder;
     private final PAPIManager papiManager;
 
     private List<CustomTrigger> customTriggers;
@@ -43,7 +43,7 @@ public class CustomTriggersListener implements Listener {
         this.bot = bot;
         this.botSettingsConfig = botSettingsConfig;
         this.papiManager = papiManager;
-        this.embedManager = new EmbedManager(botSettings);
+        this.embedMessagesBuilder = new EmbedMessagesBuilder(botSettings);
     }
 
     public void initialize() {
@@ -172,7 +172,7 @@ public class CustomTriggersListener implements Listener {
 
                 if(player != null) description = papiManager.setPlaceholders(player, description.replace("%player%", player.getName()));
 
-                textChannel.sendMessageEmbeds(embedManager.embed(title, description, color)).queue();
+                textChannel.sendMessageEmbeds(embedMessagesBuilder.embed(title, description, color).build()).queue();
 
             }
 

@@ -31,10 +31,16 @@ Activities:
 EmbedMessages:
   # Successful embed messages' type color
   SuccessfulEmbedColor: '#0AAC00'
+  # Successful embed messages' type image URL
+  SuccessfulEmbedImageUrl: ''
   # Info embed messages' type color
   InformationEmbedColor: '#ECC846'
+  # Info embed messages' type image URL
+  InformationEmbedImageUrl: ''
   # Error embed messages' type color
   ErrorEmbedColor: '#A80000'
+  # Error embed messages' type image URL
+  ErrorEmbedImageUrl: ''
 
 # Role related settings
 Roles:
