@@ -31,10 +31,12 @@ public class BotSettings {
         String urlString = config.getString("EmbedMessages.SuccessfulEmbedImageUrl");
         String result = null;
 
-        if (Validator.validateUrl(urlString)) {
-            result = urlString;
-        } else {
-            Main.getInstance().getLogger().warning("Wrong URL for the successful embed image: " + urlString);
+        if (!urlString.trim().isEmpty()) {
+            if (Validator.validateUrl(urlString)) {
+                result = urlString;
+            } else {
+                Main.getInstance().getLogger().warning("Wrong URL for the successful embed image: " + urlString);
+            }
         }
 
         SUCCESSFUL_EMBED_IMAGE_URL = result;
@@ -46,10 +48,12 @@ public class BotSettings {
         String urlString = config.getString("EmbedMessages.InformationEmbedImageUrl");
         String result = null;
 
-        if (Validator.validateUrl(urlString)) {
-            result = urlString;
-        } else {
-            Main.getInstance().getLogger().warning("Wrong URL for the information embed image: " + urlString);
+        if (!urlString.trim().isEmpty()) {
+            if (Validator.validateUrl(urlString)) {
+                result = urlString;
+            } else {
+                Main.getInstance().getLogger().warning("Wrong URL for the information embed image: " + urlString);
+            }
         }
 
         INFORMATION_EMBED_IMAGE_URL = result;
@@ -61,10 +65,12 @@ public class BotSettings {
         String urlString = config.getString("EmbedMessages.ErrorEmbedImageUrl");
         String result = null;
 
-        if (Validator.validateUrl(urlString)) {
-            result = urlString;
-        } else {
-            Main.getInstance().getLogger().warning("Wrong URL for the error embed image: " + urlString);
+        if (!urlString.trim().isEmpty()) {
+            if (Validator.validateUrl(urlString)) {
+                result = urlString;
+            } else {
+                Main.getInstance().getLogger().warning("Wrong URL for the error embed image: " + urlString);
+            }
         }
 
         ERROR_EMBED_IMAGE_URL = result;
