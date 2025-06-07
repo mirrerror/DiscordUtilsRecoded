@@ -4,7 +4,7 @@
  * This class serves as a convenient entry point for interacting with the DiscordUtils plugin.
  *
  * @author mirrerror
- * @version 5.2.1
+ * @version 5.3
  */
 package md.mirrerror.discordutils.api;
 
@@ -113,4 +113,5 @@ public class DiscordUtilsAPI {
     public static boolean isBotReady() {
         return Main.isBotReady();
     }
+
 }
