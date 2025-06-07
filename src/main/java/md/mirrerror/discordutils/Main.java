@@ -67,11 +67,18 @@ public final class Main extends JavaPlugin {
         String permissionsPlugin = mainSettings.PERMISSIONS_PLUGIN.toLowerCase();
         switch (permissionsPlugin) {
             case "vault": {
+                getLogger().info("Hooking into Vault for the permissions integration...");
                 permissionsIntegration = new VaultIntegration(this);
                 break;
             }
-            default: {
+            case "luckperms": {
+                getLogger().info("Hooking into LuckPerms for the permissions integration...");
                 permissionsIntegration = new LuckPermsIntegration(this);
+                break;
+            }
+            default: {
+                getLogger().info("You either disabled the permissions integration or the specified permissions plugin doesn't exist. The plugin will work without the permissions integration, but some features may be disabled.");
+                permissionsIntegration = null;
                 break;
             }
         }
@@ -79,10 +86,12 @@ public final class Main extends JavaPlugin {
         String dataType = mainSettings.DATABASE_TYPE.toLowerCase();
         switch (dataType) {
             case "mysql": {
+                getLogger().info("You have chosen MySQL as the data storage. Connecting to the database...");
                 dataManager = new MySQLDataManager(this, mainSettings);
                 break;
             }
             default: {
+                getLogger().info("You have chosen the default data storage. Using the data.yml file as the data storage...");
                 dataManager = new ConfigDataManager(configManager.getData());
                 break;
             }
@@ -90,9 +99,9 @@ public final class Main extends JavaPlugin {
 
         dataManager.setup().whenComplete((unused, throwable) -> {
             if(throwable != null) {
-                Main.getInstance().getLogger().severe("Something went wrong while connecting to the database. Disabling the plugin...");
-                Main.getInstance().getLogger().severe("Cause: " + throwable.getCause() + "; message: " + throwable.getMessage() + ".");
-                Main.getInstance().getPluginLoader().disablePlugin(Main.getInstance());
+                getLogger().severe("Something went wrong while connecting to the database. Disabling the plugin...");
+                getLogger().severe("Cause: " + throwable.getCause() + "; message: " + throwable.getMessage() + ".");
+                getPluginLoader().disablePlugin(Main.getInstance());
             }
         });
 

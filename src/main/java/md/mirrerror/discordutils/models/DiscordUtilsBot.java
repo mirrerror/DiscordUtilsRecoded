@@ -435,9 +435,10 @@ public class DiscordUtilsBot {
 
     public CompletableFuture<Boolean> checkForcedSecondFactor(DiscordUtilsUser discordUtilsUser) {
         return CompletableFuture.supplyAsync(() -> {
-            for(String group : botSettings.SECOND_FACTOR_FORCED_GROUPS)
-                for(String userGroup : permissionsIntegration.getUserGroups(discordUtilsUser.getOfflinePlayer()).join())
-                    if(userGroup.equals(group)) return false;
+            if (permissionsIntegration != null)
+                for(String group : botSettings.SECOND_FACTOR_FORCED_GROUPS)
+                    for(String userGroup : permissionsIntegration.getUserGroups(discordUtilsUser.getOfflinePlayer()).join())
+                        if(userGroup.equals(group)) return false;
 
             for(long roleId : botSettings.SECOND_FACTOR_FORCED_ROLES)
                 for(Guild guild : jda.getGuilds())
@@ -568,6 +569,7 @@ public class DiscordUtilsBot {
 
     public void synchronizeRoles(Guild guild, DiscordUtilsUser discordUtilsUser) {
         if (!botSettings.ROLES_SYNCHRONIZATION_ENABLED) return;
+        if (permissionsIntegration == null) return;
 
         if (groupRoles.isEmpty()) return;
 
@@ -612,6 +614,7 @@ public class DiscordUtilsBot {
 
     public void synchronizeRolesToGroups(Guild guild, DiscordUtilsUser discordUtilsUser) {
         if (!botSettings.ROLES_SYNCHRONIZATION_ENABLED) return;
+        if (permissionsIntegration == null) return;
 
         if (rolesToGroups.isEmpty()) return;
 
