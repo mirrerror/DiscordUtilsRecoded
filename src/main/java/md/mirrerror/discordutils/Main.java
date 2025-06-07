@@ -125,7 +125,7 @@ public final class Main extends JavaPlugin {
         isMainReady = true;
 
         setupMetrics();
-        if(mainSettings.CHECK_FOR_UPDATES) UpdateChecker.checkForUpdates();
+        if(mainSettings.CHECK_FOR_UPDATES) new UpdateChecker(this).checkForUpdates();
     }
 
     @Override
