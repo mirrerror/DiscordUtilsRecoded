@@ -567,6 +567,8 @@ public class DiscordUtilsBot {
     }
 
     public void synchronizeRoles(Guild guild, DiscordUtilsUser discordUtilsUser) {
+        if (!botSettings.ROLES_SYNCHRONIZATION_ENABLED) return;
+
         if (groupRoles.isEmpty()) return;
 
         if(!discordUtilsUser.isLinked()) return;
@@ -609,6 +611,8 @@ public class DiscordUtilsBot {
     }
 
     public void synchronizeRolesToGroups(Guild guild, DiscordUtilsUser discordUtilsUser) {
+        if (!botSettings.ROLES_SYNCHRONIZATION_ENABLED) return;
+
         if (rolesToGroups.isEmpty()) return;
 
         if(!discordUtilsUser.isLinked()) return;
@@ -647,6 +651,8 @@ public class DiscordUtilsBot {
     }
 
     public void synchronizeNickname(Guild guild, DiscordUtilsUser discordUtilsUser) {
+        if (!botSettings.NAMES_SYNCHRONIZATION_ENABLED) return;
+
         if(!discordUtilsUser.isLinked()) return;
 
         OfflinePlayer offlinePlayer = discordUtilsUser.getOfflinePlayer();
