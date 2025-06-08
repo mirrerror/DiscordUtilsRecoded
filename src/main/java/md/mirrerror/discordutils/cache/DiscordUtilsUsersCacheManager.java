@@ -12,8 +12,14 @@ public class DiscordUtilsUsersCacheManager {
     private static final Set<DiscordUtilsUser> cachedUsers = new HashSet<>();
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUuid(UUID uuid) {
+        return DiscordUtilsUsersCacheManager.retrieveUserFromDatabaseByUuid(uuid, false);
+    }
+
+    public static DiscordUtilsUser retrieveUserFromDatabaseByUuid(UUID uuid, boolean registerIfDoesNotExist) {
         boolean exists = Main.getInstance().getDataManager().userExists(uuid).join();
-        if(!exists) Main.getInstance().getDataManager().registerUser(uuid, -1, false).join();
+        if (!exists)
+            if (registerIfDoesNotExist) Main.getInstance().getDataManager().registerUser(uuid, -1, false).join();
+            else return DiscordUtilsUser.emptyUser();
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
         DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(), offlinePlayer,
                 Main.getInstance().getBot().getJda().getUserById(Main.getInstance().getDataManager().getDiscordUserId(uuid).join()),
@@ -25,7 +31,7 @@ public class DiscordUtilsUsersCacheManager {
 
     public static DiscordUtilsUser retrieveUserFromDatabaseByUserId(long userId) {
         UUID uuid = Main.getInstance().getDataManager().getPlayerUniqueId(userId).join();
-        if(uuid == null) return new DiscordUtilsUser(null, null, null, null, false, null);
+        if (uuid == null) return DiscordUtilsUser.emptyUser();
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
         DiscordUtilsUser discordUtilsUser = new DiscordUtilsUser(Main.getInstance().getBot(), Main.getInstance().getDataManager(),
                 offlinePlayer, Main.getInstance().getBot().getJda().getUserById(userId),
@@ -71,12 +77,16 @@ public class DiscordUtilsUsersCacheManager {
     }
 
     public static DiscordUtilsUser getFromCacheByUuid(UUID uuid) {
+        return getFromCacheByUuid(uuid, false);
+    }
+
+    public static DiscordUtilsUser getFromCacheByUuid(UUID uuid, boolean registerIfDoesNotExist) {
         for(DiscordUtilsUser discordUtilsUser : cachedUsers) {
             try {
                 if(discordUtilsUser.getOfflinePlayer().getUniqueId().equals(uuid)) return discordUtilsUser;
             } catch (NullPointerException ignored) {}
         }
-        return retrieveUserFromDatabaseByUuid(uuid);
+        return retrieveUserFromDatabaseByUuid(uuid, registerIfDoesNotExist);
     }
 
     public static DiscordUtilsUser getFromCacheByUserId(long userId) {

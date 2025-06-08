@@ -31,6 +31,10 @@ public class DiscordUtilsUser {
         this.lastBoostingTime = lastBoostingTime;
     }
 
+    public static DiscordUtilsUser emptyUser() {
+        return new DiscordUtilsUser(null, null, null, null, false, null);
+    }
+
     public void setUser(User user) {
         this.user = user;
         dataManager.setDiscordUserId(offlinePlayer.getUniqueId(), user.getIdLong());

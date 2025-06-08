@@ -22,7 +22,7 @@ public class CacheListener implements Listener {
             return;
         }
 
-        DiscordUtilsUsersCacheManager.getFromCacheByUuid(event.getUniqueId());
+        DiscordUtilsUsersCacheManager.getFromCacheByUuid(event.getUniqueId(), true);
     }
 
     @EventHandler
@@ -30,7 +30,7 @@ public class CacheListener implements Listener {
         Player player = event.getPlayer();
 
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
+            DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId(), true);
             for(Guild guild : Main.getInstance().getBot().getJda().getGuilds()) {
                 discordUtilsUser.synchronizeRoles(guild);
                 discordUtilsUser.synchronizeNickname(guild);
