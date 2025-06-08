@@ -187,7 +187,7 @@ public class SlashCommandsListener extends ListenerAdapter {
                 String minecraftName = event.getOption(Message.MENTION_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
                 DiscordUtilsUser userToMention = DiscordUtilsUsersCacheManager.getFromCacheByUuid(Bukkit.getOfflinePlayer(minecraftName).getUniqueId());
 
-                if(userToMention == null) {
+                if(!userToMention.isLinked()) {
                     hook.editOriginalEmbeds(embedMessagesBuilder.errorEmbed(Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.getText()).build()).queue();
                     return;
                 }
