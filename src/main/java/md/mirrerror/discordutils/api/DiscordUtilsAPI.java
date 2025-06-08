@@ -81,7 +81,7 @@ public class DiscordUtilsAPI {
     /**
      * Retrieves the PermissionsIntegration instance, managing permissions-related functionalities.
      *
-     * @return The PermissionsIntegration instance.
+     * @return The PermissionsIntegration instance, or {@code null} if not available.
      */
     public static PermissionsIntegration getPermissionsIntegration() {
         return Main.getInstance().getPermissionsIntegration();

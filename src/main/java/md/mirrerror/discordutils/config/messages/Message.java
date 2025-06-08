@@ -144,7 +144,7 @@ public enum Message {
 
     public List<String> getTextList(boolean addPrefix) {
         List<String> stringList = new ArrayList<>();
-        for(String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)))
+        for (String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)))
             stringList.add(addPrefix ? PREFIX.getText() + " " + HexUtils.color(s) : HexUtils.color(s));
         return stringList;
     }
