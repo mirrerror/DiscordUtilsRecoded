@@ -26,10 +26,11 @@ public class ExpressionManager {
         addDefaultContextVariables();
 
         try {
+            StandardEvaluationContext context = new StandardEvaluationContext();
+            context.setVariables(contextVariables);
+
             for (String condition : conditions) {
                 Expression expression = expressionParser.parseExpression(condition);
-                StandardEvaluationContext context = new StandardEvaluationContext();
-                context.setVariables(contextVariables);
                 if(!expression.getValue(context, Boolean.class)) return false;
             }
         } catch (EvaluationException | ParseException | NullPointerException e) {
