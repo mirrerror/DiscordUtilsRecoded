@@ -59,6 +59,9 @@ public class SlashCommandsListener extends ListenerAdapter {
                         Message.STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION.getText(), false));
         commandData.add(Commands.slash("help", Message.HELP_SLASH_COMMAND_DESCRIPTION.getText()));
         commandData.add(Commands.slash("unlink", Message.UNLINK_SLASH_COMMAND_DESCRIPTION.getText()));
+        commandData.add(Commands.slash("mention", Message.MENTION_SLASH_COMMAND_DESCRIPTION.getText())
+                .addOption(OptionType.STRING, Message.MENTION_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText(),
+                        Message.MENTION_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION.getText(), true));
 
         for(Guild guild : guilds) guild.updateCommands().addCommands(commandData).queue();
     }
@@ -173,6 +176,25 @@ public class SlashCommandsListener extends ListenerAdapter {
                 discordUtilsUser.unregister();
 
                 hook.editOriginalEmbeds(embedMessagesBuilder.infoEmbed(Message.ACCOUNT_SUCCESSFULLY_UNLINKED.getText()).build()).queue();
+
+                break;
+            }
+            case "mention": {
+                InteractionHook hook = bot.delayReply(event, false);
+
+                if(!DiscordValidator.validateLinkedUser(hook, discordUtilsUser)) return;
+
+                String minecraftName = event.getOption(Message.MENTION_SLASH_COMMAND_FIRST_ARGUMENT_NAME.getText()).getAsString();
+                DiscordUtilsUser userToMention = DiscordUtilsUsersCacheManager.getFromCacheByUuid(Bukkit.getOfflinePlayer(minecraftName).getUniqueId());
+
+                if(userToMention == null) {
+                    hook.editOriginalEmbeds(embedMessagesBuilder.errorEmbed(Message.INVALID_PLAYER_NAME_OR_UNVERIFIED.getText()).build()).queue();
+                    return;
+                }
+
+                bot.sendMessage(event.getChannel(), userToMention.getUser().getAsMention());
+
+                hook.editOriginalEmbeds(embedMessagesBuilder.infoEmbed(Message.USER_SUCCESSFULLY_MENTIONED.getText()).build()).queue();
 
                 break;
             }

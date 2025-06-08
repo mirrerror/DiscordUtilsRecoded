@@ -344,6 +344,30 @@ public class DiscordUtilsBot {
         });
     }
 
+    public void sendMessage(MessageChannelUnion channelUnion, String message) {
+        channelUnion.sendMessage(message).queue();
+    }
+
+    public Message sendAndGetMessage(MessageChannelUnion channelUnion, String message) {
+        return channelUnion.sendMessage(message).complete();
+    }
+
+    public void sendMessageEmbed(MessageChannelUnion channelUnion, MessageEmbed message) {
+        channelUnion.sendMessageEmbeds(message).queue();
+    }
+
+    public Message sendAndGetMessageEmbed(MessageChannelUnion channelUnion, MessageEmbed message) {
+        return channelUnion.sendMessageEmbeds(message).complete();
+    }
+
+    public void sendTimedMessage(MessageChannelUnion channelUnion, String message, int delay) {
+        channelUnion.sendMessage(message).complete().delete().queueAfter(delay, TimeUnit.SECONDS);
+    }
+
+    public void sendTimedMessageEmbed(MessageChannelUnion channelUnion, MessageEmbed message, int delay) {
+        channelUnion.sendMessageEmbeds(message).complete().delete().queueAfter(delay, TimeUnit.SECONDS);
+    }
+
     public void sendMessage(TextChannel textChannel, String message) {
         textChannel.sendMessage(message).queue();
     }

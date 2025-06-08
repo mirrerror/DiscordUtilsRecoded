@@ -20,6 +20,7 @@ public class LangConfig extends CustomConfig {
         fields.put("ACCOUNT_SUCCESSFULLY_LINKED", "Your account has been successfully verified.");
         fields.put("ACCOUNT_UNLINK_REQUEST_SENT", "Account unlink request has been sent. Check your DMs.");
         fields.put("ACCOUNT_SUCCESSFULLY_UNLINKED", "Account has been successfully unlinked.");
+        fields.put("USER_SUCCESSFULLY_MENTIONED", "The user has been successfully mentioned.");
         fields.put("ACCOUNT_UNLINK_CONFIRMATION", "Somebody is trying to unlink your account. Choose if I should unlink your account or no. IP: %playerIp%.");
         fields.put("SECONDFACTOR_DISABLE_CONFIRMATION", "Somebody is trying to disable the 2FA on your account. Choose if I should do this or no. IP: %playerIp%.");
         fields.put("SECONDFACTOR_DISABLE_REQUEST_SENT", "2FA disable request has been sent. Check your DMs.");
@@ -135,6 +136,9 @@ public class LangConfig extends CustomConfig {
         fields.put("STATS_SLASH_COMMAND_FIRST_ARGUMENT_NAME", "name");
         fields.put("STATS_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION", "Player''s name.");
         fields.put("HELP_SLASH_COMMAND_DESCRIPTION", "Sends you the list of the commands.");
+        fields.put("MENTION_SLASH_COMMAND_DESCRIPTION", "Mentions the user linked with the specified player.");
+        fields.put("MENTION_SLASH_COMMAND_FIRST_ARGUMENT_NAME", "name");
+        fields.put("MENTION_SLASH_COMMAND_FIRST_ARGUMENT_DESCRIPTION", "Player''s name.");
         fields.put("ACCEPT", "Accept");
         fields.put("DECLINE", "Decline");
 
