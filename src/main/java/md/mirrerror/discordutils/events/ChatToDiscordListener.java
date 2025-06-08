@@ -32,24 +32,33 @@ public class ChatToDiscordListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId());
-        if (discordUtilsUser == null) return;
+        if (!discordUtilsUser.isLinked()) return;
 
         String message = event.getMessage();
-
-        if (!message.contains("@")) return;
 
         StringBuilder messageBuilder = new StringBuilder();
         String[] words = message.split(" ");
         for (String word : words) {
             if (word.startsWith("@")) {
-                String mentionedPlayerName = word.substring(1);
-                Player mentionedPlayer = Bukkit.getPlayer(mentionedPlayerName);
-                if (mentionedPlayer != null) return;
-                OfflinePlayer mentionedOfflinePlayer = Bukkit.getOfflinePlayer(mentionedPlayerName);
-                DiscordUtilsUser mentionedDiscordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(mentionedOfflinePlayer.getUniqueId());
-                if (mentionedDiscordUtilsUser == null) return;
-                String mention = mentionedDiscordUtilsUser.getUser().getAsMention();
-                messageBuilder.append(mention);
+                String mentionPart = word.substring(1);
+                String mentionedPlayerName = extractMinecraftUsername(mentionPart);
+
+                if (!mentionedPlayerName.isEmpty()) {
+
+                    OfflinePlayer mentionedOfflinePlayer = Bukkit.getOfflinePlayer(mentionedPlayerName);
+                    DiscordUtilsUser mentionedDiscordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(mentionedOfflinePlayer.getUniqueId());
+
+                    if (mentionedDiscordUtilsUser.isLinked()) {
+                        String mention = mentionedDiscordUtilsUser.getUser().getAsMention();
+                        String remainingPart = mentionPart.substring(mentionedPlayerName.length());
+                        messageBuilder.append(mention).append(remainingPart);
+                    } else {
+                        messageBuilder.append(word);
+                    }
+
+                } else {
+                    messageBuilder.append(word);
+                }
             } else {
                 messageBuilder.append(word);
             }
@@ -59,8 +68,22 @@ public class ChatToDiscordListener implements Listener {
         WebhookMessageBuilder builder = new WebhookMessageBuilder();
         builder.setUsername(event.getPlayer().getName());
         builder.setAvatarUrl("https://mc-heads.net/avatar/" + event.getPlayer().getName());
-        builder.setContent(messageBuilder.toString());
+        builder.setContent(messageBuilder.toString().trim());
         client.send(builder.build());
+    }
+
+    private String extractMinecraftUsername(String input) {
+        StringBuilder username = new StringBuilder();
+
+        for (char c : input.toCharArray()) {
+            if (Character.isLetterOrDigit(c) || c == '_') {
+                username.append(c);
+            } else {
+                break;
+            }
+        }
+
+        return username.toString();
     }
 
 }
