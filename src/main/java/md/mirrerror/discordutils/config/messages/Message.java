@@ -135,41 +135,27 @@ public enum Message {
     }
 
     public String getText(boolean addPrefix) {
-        if(addPrefix) {
-            return HexUtils.color(Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(PREFIX))
-                    + " " + Main.getInstance().getConfigManager().getLang().getFileConfiguration().getString(String.valueOf(this)));
-        }
-        return this.getText();
+        return addPrefix ? PREFIX.getText() + " " + this.getText() : this.getText();
     }
 
     public List<String> getTextList() {
-        List<String> stringList = new ArrayList<>();
-        Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)).forEach(s -> stringList.add(HexUtils.color(s)));
-        return stringList;
+        return getTextList(false);
     }
 
     public List<String> getTextList(boolean addPrefix) {
         List<String> stringList = new ArrayList<>();
-        if(addPrefix)
-            for(String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)))
-                stringList.add(PREFIX.getText() + HexUtils.color(" " + s));
-        else
-            return this.getTextList();
+        for(String s : Main.getInstance().getConfigManager().getLang().getFileConfiguration().getStringList(String.valueOf(this)))
+            stringList.add(addPrefix ? PREFIX.getText() + " " + HexUtils.color(s) : HexUtils.color(s));
         return stringList;
     }
 
     public void send(CommandSender commandSender) {
-        if(isList) getTextList().forEach(commandSender::sendMessage);
-        else commandSender.sendMessage(getText());
+        send(commandSender, !isList);
     }
 
     public void send(CommandSender commandSender, boolean addPrefix) {
-        if(addPrefix) {
-            if(isList) getTextList().forEach(msg -> commandSender.sendMessage(PREFIX.getText() + " " + msg));
-            else commandSender.sendMessage(PREFIX.getText() + " " + getText());
-        } else {
-            send(commandSender);
-        }
+        if (isList) getTextList(addPrefix).forEach(commandSender::sendMessage);
+        else commandSender.sendMessage(getText(addPrefix));
     }
 
 }
