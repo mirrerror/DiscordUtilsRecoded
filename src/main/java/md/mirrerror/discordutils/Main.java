@@ -113,7 +113,7 @@ public final class Main extends JavaPlugin {
             bot.setupBot();
         }
 
-        Bukkit.getPluginManager().registerEvents(new CacheListener(),this);
+        Bukkit.getPluginManager().registerEvents(new CacheListener(this),this);
         Bukkit.getPluginManager().registerEvents(new BukkitSecondFactorListener(configManager, this, bot, botSettings), this);
         CustomTriggersListener customTriggersListener = new CustomTriggersListener(this, bot, configManager.getBotSettings().getFileConfiguration(),
                 botSettings, papiManager);

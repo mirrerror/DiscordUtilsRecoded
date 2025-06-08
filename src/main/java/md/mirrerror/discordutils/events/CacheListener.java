@@ -1,5 +1,6 @@
 package md.mirrerror.discordutils.events;
 
+import lombok.RequiredArgsConstructor;
 import md.mirrerror.discordutils.Main;
 import md.mirrerror.discordutils.cache.DiscordUtilsUsersCacheManager;
 import md.mirrerror.discordutils.config.messages.Message;
@@ -13,7 +14,10 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+@RequiredArgsConstructor
 public class CacheListener implements Listener {
+
+    private final Main plugin;
 
     @EventHandler
     public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
@@ -29,9 +33,9 @@ public class CacheListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             DiscordUtilsUser discordUtilsUser = DiscordUtilsUsersCacheManager.getFromCacheByUuid(player.getUniqueId(), true);
-            for(Guild guild : Main.getInstance().getBot().getJda().getGuilds()) {
+            for(Guild guild : plugin.getBot().getJda().getGuilds()) {
                 discordUtilsUser.synchronizeRoles(guild);
                 discordUtilsUser.synchronizeNickname(guild);
             }
@@ -41,9 +45,7 @@ public class CacheListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            DiscordUtilsUsersCacheManager.removeFromCacheByUuid(player.getUniqueId());
-        });
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> DiscordUtilsUsersCacheManager.removeFromCacheByUuid(player.getUniqueId()));
     }
 
 }
