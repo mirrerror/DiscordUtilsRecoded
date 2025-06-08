@@ -29,7 +29,7 @@ public class MySQLDataManager implements DataManager {
         String password = mainSettings.DATABASE_PASSWORD;
 
         try {
-            if(MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
+            if (MinecraftVersionUtils.isVersionGreaterThan(1, 12, 2)) Class.forName("com.mysql.cj.jdbc.Driver");
             else Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException exception) {
             exception.printStackTrace();
@@ -43,6 +43,8 @@ public class MySQLDataManager implements DataManager {
         config.addDataSourceProperty("cachePrepStmts" , "true");
         config.addDataSourceProperty("prepStmtCacheSize" , "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit" , "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
         dataSource = new HikariDataSource(config);
     }
 
@@ -62,17 +64,17 @@ public class MySQLDataManager implements DataManager {
             ResultSet secondFactorColumn = metaData.getColumns(null, null, "players", "2fa");
             ResultSet lastBoostingTimeColumn = metaData.getColumns(null, null, "players", "last_boosting_time");
 
-            if(!uuidColumn.next()) {
+            if (!uuidColumn.next()) {
                 PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN uuid varchar(255);");
                 alterStatement.executeUpdate();
             }
 
-            if(!userIdColumn.next()) {
+            if (!userIdColumn.next()) {
                 PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN user_id bigint;");
                 alterStatement.executeUpdate();
             }
 
-            if(!secondFactorColumn.next()) {
+            if (!secondFactorColumn.next()) {
                 PreparedStatement alterStatement = connection.prepareStatement("ALTER TABLE players ADD COLUMN 2fa boolean;");
                 alterStatement.executeUpdate();
             }
@@ -151,7 +153,7 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE user_id=?");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT 1 FROM players WHERE user_id=? LIMIT 1");
                 preparedStatement.setLong(1, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 return resultSet.next();
@@ -169,7 +171,7 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE user_id=?");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT 1 FROM players WHERE user_id=? LIMIT 1");
                 preparedStatement.setLong(1, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if(resultSet.next()) {
@@ -206,7 +208,7 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT 2fa FROM players WHERE uuid=? LIMIT 1");
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if(resultSet.next()) {
@@ -243,7 +245,7 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT user_id FROM players WHERE uuid=? LIMIT 1");
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if(resultSet.next()) {
@@ -280,7 +282,7 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT last_boosting_time FROM players WHERE uuid=? LIMIT 1");
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -309,13 +311,9 @@ public class MySQLDataManager implements DataManager {
         return CompletableFuture.supplyAsync(() -> {
 
             try (Connection connection = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE user_id>0");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM players WHERE user_id IS NOT NULL AND user_id > 0");
                 ResultSet resultSet = preparedStatement.executeQuery();
-                long count = 0L;
-                while (resultSet.next()) {
-                    count += 1;
-                }
-                return count;
+                if (resultSet.next()) return resultSet.getLong(1);
             } catch (SQLException e) {
                 plugin.getLogger().severe("Something went wrong while counting linked users (database)!");
                 plugin.getLogger().severe("Cause: " + e.getCause() + "; message: " + e.getMessage() + ".");
